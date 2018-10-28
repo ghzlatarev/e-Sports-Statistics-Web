@@ -1,5 +1,11 @@
-﻿using ESportStatistics.Data.Context;
+﻿using ESportStatistics.Core.Services;
+using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
+using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models.Identity;
+using ESportStatistics.Data.Repository.DataHandler;
+using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.External;
 using ESportStatistics.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,11 +29,16 @@ namespace ESportStatistics.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
-            
+                 options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IDataContext, DataContext>();
+            services.AddScoped<IDataHandler, DataHandler>();
+            services.AddScoped<IPandaScoreClient, PandaScoreClient>();
+            services.AddScoped<IChampionService, ChampionService>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj" />
     <ProjectReference Include="..\ESportStatistics.Data\ESportStatistics.Data.csproj" />
+    <ProjectReference Include="..\ESportStatistics.Services.Data\ESportStatistics.Services.Data.csproj" />
   </ItemGroup>
 
 </Project>
