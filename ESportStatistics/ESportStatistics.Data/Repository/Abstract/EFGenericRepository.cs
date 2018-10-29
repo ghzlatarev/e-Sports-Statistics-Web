@@ -28,11 +28,16 @@ namespace ESportStatistics.Data.Repository.Abstract
             return this.DbSet.AsQueryable();
         }
 
+        public virtual async Task<IQueryable<T>> AllAsync()
+        {
+            return (await this.DbSet.ToListAsync()).AsQueryable();
+        }
+
         public virtual T GetById(int id)
         {
             return this.DbSet.Find(id);
         }
-
+        
         public void Add(T entity)
         {
             EntityEntry entry = this.Context.Entry(entity);
@@ -67,18 +72,6 @@ namespace ESportStatistics.Data.Repository.Abstract
         }
 
         public virtual void Update(T entity)
-        {
-            EntityEntry entry = this.Context.Entry(entity);
-
-            if (entry.State == EntityState.Detached)
-            {
-                this.DbSet.Attach(entity);
-            }
-
-            entry.State = EntityState.Modified;
-        }
-
-        public virtual async Task UpdateAsync(T entity)
         {
             EntityEntry entry = this.Context.Entry(entity);
 

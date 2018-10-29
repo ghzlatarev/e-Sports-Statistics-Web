@@ -10,6 +10,8 @@ namespace ESportStatistics.Data.Repository.Contracts
     {
         IQueryable<T> All();
 
+        Task<IQueryable<T>> AllAsync();
+
         T GetById(int id);
 
         void Add(T entity);
@@ -19,8 +21,6 @@ namespace ESportStatistics.Data.Repository.Contracts
         void Add(IEnumerable<T> entities);
 
         void Update(T entity);
-
-        Task UpdateAsync(T entity);
 
         void Delete(T entity);
 

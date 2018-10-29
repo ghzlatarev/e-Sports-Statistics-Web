@@ -91,17 +91,15 @@ namespace ESportStatistics.Core.Services
 
             foreach (var champion in champions)
             {
-                var temp = this.DataHandler.Champions.All()
-                    .SingleOrDefault(c => c.PandaScoreId.Equals(champion.PandaScoreId));
+                var temp = (await this.DataHandler.Champions.AllAsync())
+                    .FirstOrDefault(c => c.PandaScoreId.Equals(champion.PandaScoreId));
 
                 if (temp != null)
                 {
-                    await this.DataHandler.Champions.UpdateAsync(temp);
+                    this.DataHandler.Champions.HardDelete(temp);
                 }
-                else
-                {
-                    await this.DataHandler.Champions.AddAsync(champion);
-                }
+
+                await this.DataHandler.Champions.AddAsync(champion);
             }
 
             await this.DataHandler.SaveChangesAsync();

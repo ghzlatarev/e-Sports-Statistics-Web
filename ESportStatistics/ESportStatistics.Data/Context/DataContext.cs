@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
 
-// TO DO : Refactor the admin/role process!
 namespace ESportStatistics.Data.Context
 {
     public class DataContext : IdentityDbContext<ApplicationUser>, IDataContext
@@ -41,6 +40,7 @@ namespace ESportStatistics.Data.Context
 
         public override int SaveChanges()
         {
+            //this.ApplyDeletionRules(); TO DO : Configure the repositories to use this functionallity
             this.ApplyAuditInfoRules();
             return base.SaveChanges();
         }
@@ -73,6 +73,20 @@ namespace ESportStatistics.Data.Context
             base.OnModelCreating(modelBuilder);
         }
 
+        private void ApplyDeletionRules()
+        {
+            var entitiesForDeletion = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Deleted && e.Entity is IDeletable);
+
+            foreach (var entry in entitiesForDeletion)
+            {
+                var entity = (IDeletable)entry.Entity;
+                entity.DeletedOn = DateTime.Now;
+                entity.IsDeleted = true;
+                entry.State = EntityState.Modified;
+            }
+        }
+
         private void ApplyAuditInfoRules()
         {
             var newlyCreatedEntities = this.ChangeTracker.Entries()
@@ -95,8 +109,21 @@ namespace ESportStatistics.Data.Context
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<IdentityRole>().HasData(new { Name = "Standard" });
-            modelBuilder.Entity<IdentityRole>().HasData(new { Name = "Administrator" });
+            modelBuilder.Entity<IdentityRole>().HasData(new
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "user",
+                NormalizedName = "USER",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            });
+
+            modelBuilder.Entity<IdentityRole>().HasData(new
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "administrator",
+                NormalizedName = "ADMINISTRATOR",
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            });
         }
     }
 }
