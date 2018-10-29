@@ -84,12 +84,10 @@ namespace ESportStatistics.Core.Services
             return champion;
         }
 
-        public async Task<int> RebaseChampions(string accessToken)
+        public async Task RebaseChampions(string accessToken)
         {
             IEnumerable<Champion> champions = await PandaScoreClient
                 .GetEntitiesParallel<Champion>(accessToken, "champions");
-
-            int elements = await PandaScoreClient.GetNumberOfAvaliableElements(accessToken,"champions");
 
             foreach (var champion in champions)
             {
@@ -98,17 +96,15 @@ namespace ESportStatistics.Core.Services
 
                 if (temp != null)
                 {
-                    this.DataHandler.Champions.Update(temp);
+                    await this.DataHandler.Champions.UpdateAsync(temp);
                 }
                 else
                 {
-                    this.DataHandler.Champions.Add(champion);
+                    await this.DataHandler.Champions.AddAsync(champion);
                 }
             }
 
-            this.DataHandler.SaveChanges();
-
-            return elements;
+            await this.DataHandler.SaveChangesAsync();
         }
     }
 }

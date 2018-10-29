@@ -1,7 +1,9 @@
-﻿namespace ESportStatistics.Core.Providers.Contracts
+﻿using System.Threading.Tasks;
+
+namespace ESportStatistics.Core.Providers.Contracts
 {
     public interface ILoggerService
     {
-        void LogToFile(string message, string fileName);
+        Task LogToFileAsync(string message, string fileName);
     }
 }

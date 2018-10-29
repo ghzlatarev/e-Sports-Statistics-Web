@@ -1,6 +1,7 @@
-﻿using ESportStatistics.Data.Models.Identity;
+﻿using ESportStatistics.Core.Providers.Contracts;
+using ESportStatistics.Data.Models.Identity;
+using ESportStatistics.Services.Extensions;
 using ESportStatistics.Web.Models.ManageViewModels;
-using ESportStatistics.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

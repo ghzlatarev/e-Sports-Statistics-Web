@@ -2,12 +2,13 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Core.Providers
 {
     public class LoggerService : ILoggerService
     {
-        public void LogToFile(string message, string fileName = "logs.txt")
+        public async Task LogToFileAsync(string message, string fileName = "logs.txt")
         {
             if (message == null)
             {
@@ -22,7 +23,7 @@ namespace ESportStatistics.Core.Providers
             log.Append(DateTime.Now.ToString());
             log.Append(Environment.NewLine);
 
-            File.AppendAllText(fileName, log.ToString());
+            await File.AppendAllTextAsync(fileName, log.ToString());
         }
     }
 }

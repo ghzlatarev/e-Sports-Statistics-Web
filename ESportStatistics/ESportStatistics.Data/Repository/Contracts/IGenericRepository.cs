@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using ESportStatistics.Data.Models.Abstract;
 using System.Collections.Generic;
-using ESportStatistics.Data.Models.Abstract;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Repository.Contracts
 {
@@ -13,9 +14,13 @@ namespace ESportStatistics.Data.Repository.Contracts
 
         void Add(T entity);
 
+        Task AddAsync(T entity);
+
         void Add(IEnumerable<T> entities);
 
         void Update(T entity);
+
+        Task UpdateAsync(T entity);
 
         void Delete(T entity);
 

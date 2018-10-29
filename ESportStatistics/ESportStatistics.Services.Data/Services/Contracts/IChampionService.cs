@@ -14,6 +14,6 @@ namespace ESportStatistics.Core.Services.Contracts
 
         Champion RestoreChampion(string name);
 
-        Task<int> RebaseChampions(string accessToken);
+        Task RebaseChampions(string accessToken);
     }
 }

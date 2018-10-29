@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ESportStatistics.Core.Providers.Contracts;
 using System.Threading.Tasks;
 
-namespace ESportStatistics.Web.Services
+namespace ESportStatistics.Core.Providers
 {
     // This class is used by the application to send email for account confirmation and password reset.
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713

@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ESportStatistics.Core.Providers.Contracts;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using ESportStatistics.Web.Services;
 
-namespace ESportStatistics.Web.Services
+namespace ESportStatistics.Services.Extensions
 {
     public static class EmailSenderExtensions
     {

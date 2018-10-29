@@ -1,6 +1,7 @@
 ﻿using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.Contracts;
 using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Repository.DataHandler.Contracts
 {
@@ -27,5 +28,7 @@ namespace ESportStatistics.Data.Repository.DataHandler.Contracts
         IDeletableGenericRepository<Match> Matches { get; }
 
         int SaveChanges();
+
+        Task<int> SaveChangesAsync();
     }
 }

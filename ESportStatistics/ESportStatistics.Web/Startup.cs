@@ -1,12 +1,12 @@
-﻿using ESportStatistics.Core.Services;
+﻿using ESportStatistics.Core.Providers;
+using ESportStatistics.Core.Providers.Contracts;
+using ESportStatistics.Core.Services;
 using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
-using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models.Identity;
 using ESportStatistics.Data.Repository.DataHandler;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.External;
-using ESportStatistics.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +35,6 @@ namespace ESportStatistics.Web
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IDataContext, DataContext>();
             services.AddScoped<IDataHandler, DataHandler>();
             services.AddScoped<IPandaScoreClient, PandaScoreClient>();
             services.AddScoped<IChampionService, ChampionService>();

@@ -3,6 +3,7 @@ using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Models.Contracts;
 using ESportStatistics.Data.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -94,7 +95,8 @@ namespace ESportStatistics.Data.Context
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<IdentityRole>().HasData(new { Name = "Standard" });
+            modelBuilder.Entity<IdentityRole>().HasData(new { Name = "Administrator" });
         }
     }
 }
