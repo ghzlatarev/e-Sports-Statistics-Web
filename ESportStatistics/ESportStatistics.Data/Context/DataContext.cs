@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Context
 {
@@ -40,9 +42,15 @@ namespace ESportStatistics.Data.Context
 
         public override int SaveChanges()
         {
-            //this.ApplyDeletionRules(); TO DO : Configure the repositories to use this functionallity
             this.ApplyAuditInfoRules();
             return base.SaveChanges();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            this.ApplyDeletionRules();
+            this.ApplyAuditInfoRules();
+            return await base.SaveChangesAsync();
         }
 
         public override DbSet<TEntity> Set<TEntity>()

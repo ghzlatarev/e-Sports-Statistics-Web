@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
 
 namespace ESportStatistics.Web
 {
@@ -35,8 +37,10 @@ namespace ESportStatistics.Web
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddTransient<HttpClient>();
+            services.AddTransient<IPandaScoreClient, PandaScoreClient>();
+
             services.AddScoped<IDataHandler, DataHandler>();
-            services.AddScoped<IPandaScoreClient, PandaScoreClient>();
             services.AddScoped<IChampionService, ChampionService>();
 
             // Add application services.

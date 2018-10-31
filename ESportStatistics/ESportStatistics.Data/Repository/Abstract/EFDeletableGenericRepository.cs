@@ -22,19 +22,9 @@ namespace ESportStatistics.Data.Repository.Abstract
             return base.All();
         }
 
-        public async Task<IQueryable<T>> AllWithDeletedAsync()
-        {
-            return await base.AllAsync();
-        }
-
         public override IQueryable<T> All()
         {
             return base.All().Where(x => !x.IsDeleted);
-        }
-
-        public override async Task<IQueryable<T>> AllAsync()
-        {
-            return (await base.AllAsync()).Where(x => !x.IsDeleted);
         }
 
         public override void Delete(T entity)

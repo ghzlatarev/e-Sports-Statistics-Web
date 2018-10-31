@@ -3,6 +3,7 @@ using ESportStatistics.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using ESportStatistics.Data.Models.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Context.Contracts
 {
@@ -31,6 +32,8 @@ namespace ESportStatistics.Data.Context.Contracts
         DbSet<Serie> Series { get; set; }
 
         int SaveChanges();
+
+        Task<int> SaveChangesAsync();
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

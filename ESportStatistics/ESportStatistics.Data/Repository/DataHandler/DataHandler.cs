@@ -1,5 +1,4 @@
 ﻿using ESportStatistics.Data.Context;
-using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Models.Abstract;
 using ESportStatistics.Data.Models.Contracts;
@@ -8,6 +7,7 @@ using ESportStatistics.Data.Repository.Contracts;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Repository.DataHandler

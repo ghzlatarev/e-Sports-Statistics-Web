@@ -1,6 +1,5 @@
 ﻿using ESportStatistics.Data.Models.Abstract;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Repository.Contracts
 {
@@ -9,8 +8,6 @@ namespace ESportStatistics.Data.Repository.Contracts
         where T : BaseEntity
     {
         IQueryable<T> AllWithDeleted();
-
-        Task<IQueryable<T>> AllWithDeletedAsync();
 
         void HardDelete(T entity);
     }

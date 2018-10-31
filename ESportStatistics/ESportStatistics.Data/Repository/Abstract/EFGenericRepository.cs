@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using ESportStatistics.Data.Context.Contracts;
+﻿using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models.Abstract;
 using ESportStatistics.Data.Repository.Contracts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Repository.Abstract
@@ -28,16 +28,11 @@ namespace ESportStatistics.Data.Repository.Abstract
             return this.DbSet.AsQueryable();
         }
 
-        public virtual async Task<IQueryable<T>> AllAsync()
-        {
-            return (await this.DbSet.ToListAsync()).AsQueryable();
-        }
-
-        public virtual T GetById(int id)
+        public virtual T GetById(Guid id)
         {
             return this.DbSet.Find(id);
         }
-        
+
         public void Add(T entity)
         {
             EntityEntry entry = this.Context.Entry(entity);
@@ -66,7 +61,7 @@ namespace ESportStatistics.Data.Repository.Abstract
             }
         }
 
-        public void Add(IEnumerable<T> entities)
+        public void AddRange(IEnumerable<T> entities)
         {
             this.DbSet.AddRange(entities);
         }
@@ -81,6 +76,11 @@ namespace ESportStatistics.Data.Repository.Abstract
             }
 
             entry.State = EntityState.Modified;
+        }
+
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            this.DbSet.UpdateRange(entities);
         }
 
         public virtual void Delete(T entity)
@@ -98,7 +98,7 @@ namespace ESportStatistics.Data.Repository.Abstract
             }
         }
 
-        public virtual void Delete(int id)
+        public virtual void Delete(Guid id)
         {
             var entity = this.GetById(id);
 

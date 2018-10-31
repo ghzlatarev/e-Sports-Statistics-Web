@@ -1,8 +1,10 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.Data.Exceptions;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +15,19 @@ namespace ESportStatistics.Core.Services
     public class ChampionService : IChampionService
     {
         public ChampionService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+            IPandaScoreClient pandaScoreClient,
+            DataContext dataContext)
         {
             this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
             this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
         private IDataHandler DataHandler { get; }
 
         private IPandaScoreClient PandaScoreClient { get; }
+
+        private DataContext DataContext { get; }
 
         public IEnumerable<Champion> FilterChampions(string filter, int pageNumber = 1, int pageSize = 10)
         {
@@ -89,20 +95,14 @@ namespace ESportStatistics.Core.Services
             IEnumerable<Champion> champions = await PandaScoreClient
                 .GetEntitiesParallel<Champion>(accessToken, "champions");
 
-            foreach (var champion in champions)
-            {
-                var temp = (await this.DataHandler.Champions.AllAsync())
-                    .FirstOrDefault(c => c.PandaScoreId.Equals(champion.PandaScoreId));
+            IList<Champion> dbChampions = await this.DataContext.Champions.ToListAsync();
 
-                if (temp != null)
-                {
-                    this.DataHandler.Champions.HardDelete(temp);
-                }
+            IList<Champion> deleteList = dbChampions.Where(c => champions.Any(psc => psc.PandaScoreId.Equals(c.PandaScoreId))).ToList();
 
-                await this.DataHandler.Champions.AddAsync(champion);
-            }
+            this.DataContext.Champions.RemoveRange(deleteList);
+            await this.DataContext.Champions.AddRangeAsync(champions);
 
-            await this.DataHandler.SaveChangesAsync();
+            await this.DataContext.SaveChangesAsync();
         }
     }
 }
