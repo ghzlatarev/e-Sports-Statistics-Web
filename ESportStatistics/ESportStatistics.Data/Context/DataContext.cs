@@ -1,4 +1,5 @@
 ﻿using ESportStatistics.Data.Context.Configurations;
+using ESportStatistics.Data.Context.Configurations.Identity;
 using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Models.Contracts;
@@ -9,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Data.Context
@@ -42,6 +42,7 @@ namespace ESportStatistics.Data.Context
 
         public override int SaveChanges()
         {
+            this.ApplyDeletionRules();
             this.ApplyAuditInfoRules();
             return base.SaveChanges();
         }
@@ -65,6 +66,10 @@ namespace ESportStatistics.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Identity model configuration
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
+
+            // PandaScore model configuration
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
             modelBuilder.ApplyConfiguration(new MasteryConfiguration());
             modelBuilder.ApplyConfiguration(new SpellConfiguration());
@@ -75,8 +80,6 @@ namespace ESportStatistics.Data.Context
             modelBuilder.ApplyConfiguration(new ChampionConfiguration());
             modelBuilder.ApplyConfiguration(new SeriesConfiguration());
             modelBuilder.ApplyConfiguration(new MatchConfiguration());
-
-            this.SeedData(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }
@@ -89,7 +92,7 @@ namespace ESportStatistics.Data.Context
             foreach (var entry in entitiesForDeletion)
             {
                 var entity = (IDeletable)entry.Entity;
-                entity.DeletedOn = DateTime.Now;
+                entity.DeletedOn = DateTime.UtcNow.AddHours(2);
                 entity.IsDeleted = true;
                 entry.State = EntityState.Modified;
             }
@@ -106,32 +109,13 @@ namespace ESportStatistics.Data.Context
 
                 if (entry.State == EntityState.Added && entity.CreatedOn == null)
                 {
-                    entity.CreatedOn = DateTime.Now;
+                    entity.CreatedOn = DateTime.UtcNow.AddHours(2);
                 }
                 else
                 {
-                    entity.ModifiedOn = DateTime.Now;
+                    entity.ModifiedOn = DateTime.UtcNow.AddHours(2);
                 }
             }
-        }
-
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<IdentityRole>().HasData(new
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "user",
-                NormalizedName = "USER",
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            });
-
-            modelBuilder.Entity<IdentityRole>().HasData(new
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = "administrator",
-                NormalizedName = "ADMINISTRATOR",
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            });
         }
     }
 }

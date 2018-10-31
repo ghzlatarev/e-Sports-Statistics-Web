@@ -26,7 +26,7 @@ namespace ESportStatistics.Web.Utilities.Middleware
                     context.Response.Redirect("/404");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 context.Response.Redirect("/500");
             }

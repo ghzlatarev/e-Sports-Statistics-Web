@@ -56,9 +56,14 @@ namespace ESportStatistics.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(model.UserNameOrEmail);
+                if (user != null)
+                {
+                    model.UserNameOrEmail = user.UserName;
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(model.UserNameOrEmail, model.Password, model.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -217,7 +222,7 @@ namespace ESportStatistics.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -234,7 +239,6 @@ namespace ESportStatistics.Web.Controllers
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 

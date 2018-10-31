@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace ESportStatistics.Web.Utilities.Middleware
 {
     public class InternalServerErrorMiddleware
     {
-        private readonly RequestDelegate next;
+        private readonly RequestDelegate _next;
 
         public InternalServerErrorMiddleware(RequestDelegate next)
         {
-            this.next = next;
+            _next = next;
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await this.next.Invoke(context);
+                await _next.Invoke(context);
 
                 if (context.Response.StatusCode == 500)
                 {
