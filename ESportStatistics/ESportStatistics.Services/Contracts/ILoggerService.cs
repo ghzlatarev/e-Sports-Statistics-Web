@@ -4,6 +4,6 @@ namespace ESportStatistics.Core.Providers.Contracts
 {
     public interface ILoggerService
     {
-        Task LogToFileAsync(string message, string fileName);
+        Task LogToFileAsync(string message, string fileName = "logs.txt");
     }
 }

@@ -7,6 +7,7 @@ using ESportStatistics.Data.Models.Identity;
 using ESportStatistics.Data.Repository.DataHandler;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.External;
+using ESportStatistics.Web.Utilities.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -63,12 +64,26 @@ namespace ESportStatistics.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseNotFoundExceptionHandler();
+
+            app.UseInternalServerErrorExceptionHandler();
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "internalservererror",
+                    template: "500",
+                    defaults: new { controller = "Error", action = "InternalServerError" });
+
+                routes.MapRoute(
+                    name: "notfound",
+                    template: "404",
+                    defaults: new { controller = "Error", action = "PageNotFound" });
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
