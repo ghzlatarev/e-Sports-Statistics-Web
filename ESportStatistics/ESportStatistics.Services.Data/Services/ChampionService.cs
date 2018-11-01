@@ -31,7 +31,7 @@ namespace ESportStatistics.Core.Services
 
         public IEnumerable<Champion> FilterChampions(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataHandler.Champions.All()
+            var query = this.DataContext.Champions.AsQueryable()
                 .Where(t => t.Name.Contains(filter)
                 ).Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -42,7 +42,7 @@ namespace ESportStatistics.Core.Services
 
         public Champion AddChampion(string name)
         {
-            if (this.DataHandler.Champions.All().Any(
+            if (this.DataContext.Champions.AsQueryable().Any(
                 t => t.Name.Equals(name)))
             {
                 throw new EntityAlreadyExistsException("Champion already exists!");
@@ -53,21 +53,21 @@ namespace ESportStatistics.Core.Services
                 Name = name
             };
 
-            this.DataHandler.Champions.Add(champion);
-            this.DataHandler.SaveChanges();
+            this.DataContext.Champions.Add(champion);
+            this.DataContext.SaveChanges();
 
             return champion;
         }
 
         public Champion DeleteChampion(string name)
         {
-            var champion = this.DataHandler.Champions.AllWithDeleted()
+            var champion = this.DataContext.Champions.AsQueryable()
                 .SingleOrDefault(c => c.Name.Equals(name));
 
             if (!champion.IsDeleted)
             {
-                this.DataHandler.Champions.Delete(champion);
-                this.DataHandler.SaveChanges();
+                this.DataContext.Champions.Remove(champion);
+                this.DataContext.SaveChanges();
             }
 
             return champion;
@@ -75,7 +75,7 @@ namespace ESportStatistics.Core.Services
 
         public Champion RestoreChampion(string name)
         {
-            var champion = this.DataHandler.Champions.AllWithDeleted()
+            var champion = this.DataContext.Champions.AsQueryable()
                 .SingleOrDefault(c => c.Name.Equals(name));
 
             if (champion.IsDeleted)
@@ -83,8 +83,8 @@ namespace ESportStatistics.Core.Services
                 champion.IsDeleted = false;
                 champion.DeletedOn = null;
 
-                this.DataHandler.Champions.Update(champion);
-                this.DataHandler.SaveChanges();
+                this.DataContext.Champions.Update(champion);
+                this.DataContext.SaveChanges();
             }
 
             return champion;
@@ -102,7 +102,7 @@ namespace ESportStatistics.Core.Services
             this.DataContext.Champions.RemoveRange(deleteList);
             await this.DataContext.Champions.AddRangeAsync(champions);
 
-            await this.DataContext.SaveChangesAsync();
+            await this.DataContext.SaveChangesAsync(false);
         }
     }
 }

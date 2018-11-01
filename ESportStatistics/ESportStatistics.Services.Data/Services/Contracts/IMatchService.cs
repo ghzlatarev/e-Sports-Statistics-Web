@@ -1,5 +1,6 @@
 ﻿using ESportStatistics.Data.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Core.Services.Contracts
 {
@@ -7,6 +8,6 @@ namespace ESportStatistics.Core.Services.Contracts
     {
         IEnumerable<Match> FilterMatches(string filter, int pageNumber, int pageSize);
 
-        void RebaseMatches();
+        Task RebaseMatches(string accessToken);
     }
 }

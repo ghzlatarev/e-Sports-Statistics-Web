@@ -42,14 +42,23 @@ namespace ESportStatistics.Data.Context
 
         public override int SaveChanges()
         {
+            this.ApplyDeletionRules();
             this.ApplyAuditInfoRules();
             return base.SaveChanges();
         }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync(bool applyDeletionRules = true, bool applyAuditInfoRules = true)
         {
-            this.ApplyDeletionRules();
-            this.ApplyAuditInfoRules();
+            if (applyDeletionRules == true)
+            {
+                this.ApplyDeletionRules();
+            }
+            
+            if(applyAuditInfoRules == true)
+            {
+                this.ApplyAuditInfoRules();
+            }
+            
             return await base.SaveChangesAsync();
         }
 

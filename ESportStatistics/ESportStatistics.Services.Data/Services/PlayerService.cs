@@ -1,29 +1,36 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Core.Services
 {
     public class PlayerService : IPlayerService
     {
         public PlayerService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+            IPandaScoreClient pandaScoreClient,
+            DataContext dataContext)
         {
             this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
             this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
         private IDataHandler DataHandler { get; }
 
         private IPandaScoreClient PandaScoreClient { get; }
 
+        private DataContext DataContext { get; }
+
         public IEnumerable<Player> FilterPlayers(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataHandler.Players.All()
+            var query = this.DataContext.Players.AsQueryable()
                 .Where(p => p.Name.Contains(filter))
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -32,28 +39,19 @@ namespace ESportStatistics.Core.Services
             return query;
         }
 
-        public void RebasePlayers()
+        public async Task RebasePlayers(string accessToken)
         {
-            throw new NotImplementedException();
-            /*IEnumerable<Player> players = PandaScoreClient
-                .GetEntities<Player>(apiUrl)
-                .Select(entity => entity as Player);
+            IEnumerable<Player> players = await PandaScoreClient
+                .GetEntitiesParallel<Player>(accessToken, "players");
 
-            foreach (var player in players)
-            {
-                var temp = this.DataHandler.Players.All().SingleOrDefault(p => p.PandaScoreId.Equals(player.PandaScoreId));
+            IList<Player> dbPlayers = await this.DataContext.Players.ToListAsync();
 
-                if (temp != null)
-                {
-                    this.DataHandler.Players.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Players.Add(player);
-                }
-            }
+            IList<Player> deleteList = dbPlayers.Where(p => players.Any(psp => psp.PandaScoreId.Equals(p.PandaScoreId))).ToList();
 
-            this.DataHandler.SaveChanges();*/
+            this.DataContext.Players.RemoveRange(deleteList);
+            await this.DataContext.Players.AddRangeAsync(players);
+
+            await this.DataContext.SaveChangesAsync();
         }
     }
 }
