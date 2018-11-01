@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ESportStatistics.Web</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link href="~/css/site.css" rel="stylesheet" />
+        @await Html.PartialAsync("_ThemeStylesPartial")
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -17,44 +17,96 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ESportStatistics.Web</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ESportStatistics</a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    @if (User.IsInRole("Administrator"))
-                    {
-                        <li><a asp-area="Administration" asp-controller="Users" asp-action="Index">User Administration</a></li>
-
-                    }
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        @await Html.PartialAsync("_LoginPartial")
+                    </ul>
+                </li>
+            </ul>
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home fa-fw"></i> Home</a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="Contact"><i class="fa fa-user fa-fw"></i> Contact</a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="About"><i class="fa fa-info fa-fw"></i> About</a>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-area-chart fa-fw"></i> Statistics<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a>Champions</a>
+                                </li>
+                                <li>
+                                    <a>Items</a>
+                                </li>
+                                <li>
+                                    <a>Leagues</a>
+                                </li>
+                                <li>
+                                    <a>Masteries</a>
+                                </li>
+                                <li>
+                                    <a>Matches</a>
+                                </li>
+                                <li>
+                                    <a>Players</a>
+                                </li>
+                                <li>
+                                    <a>Series</a>
+                                </li>
+                                <li>
+                                    <a>Spells</a>
+                                </li>
+                                <li>
+                                    <a>Teams</a>
+                                </li>
+                                <li>
+                                    <a>Tournaments</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+        <div id="page-wrapper">
+            <div class="row">
+                @RenderBody()
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2018 - ESportStatistics.Web</p>
-        </footer>
+        <!-- /#page-wrapper -->
     </div>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
+        @await Html.PartialAsync("_ThemeScriptsPartial")
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"

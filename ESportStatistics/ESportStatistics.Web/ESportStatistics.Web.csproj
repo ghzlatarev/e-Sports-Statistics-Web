@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-ESportStatistics.Web-523E059C-E7A0-42E6-AA90-D954E2F576A2</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Shared\_ThemeScriptsPartial.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
@@ -28,6 +32,10 @@
   <ItemGroup>
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Identity\Views\Shared\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Shared\_ThemeScriptsPartial.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,7 +13,6 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
 {
     [Authorize]
     [Area("Identity")]
-    [Route("Identity/[controller]/[action]")]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
