@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Net.Http;
 
 namespace ESportStatistics.Web
@@ -28,7 +27,6 @@ namespace ESportStatistics.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options =>
@@ -38,19 +36,17 @@ namespace ESportStatistics.Web
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddTransient<HttpClient>();
-            services.AddTransient<IPandaScoreClient, PandaScoreClient>();
+            services.AddScoped<HttpClient>();
+            services.AddScoped<IPandaScoreClient, PandaScoreClient>();
 
             services.AddScoped<IDataHandler, DataHandler>();
             services.AddScoped<IChampionService, ChampionService>();
 
-            // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -65,8 +61,6 @@ namespace ESportStatistics.Web
             }
 
             app.UseNotFoundExceptionHandler();
-
-            app.UseInternalServerErrorExceptionHandler();
 
             app.UseStaticFiles();
 

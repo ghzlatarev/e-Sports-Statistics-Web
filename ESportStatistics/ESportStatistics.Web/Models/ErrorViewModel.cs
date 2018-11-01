@@ -1,5 +1,3 @@
-using System;
-
 namespace ESportStatistics.Web.Models
 {
     public class ErrorViewModel

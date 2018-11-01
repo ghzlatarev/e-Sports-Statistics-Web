@@ -1,7 +1,7 @@
-﻿using System;
+﻿using ESportStatistics.Data.Models.Contracts;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
-using ESportStatistics.Data.Models.Contracts;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ESportStatistics.Data.Models.Abstract
