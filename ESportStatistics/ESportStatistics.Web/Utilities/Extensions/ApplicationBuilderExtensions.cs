@@ -13,10 +13,5 @@ namespace ESportStatistics.Web.Utilities.Extensions
         {
             builder.UseMiddleware<PageNotFoundMiddleware>();
         }
-
-        public static void UseInternalServerErrorExceptionHandler(this IApplicationBuilder builder)
-        {
-            builder.UseMiddleware<InternalServerErrorMiddleware>();
-        }
     }
 }

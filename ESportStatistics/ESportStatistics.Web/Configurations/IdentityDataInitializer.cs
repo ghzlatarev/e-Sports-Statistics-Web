@@ -8,30 +8,30 @@ namespace ESportStatistics.Web.Configurations
 {
     public static class IdentityDataInitializer
     {
-        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedDataAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            SeedRoles(roleManager);
-            SeedUsers(userManager);
+            await SeedRolesAsync(roleManager);
+            await SeedUsersAsync(userManager);
         }
 
-        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
-            if (!roleManager.RoleExistsAsync("User").Result)
+            if (!await roleManager.RoleExistsAsync("User"))
             {
                 IdentityRole newRole = new IdentityRole() { Name = "User" };
-                roleManager.CreateAsync(newRole);
+                await roleManager.CreateAsync(newRole);
             }
 
-            if (!roleManager.RoleExistsAsync("Administrator").Result)
+            if (!await roleManager.RoleExistsAsync("Administrator"))
             {
                 IdentityRole newRole = new IdentityRole() { Name = "Administrator" };
-                roleManager.CreateAsync(newRole);
+                await roleManager.CreateAsync(newRole);
             }
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager)
+        public static async Task SeedUsersAsync(UserManager<ApplicationUser> userManager)
         {
-            if (!userManager.Users.AnyAsync(u => u.UserName == "Administrator").Result)
+            if (!await userManager.Users.AnyAsync(u => u.UserName == "Administrator"))
             {
                 ApplicationUser newUser = new ApplicationUser()
                 {
@@ -41,9 +41,9 @@ namespace ESportStatistics.Web.Configurations
                     IsDeleted = false
                 };
 
-                if (userManager.CreateAsync(newUser, "zaq1@WSX").Result.Succeeded)
+                if ((await userManager.CreateAsync(newUser, "zaq1@WSX")).Succeeded)
                 {
-                    userManager.AddToRoleAsync(newUser, "Administrator");
+                    await userManager.AddToRoleAsync(newUser, "Administrator");
                 }
             }
         }

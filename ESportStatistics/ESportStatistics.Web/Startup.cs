@@ -62,8 +62,6 @@ namespace ESportStatistics.Web
 
             app.UseNotFoundExceptionHandler();
 
-            app.UseInternalServerErrorExceptionHandler();
-
             app.UseStaticFiles();
 
             app.UseAuthentication();

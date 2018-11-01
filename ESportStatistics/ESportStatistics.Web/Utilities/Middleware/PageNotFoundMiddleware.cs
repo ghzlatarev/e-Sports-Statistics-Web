@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ESportStatistics.Services.Data.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Utilities.Middleware
 {
@@ -26,9 +24,9 @@ namespace ESportStatistics.Web.Utilities.Middleware
                     context.Response.Redirect("/404");
                 }
             }
-            catch (Exception)
+            catch (EntityNotFoundException ex)
             {
-                context.Response.Redirect("/500");
+                context.Response.Redirect("/404");
             }
         }
     }

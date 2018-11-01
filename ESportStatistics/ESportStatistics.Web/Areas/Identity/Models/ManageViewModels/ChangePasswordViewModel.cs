@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ESportStatistics.Web.Models.ManageViewModels
+namespace ESportStatistics.Web.Areas.Identity.ManageViewModels
 {
     public class ChangePasswordViewModel
     {

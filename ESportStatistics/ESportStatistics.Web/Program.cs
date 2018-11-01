@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web
 {
@@ -15,7 +16,7 @@ namespace ESportStatistics.Web
         {
             var host = BuildWebHost(args);
 
-            SeedData(host);
+            SeedData(host).GetAwaiter().GetResult();
             BuildWebHost(args).Run();
         }
 
@@ -24,7 +25,7 @@ namespace ESportStatistics.Web
                 .UseStartup<Startup>()
                 .Build();
 
-        private static void SeedData(IWebHost host)
+        private static async Task SeedData(IWebHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -33,7 +34,7 @@ namespace ESportStatistics.Web
                 {
                     var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var _roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    IdentityDataInitializer.SeedData(_userManager, _roleManager);
+                    await IdentityDataInitializer.SeedDataAsync(_userManager, _roleManager);
                 }
                 catch (Exception ex)
                 {

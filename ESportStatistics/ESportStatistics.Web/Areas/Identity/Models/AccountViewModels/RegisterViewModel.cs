@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ESportStatistics.Web.Models.AccountViewModels
+namespace ESportStatistics.Web.Areas.Identity.AccountViewModels
 {
     public class RegisterViewModel
     {

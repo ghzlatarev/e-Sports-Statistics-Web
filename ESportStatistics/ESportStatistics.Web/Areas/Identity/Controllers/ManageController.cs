@@ -1,6 +1,6 @@
 ﻿using ESportStatistics.Core.Providers.Contracts;
 using ESportStatistics.Data.Models.Identity;
-using ESportStatistics.Web.Models.ManageViewModels;
+using ESportStatistics.Web.Areas.Identity.ManageViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +9,11 @@ using System;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace ESportStatistics.Web.Controllers
+namespace ESportStatistics.Web.Areas.Identity.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
+    [Area("Identity")]
+    [Route("Identity/[controller]/[action]")]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
