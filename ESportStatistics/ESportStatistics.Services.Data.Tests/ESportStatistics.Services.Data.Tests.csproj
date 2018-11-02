@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ChampionsServiceTests\**" />
+    <EmbeddedResource Remove="ChampionsServiceTests\**" />
+    <None Remove="ChampionsServiceTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="Moq" Version="4.10.0" />
@@ -15,10 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ChampionsServiceTests\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj" />
     <ProjectReference Include="..\ESportStatistics.Services.Data\ESportStatistics.Services.Data.csproj" />
   </ItemGroup>
 
