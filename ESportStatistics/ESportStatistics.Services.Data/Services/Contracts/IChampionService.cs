@@ -1,4 +1,5 @@
 ﻿using ESportStatistics.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,9 +11,9 @@ namespace ESportStatistics.Core.Services.Contracts
 
         Task<Champion> AddChampionAsync(string name);
 
-        Task<Champion> DeleteChampionAsync(string name);
+        Task<Champion> DeleteChampionAsync(Guid Id);
 
-        Task<Champion> RestoreChampionAsync(string name);
+        Task<Champion> RestoreChampionAsync(Guid Id);
 
         Task RebaseChampionsAsync(string accessToken);
     }

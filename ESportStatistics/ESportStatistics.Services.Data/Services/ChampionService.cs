@@ -54,12 +54,11 @@ namespace ESportStatistics.Core.Services
             return champion;
         }
 
-        public async Task<Champion> DeleteChampionAsync(string name)
+        public async Task<Champion> DeleteChampionAsync(Guid Id)
         {
-            Validator.ValidateNull(name, "Champion name cannot be null!");
+            Validator.ValidateNull(Id, "Champion Id cannot be null!");
 
-            var champion = await this.dataContext.Champions
-                .SingleOrDefaultAsync(c => c.Name.Equals(name));
+            var champion = await this.dataContext.Champions.FindAsync(Id);
 
             Validator.ValidateNull(champion, "Invalid champion!");
 
@@ -74,12 +73,11 @@ namespace ESportStatistics.Core.Services
             return champion;
         }
 
-        public async Task<Champion> RestoreChampionAsync(string name)
+        public async Task<Champion> RestoreChampionAsync(Guid Id)
         {
-            Validator.ValidateNull(name, "Champion name cannot be null!");
+            Validator.ValidateNull(Id, "Champion Id cannot be null!");
 
-            var champion = await this.dataContext.Champions
-                .SingleOrDefaultAsync(c => c.Name.Equals(name));
+            var champion = await this.dataContext.Champions.FindAsync(Id);
 
             Validator.ValidateNull(champion, "Invalid champion!");
 
