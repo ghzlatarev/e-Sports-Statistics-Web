@@ -20,17 +20,28 @@ namespace ESportStatistics.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            this.Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
 
+        public IHostingEnvironment Environment { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-                 options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
+            if (Environment.IsDevelopment())
+            {
+                services.AddDbContext<DataContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
+            }
+            else
+            {
+                services.AddDbContext<DataContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("ProductionConnection")));
+            }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
