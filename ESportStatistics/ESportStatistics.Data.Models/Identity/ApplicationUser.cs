@@ -17,5 +17,7 @@ namespace ESportStatistics.Data.Models.Identity
 
         [DataType(DataType.DateTime)]
         public DateTime? DeletedOn { get; set; }
+        
+        public byte[] AvatarImage { get; set; }
     }
 }

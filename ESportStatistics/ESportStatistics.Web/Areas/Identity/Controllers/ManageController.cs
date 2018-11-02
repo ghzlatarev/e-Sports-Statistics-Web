@@ -1,11 +1,15 @@
-﻿using ESportStatistics.Core.Providers.Contracts;
-using ESportStatistics.Data.Models.Identity;
+﻿using ESportStatistics.Data.Models.Identity;
+using ESportStatistics.Services.Data.Services.Identity.Contracts;
 using ESportStatistics.Web.Areas.Identity.ManageViewModels;
+using ESportStatistics.Web.Utilities.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
@@ -17,7 +21,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IUserService _userService;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
 
@@ -27,13 +31,13 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
-          IEmailSender emailSender,
+          IUserService userService,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
+            _userService = userService;
             _logger = logger;
             _urlEncoder = urlEncoder;
         }
@@ -50,14 +54,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
-            };
+            var model = new IndexViewModel(user);
 
             return View(model);
         }
@@ -143,12 +140,59 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return RedirectToAction(nameof(ChangePassword));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Identity/[controller]/[action]")]
+        public async Task<IActionResult> Avatar(IFormFile avatarImage)
+        {
+            if (avatarImage == null)
+            {
+                this.StatusMessage = "Error: Please provide an image!";
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            if (!this.IsValidImage(avatarImage))
+            {
+                this.StatusMessage = "Error: Image is too large or incorrect forma!";
+                return this.RedirectToAction(nameof(Index));
+            }
+
+            await this._userService.SaveAvatarImageAsync(
+                avatarImage.OpenReadStream(),
+                this.User.GetId());
+
+            this.StatusMessage = "Profile image successfully updated.";
+
+            return this.RedirectToAction(nameof(Index));
+        }
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+        }
+
+        private bool IsValidImage(IFormFile image)
+        {
+            string type = image.ContentType;
+            /*Checks the format of the image/*/
+            if (type != "image/png" && type != "image/jpg" && type != "image/jpeg")
+            {
+                return false;
+            }
+
+            /*Checks if the file is smaller than 1 MB.*/
+            return image.Length < 1024 * 1024;
+        }
+
+        private string GetUploadRoot()
+        {
+            var environment = this.HttpContext.RequestServices
+                .GetService(typeof(IHostingEnvironment)) as IHostingEnvironment;
+
+            return Path.Combine(environment.WebRootPath, "images", "avatars");
         }
     }
 }

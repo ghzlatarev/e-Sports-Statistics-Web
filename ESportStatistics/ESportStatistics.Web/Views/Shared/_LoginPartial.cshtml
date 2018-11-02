@@ -1,10 +1,4 @@
-@using Microsoft.AspNetCore.Identity
-@using ESportStatistics.Web.Models
-
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-
-@if (SignInManager.IsSignedIn(User))
+@if (User.Identity.IsAuthenticated)
 {
     <li>
         <a asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage"><i class="fa fa-user fa-fw"></i>Profile</a>
