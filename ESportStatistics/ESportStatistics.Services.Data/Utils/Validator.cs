@@ -17,7 +17,7 @@ namespace ESportStatistics.Services.Data.Utils
         {
             if (value == null)
             {
-                throw new ArgumentException(message);
+                throw new ArgumentNullException(message);
             }
         }
 
