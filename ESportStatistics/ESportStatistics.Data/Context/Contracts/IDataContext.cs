@@ -33,7 +33,7 @@ namespace ESportStatistics.Data.Context.Contracts
 
         int SaveChanges();
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChangesAsync(bool applyDeletionRules, bool applyAuditInfoRules);
 
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 

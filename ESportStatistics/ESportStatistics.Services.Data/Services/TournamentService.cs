@@ -1,60 +1,57 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Core.Services
 {
     public class TournamentService : ITournamentService
     {
         public TournamentService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+            IPandaScoreClient pandaScoreClient,
+            DataContext dataContext)
         {
             this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
             this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
         private IDataHandler DataHandler { get; }
 
         private IPandaScoreClient PandaScoreClient { get; }
 
-        public IEnumerable<Tournament> FilterTournaments(string filter, int pageNumber = 1, int pageSize = 10)
+        private DataContext DataContext { get; }
+
+        public async Task <IEnumerable<Tournament>> FilterTournamentsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataHandler.Tournaments.All()
-                .Where(t => t.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
+            var query = await this.DataContext.Tournaments.AsQueryable()
+                .Where(t => t.Name.Contains(filter))
+                .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
             return query;
         }
 
-        public void RebaseTournaments()
+        public async Task RebaseTournamentsAsync(string accessToken)
         {
-            throw new NotImplementedException();
-            /*IEnumerable<Tournament> tournaments = PandaScoreClient
-                .GetEntities<Tournament>(apiUrl)
-                .Select(entity => entity as Tournament);
+            IEnumerable<Tournament> tournaments = await PandaScoreClient
+               .GetEntitiesParallel<Tournament>(accessToken, "tournaments");
 
-            foreach (var tournament in tournaments)
-            {
-                var temp = this.DataHandler.Tournaments.All()
-                    .SingleOrDefault(t => t.PandaScoreId.Equals(tournament.PandaScoreId));
+            IList<Tournament> dbTournaments = await this.DataContext.Tournaments.ToListAsync();
 
-                if (temp != null)
-                {
-                    this.DataHandler.Tournaments.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Tournaments.Add(tournament);
-                }
-            }
+            IList<Tournament> deleteList = dbTournaments.Where(t => tournaments.Any(pst => pst.PandaScoreId.Equals(t.PandaScoreId))).ToList();
 
-            this.DataHandler.SaveChanges();*/
+            this.DataContext.Tournaments.RemoveRange(deleteList);
+            await this.DataContext.Tournaments.AddRangeAsync(tournaments);
+
+            await this.DataContext.SaveChangesAsync(false);
         }
     }
 }

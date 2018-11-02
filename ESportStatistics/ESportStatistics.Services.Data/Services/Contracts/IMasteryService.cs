@@ -1,12 +1,13 @@
 ﻿using ESportStatistics.Data.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IMasteryService
     {
-        IEnumerable<Mastery> FilterMasteries(string filter, int pageNumber, int pageSize);
+        Task <IEnumerable<Mastery>> FilterMasteriesAsync(string filter, int pageNumber, int pageSize);
 
-        void RebaseMasteries();
+        Task RebaseMasteriesAsync(string accessToken);
     }
 }
