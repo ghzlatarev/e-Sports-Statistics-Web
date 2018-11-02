@@ -2,6 +2,7 @@
 using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,24 +14,20 @@ namespace ESportStatistics.Core.Services
 {
     public class SpellService : ISpellService
     {
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
         public SpellService(IDataHandler dataHandler,
             IPandaScoreClient pandaScoreClient,
             DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
-            this.DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
-
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        private DataContext DataContext { get; }
 
         public async Task <IEnumerable<Spell>> FilterSpellsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = await this.DataContext.Spells
+            var query = await this.dataContext.Spells
                 .Where(s => s.Name.Contains(filter))
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -41,17 +38,19 @@ namespace ESportStatistics.Core.Services
 
         public async Task RebaseSpellsAsync(string accessToken)
         {
-            IEnumerable<Spell> spells = await PandaScoreClient
+            Validator.ValidateNull(accessToken, "Empty access token!");
+
+            IEnumerable<Spell> spells = await this.pandaScoreClient
                .GetEntitiesParallel<Spell>(accessToken, "spells");
 
-            IList<Spell> dbSpells = await this.DataContext.Spells.ToListAsync();
+            IList<Spell> dbSpells = await this.dataContext.Spells.ToListAsync();
 
             IList<Spell> deleteList = dbSpells.Where(s => spells.Any(pss => pss.PandaScoreId.Equals(s.PandaScoreId))).ToList();
 
-            this.DataContext.Spells.RemoveRange(deleteList);
-            await this.DataContext.Spells.AddRangeAsync(spells);
+            this.dataContext.Spells.RemoveRange(deleteList);
+            await this.dataContext.Spells.AddRangeAsync(spells);
 
-            await this.DataContext.SaveChangesAsync(false);
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

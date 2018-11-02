@@ -1,10 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ESportStatistics.Services.Data.Exceptions
 {
-    class EntityIsAlreadyDeletedException
+    public class EntityAlreadyDeletedException : Exception
     {
+        public EntityAlreadyDeletedException()
+        {
+        }
+
+        public EntityAlreadyDeletedException(string message) : base(message)
+        {
+        }
     }
 }

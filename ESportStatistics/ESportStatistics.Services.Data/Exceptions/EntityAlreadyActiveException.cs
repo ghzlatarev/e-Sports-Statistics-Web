@@ -1,10 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ESportStatistics.Services.Data.Exceptions
 {
-    class EntityAlreadyActiveException
+    public class EntityAlreadyActiveException : Exception
     {
+        public EntityAlreadyActiveException()
+        {
+        }
+
+        public EntityAlreadyActiveException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }

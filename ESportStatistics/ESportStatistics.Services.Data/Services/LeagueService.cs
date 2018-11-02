@@ -1,7 +1,9 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
+using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,24 +15,18 @@ namespace ESportStatistics.Core.Services
 {
     public class LeagueService : ILeagueService
     {
-        public LeagueService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient,
-            DataContext dataContext)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public LeagueService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
-            this.DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
-
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        private DataContext DataContext { get; }
 
         public async Task<IEnumerable<League>> FilterLeaguesAsync(string filter, int pageNumber, int pageSize)
         {
-            var query = await this.DataContext.Leagues
+            var query = await this.dataContext.Leagues
                 .Where(t => t.Name.Contains(filter))
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -41,17 +37,19 @@ namespace ESportStatistics.Core.Services
 
         public async Task RebaseLeaguesAsync(string accessToken)
         {
-            IEnumerable<League> leagues = await PandaScoreClient
+            Validator.ValidateNull(accessToken, "Empty access token!");
+
+            IEnumerable<League> leagues = await this.pandaScoreClient
                 .GetEntitiesParallel<League>(accessToken, "leagues");
 
-            IList<League> dbLeagues = await this.DataContext.Leagues.ToListAsync();
+            IList<League> dbLeagues = await this.dataContext.Leagues.ToListAsync();
 
             IList<League> deleteList = dbLeagues.Where(l => leagues.Any(psl => psl.PandaScoreId.Equals(l.PandaScoreId))).ToList();
 
-            this.DataContext.Leagues.RemoveRange(deleteList);
-            await this.DataContext.Leagues.AddRangeAsync(leagues);
+            this.dataContext.Leagues.RemoveRange(deleteList);
+            await this.dataContext.Leagues.AddRangeAsync(leagues);
 
-            await this.DataContext.SaveChangesAsync(false);
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

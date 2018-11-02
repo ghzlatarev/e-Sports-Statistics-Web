@@ -9,19 +9,8 @@ namespace ESportStatistics.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IChampionService service;
-        private readonly IConfiguration configuration;
-
-        public HomeController(IConfiguration configuration, IChampionService service)
+        public IActionResult Index()
         {
-            this.service = service;
-            this.configuration = configuration;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            await this.service.RebaseChampionsAsync(configuration["PandaScoreAPIAccessToken"]);
-            await this.service.DeleteChampionAsync("Sion");
             return View();
         }
 

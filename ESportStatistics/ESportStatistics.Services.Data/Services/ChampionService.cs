@@ -1,8 +1,10 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
+using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.Data.Exceptions;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,24 +16,18 @@ namespace ESportStatistics.Core.Services
 {
     public class ChampionService : IChampionService
     {
-        public ChampionService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient,
-            DataContext dataContext)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public ChampionService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
-            this.DataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
-
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        private DataContext DataContext { get; }
 
         public async Task<IEnumerable<Champion>> FilterChampionsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = await this.DataContext.Champions
+            var query = await this.dataContext.Champions
                 .Where(t => t.Name.Contains(filter))
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
@@ -42,7 +38,9 @@ namespace ESportStatistics.Core.Services
 
         public async Task<Champion> AddChampionAsync(string name)
         {
-            if (await this.DataContext.Champions.AnyAsync(t => t.Name.Equals(name)))
+            Validator.ValidateNull(name, "Champion name cannot be null!");
+
+            if (await this.dataContext.Champions.AnyAsync(t => t.Name.Equals(name)))
             {
                 throw new EntityAlreadyExistsException("Champion already exists!");
             }
@@ -52,56 +50,70 @@ namespace ESportStatistics.Core.Services
                 Name = name
             };
 
-            this.DataContext.Champions.Add(champion);
-            await this.DataContext.SaveChangesAsync();
+            await this.dataContext.Champions.AddAsync(champion);
+            await this.dataContext.SaveChangesAsync();
 
             return champion;
         }
 
         public async Task<Champion> DeleteChampionAsync(string name)
         {
-            var champion = await this.DataContext.Champions
+            Validator.ValidateNull(name, "Champion name cannot be null!");
+
+            var champion = await this.dataContext.Champions
                 .SingleOrDefaultAsync(c => c.Name.Equals(name));
 
-            if (champion.IsDeleted == false)
+            Validator.ValidateNull(champion, "Invalid champion!");
+
+            if (champion.IsDeleted == true)
             {
-                this.DataContext.Champions.Remove(champion);
-                await this.DataContext.SaveChangesAsync();
+                throw new EntityAlreadyDeletedException();
             }
+
+            this.dataContext.Champions.Remove(champion);
+            await this.dataContext.SaveChangesAsync();
 
             return champion;
         }
 
         public async Task<Champion> RestoreChampionAsync(string name)
         {
-            var champion = await this.DataContext.Champions
+            Validator.ValidateNull(name, "Champion name cannot be null!");
+
+            var champion = await this.dataContext.Champions
                 .SingleOrDefaultAsync(c => c.Name.Equals(name));
 
-            if (champion.IsDeleted)
-            {
-                champion.IsDeleted = false;
-                champion.DeletedOn = null;
+            Validator.ValidateNull(champion, "Invalid champion!");
 
-                this.DataContext.Champions.Update(champion);
-                await this.DataContext.SaveChangesAsync();
+            if (champion.IsDeleted == false)
+            {
+                throw new EntityAlreadyActiveException();
             }
+
+            champion.IsDeleted = false;
+            champion.DeletedOn = null;
+
+            this.dataContext.Champions.Update(champion);
+            await this.dataContext.SaveChangesAsync();
 
             return champion;
         }
 
         public async Task RebaseChampionsAsync(string accessToken)
         {
-            IEnumerable<Champion> champions = await PandaScoreClient
+            Validator.ValidateNull(accessToken, "Empty access token!");
+
+            IEnumerable<Champion> champions = await this.pandaScoreClient
                 .GetEntitiesParallel<Champion>(accessToken, "champions");
 
-            IList<Champion> dbChampions = await this.DataContext.Champions.ToListAsync();
+            IList<Champion> dbChampions = await this.dataContext.Champions.ToListAsync();
 
             IList<Champion> deleteList = dbChampions.Where(c => champions.Any(psc => psc.PandaScoreId.Equals(c.PandaScoreId))).ToList();
 
-            this.DataContext.Champions.RemoveRange(deleteList);
-            await this.DataContext.Champions.AddRangeAsync(champions);
+            this.dataContext.Champions.RemoveRange(deleteList);
+            await this.dataContext.Champions.AddRangeAsync(champions);
 
-            await this.DataContext.SaveChangesAsync(false);
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }
