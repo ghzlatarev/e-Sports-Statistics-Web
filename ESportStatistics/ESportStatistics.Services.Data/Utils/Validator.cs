@@ -19,6 +19,13 @@ namespace ESportStatistics.Services.Data.Utils
                 throw new ArgumentException(message);
             }
         }
+        public static void ValidateMinRange(int value, string message)
+        {
+            if (value < 1)
+            {
+                throw new ArgumentException(message);
+            }
+        }
         public static void ValidateSymbol(string value, string pattern, string message)
         {
             var regex = new Regex(pattern, RegexOptions.IgnoreCase);
