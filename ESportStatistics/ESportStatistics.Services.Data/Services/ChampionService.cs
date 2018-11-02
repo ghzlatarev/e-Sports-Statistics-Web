@@ -29,21 +29,20 @@ namespace ESportStatistics.Core.Services
 
         private DataContext DataContext { get; }
 
-        public IEnumerable<Champion> FilterChampions(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Champion>> FilterChampionsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataContext.Champions.AsQueryable()
-                .Where(t => t.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
+            var query = await this.DataContext.Champions
+                .Where(t => t.Name.Contains(filter))
+                .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
             return query;
         }
 
-        public Champion AddChampion(string name)
+        public async Task<Champion> AddChampionAsync(string name)
         {
-            if (this.DataContext.Champions.AsQueryable().Any(
-                t => t.Name.Equals(name)))
+            if (await this.DataContext.Champions.AnyAsync(t => t.Name.Equals(name)))
             {
                 throw new EntityAlreadyExistsException("Champion already exists!");
             }
@@ -54,29 +53,29 @@ namespace ESportStatistics.Core.Services
             };
 
             this.DataContext.Champions.Add(champion);
-            this.DataContext.SaveChanges();
+            await this.DataContext.SaveChangesAsync();
 
             return champion;
         }
 
-        public Champion DeleteChampion(string name)
+        public async Task<Champion> DeleteChampionAsync(string name)
         {
-            var champion = this.DataContext.Champions.AsQueryable()
-                .SingleOrDefault(c => c.Name.Equals(name));
+            var champion = await this.DataContext.Champions
+                .SingleOrDefaultAsync(c => c.Name.Equals(name));
 
-            if (!champion.IsDeleted)
+            if (champion.IsDeleted == false)
             {
                 this.DataContext.Champions.Remove(champion);
-                this.DataContext.SaveChanges();
+                await this.DataContext.SaveChangesAsync();
             }
 
             return champion;
         }
 
-        public Champion RestoreChampion(string name)
+        public async Task<Champion> RestoreChampionAsync(string name)
         {
-            var champion = this.DataContext.Champions.AsQueryable()
-                .SingleOrDefault(c => c.Name.Equals(name));
+            var champion = await this.DataContext.Champions
+                .SingleOrDefaultAsync(c => c.Name.Equals(name));
 
             if (champion.IsDeleted)
             {
@@ -84,13 +83,13 @@ namespace ESportStatistics.Core.Services
                 champion.DeletedOn = null;
 
                 this.DataContext.Champions.Update(champion);
-                this.DataContext.SaveChanges();
+                await this.DataContext.SaveChangesAsync();
             }
 
             return champion;
         }
 
-        public async Task RebaseChampions(string accessToken)
+        public async Task RebaseChampionsAsync(string accessToken)
         {
             IEnumerable<Champion> champions = await PandaScoreClient
                 .GetEntitiesParallel<Champion>(accessToken, "champions");

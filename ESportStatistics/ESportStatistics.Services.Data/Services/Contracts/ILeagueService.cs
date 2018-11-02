@@ -6,8 +6,8 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface ILeagueService
     {
-        IEnumerable<League> FilterLeagues(string filter, int pageNumber, int pageSize);
+        Task<IEnumerable<League>> FilterLeaguesAsync(string filter, int pageNumber, int pageSize);
 
-        Task RebaseLeagues(string accessToken);
+        Task RebaseLeaguesAsync(string accessToken);
     }
 }

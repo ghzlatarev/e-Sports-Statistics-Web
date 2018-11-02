@@ -28,18 +28,18 @@ namespace ESportStatistics.Core.Services
 
         private DataContext DataContext { get; }
 
-        public IEnumerable<Team> FilterTeams(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task <IEnumerable<Team>> FilterTeamsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataContext.Teams.AsQueryable()
-                .Where(i => i.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
+            var query = await this.DataContext.Teams
+                .Where(i => i.Name.Contains(filter))
+                .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
             return query;
         }
 
-        public async Task RebaseTeams(string accessToken)
+        public async Task RebaseTeamsAsync(string accessToken)
         {
             IEnumerable<Team> teams = await PandaScoreClient
                .GetEntitiesParallel<Team>(accessToken, "teams");
@@ -51,7 +51,7 @@ namespace ESportStatistics.Core.Services
             this.DataContext.Teams.RemoveRange(deleteList);
             await this.DataContext.Teams.AddRangeAsync(teams);
 
-            await this.DataContext.SaveChangesAsync();
+            await this.DataContext.SaveChangesAsync(false);
         }
     }
 }

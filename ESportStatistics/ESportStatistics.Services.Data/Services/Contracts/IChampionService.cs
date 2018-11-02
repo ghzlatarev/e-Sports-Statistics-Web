@@ -6,14 +6,14 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IChampionService
     {
-        IEnumerable<Champion> FilterChampions(string filter, int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Champion>> FilterChampionsAsync(string filter, int pageNumber = 1, int pageSize = 10);
 
-        Champion AddChampion(string name);
+        Task<Champion> AddChampionAsync(string name);
 
-        Champion DeleteChampion(string name);
+        Task<Champion> DeleteChampionAsync(string name);
 
-        Champion RestoreChampion(string name);
+        Task<Champion> RestoreChampionAsync(string name);
 
-        Task RebaseChampions(string accessToken);
+        Task RebaseChampionsAsync(string accessToken);
     }
 }

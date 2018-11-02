@@ -6,8 +6,8 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface ISeriesService
     {
-        IEnumerable<Serie> FilterSeries(string filter, int pageNumber, int pageSize);
+        Task <IEnumerable<Serie>> FilterSeriesAsync(string filter, int pageNumber, int pageSize);
 
-        Task RebaseSeries(string accessToken);
+        Task RebaseSeriesAsync(string accessToken);
     }
 }

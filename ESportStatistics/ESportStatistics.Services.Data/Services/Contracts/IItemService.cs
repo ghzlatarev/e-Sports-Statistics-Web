@@ -6,8 +6,8 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IItemService
     {
-        IEnumerable<Item> FilterItems(string filter, int pageNumber, int pageSize);
+        Task<IEnumerable<Champion>> FilterItemsAsync(string filter, int pageNumber = 1, int pageSize = 10);
 
-        Task RebaseItems(string accessToken);
+        Task RebaseItemsAsync(string accessToken);
     }
 }
