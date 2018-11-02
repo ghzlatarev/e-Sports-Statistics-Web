@@ -6,8 +6,8 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IPlayerService
     {
-        IEnumerable<Player> FilterPlayers(string filter, int pageNumber, int pageSize);
+        Task <IEnumerable<Player>> FilterPlayersAsync(string filter, int pageNumber, int pageSize);
 
-        Task RebasePlayers(string accessToken);
+        Task RebasePlayersAsync(string accessToken);
     }
 }

@@ -6,8 +6,8 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface ISpellService
     {
-        IEnumerable<Spell> FilterSpells(string filter, int pageNumber, int pageSize);
+        Task <IEnumerable<Spell>> FilterSpellsAsync(string filter, int pageNumber, int pageSize);
 
-        Task RebaseSpells(string accessToken);
+        Task RebaseSpellsAsync(string accessToken);
     }
 }

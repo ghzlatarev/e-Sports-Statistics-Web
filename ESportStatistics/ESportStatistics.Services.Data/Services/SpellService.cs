@@ -28,18 +28,18 @@ namespace ESportStatistics.Core.Services
 
         private DataContext DataContext { get; }
 
-        public IEnumerable<Spell> FilterSpells(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task <IEnumerable<Spell>> FilterSpellsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataContext.Spells.AsQueryable()
-                .Where(s => s.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
+            var query = await this.DataContext.Spells
+                .Where(s => s.Name.Contains(filter))
+                .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
             return query;
         }
 
-        public async Task RebaseSpells(string accessToken)
+        public async Task RebaseSpellsAsync(string accessToken)
         {
             IEnumerable<Spell> spells = await PandaScoreClient
                .GetEntitiesParallel<Spell>(accessToken, "spells");
@@ -51,7 +51,7 @@ namespace ESportStatistics.Core.Services
             this.DataContext.Spells.RemoveRange(deleteList);
             await this.DataContext.Spells.AddRangeAsync(spells);
 
-            await this.DataContext.SaveChangesAsync();
+            await this.DataContext.SaveChangesAsync(false);
         }
     }
 }
