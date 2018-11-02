@@ -22,7 +22,7 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task <IEnumerable<Team>> FilterTeamsAsync(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Team>> FilterTeamsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
             var query = await this.dataContext.Teams
                 .Where(i => i.Name.Contains(filter))

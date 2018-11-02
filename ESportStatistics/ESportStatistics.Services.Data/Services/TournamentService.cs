@@ -1,7 +1,6 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +22,7 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task <IEnumerable<Tournament>> FilterTournamentsAsync(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Tournament>> FilterTournamentsAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
             var query = await this.dataContext.Tournaments.AsQueryable()
                 .Where(t => t.Name.Contains(filter))

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ESportStatistics.Core.Services.Contracts
 {
-    public interface ISeriesService
+    public interface ISerieService
     {
         Task <IEnumerable<Serie>> FilterSeriesAsync(string filter, int pageNumber, int pageSize);
 

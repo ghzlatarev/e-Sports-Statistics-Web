@@ -4,8 +4,6 @@ using ESportStatistics.Core.Services;
 using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models.Identity;
-using ESportStatistics.Data.Repository.DataHandler;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.Data.Services.Identity;
 using ESportStatistics.Services.Data.Services.Identity.Contracts;
 using ESportStatistics.Services.External;
@@ -41,9 +39,6 @@ namespace ESportStatistics.Web
             services.AddScoped<HttpClient>();
             services.AddScoped<IPandaScoreClient, PandaScoreClient>();
 
-            //Depricated!
-            services.AddScoped<IDataHandler, DataHandler>();
-
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IChampionService, ChampionService>();
@@ -53,6 +48,8 @@ namespace ESportStatistics.Web
             services.AddScoped<IMatchService, MatchService>();
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<ISerieService, SerieService>();
+            services.AddScoped<ISpellService, SpellService>();
             services.AddScoped<ITournamentService, TournamentService>();
 
             services.AddScoped<IEmailSender, EmailSender>();

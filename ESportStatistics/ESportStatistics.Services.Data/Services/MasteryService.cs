@@ -1,8 +1,6 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
-using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
 using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
