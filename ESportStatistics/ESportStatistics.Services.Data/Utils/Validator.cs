@@ -12,6 +12,7 @@ namespace ESportStatistics.Services.Data.Utils
                 throw new ArgumentException(message);
             }
         }
+
         public static void ValidateNull(Object value, string message)
         {
             if (value == null)
@@ -19,13 +20,15 @@ namespace ESportStatistics.Services.Data.Utils
                 throw new ArgumentException(message);
             }
         }
-        public static void ValidateMinRange(int value, string message)
+
+        public static void ValidateMinRange(int value, int min, string message)
         {
-            if (value < 1)
+            if (value < min)
             {
                 throw new ArgumentException(message);
             }
         }
+
         public static void ValidateSymbol(string value, string pattern, string message)
         {
             var regex = new Regex(pattern, RegexOptions.IgnoreCase);
