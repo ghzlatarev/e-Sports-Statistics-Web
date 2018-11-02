@@ -21,7 +21,7 @@ It contains **core information** about the game itself as well as data for **pro
   - Create PDF reports of various statistics
 
 - The system contains two types of users.
-  - **Standart user** : Is limited to only **viewing** the content.
+  - **Standard user** : Is limited to only **viewing** the content.
   - **Administrator user** : Has access to all statistics including modifing the data.The admin also has access to **most** of the standart user account information 
   including the ability to disable , enable or modify user credentials(including **user type**).
   
@@ -29,19 +29,27 @@ It contains **core information** about the game itself as well as data for **pro
   - To be completed withing 80 work hours (at least 25 hours of testing)
   - Tech : 
     - .NET Core 
+    - ASP.NET Core
     - Microsoft SQL Server
     - Entity Framework
     - MSTest 
     - MOQ
+    - MS InMemory
+    - AJAX
+    - Rest
+    - Bootstrap
+    - JavaScript
   - External Tools : 
     - Trello  
     - SSMS
     - GitLab
+    - Azure
+    - Superhosting.bg
   - Techniques : 
     - DIContainer
-    - Command pattern
     - Code First Approach
     - SOLID
-    - CRUD 
-    - **Optionally** use Repository pattern or Service layer
+    - MVC
+    - InMemory Testing
+    - Unit Testing
   - User Interface(Console)
