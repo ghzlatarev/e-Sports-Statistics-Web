@@ -6,7 +6,7 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IMatchService
     {
-        Task <IEnumerable<Match>> FilterMatchesAsync(string filter, int pageNumber, int pageSize);
+        Task<IEnumerable<Match>> FilterMatchesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10);
 
         Task RebaseMatchesAsync(string accessToken);
     }

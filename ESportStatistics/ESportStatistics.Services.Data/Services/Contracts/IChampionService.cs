@@ -7,7 +7,7 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IChampionService
     {
-        Task<IEnumerable<Champion>> FilterChampionsAsync(string filter, int pageNumber = 1, int pageSize = 10);
+        Task<IEnumerable<Champion>> FilterChampionsAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10);
 
         Task<Champion> AddChampionAsync(string name);
 

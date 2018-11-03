@@ -129,6 +129,12 @@ namespace ESportStatistics.Web
                     template: "changepassword",
                     defaults: new { controller = "Manage", action = "ChangePassword" });
 
+                routes.MapAreaRoute(
+                    name: "users",
+                    areaName: "Administration",
+                    template: "users",
+                    defaults: new { controller = "User", action = "Index" });
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

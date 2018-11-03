@@ -54,7 +54,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel(user);
+            var model = new IndexViewModel(user, StatusMessage);
 
             return View(model);
         }

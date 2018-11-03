@@ -22,7 +22,7 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task<IEnumerable<Match>> FilterMatchesAsync(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Match>> FilterMatchesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");

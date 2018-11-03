@@ -6,7 +6,7 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IMasteryService
     {
-        Task <IEnumerable<Mastery>> FilterMasteriesAsync(string filter, int pageNumber, int pageSize);
+        Task<IEnumerable<Mastery>> FilterMasteriesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10);
 
         Task RebaseMasteriesAsync(string accessToken);
     }

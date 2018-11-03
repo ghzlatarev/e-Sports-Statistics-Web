@@ -15,6 +15,8 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
     </environment>
+
+    @RenderSection("DataTableStyles", required: false)
 </head>
 <body>
     <div id="wrapper">
@@ -126,6 +128,7 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
+    @RenderSection("DataTableScripts", required: false)
 </body>
 </html>
 

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Shared\_ThemeDataTablesScriptsPartial.cshtml" />
+    <Content Remove="Views\Shared\_ThemeDataTablesStylesPartial.cshtml" />
     <Content Remove="Views\Shared\_ThemeScriptsPartial.cshtml" />
   </ItemGroup>
 
@@ -30,11 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Identity\Views\Shared\" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Shared\_ThemeDataTablesScriptsPartial.cshtml" />
+    <None Include="Views\Shared\_ThemeDataTablesStylesPartial.cshtml" />
     <None Include="Views\Shared\_ThemeScriptsPartial.cshtml" />
   </ItemGroup>
 
