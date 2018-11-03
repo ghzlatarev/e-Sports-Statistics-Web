@@ -6,29 +6,6 @@
 <h4>@ViewData["Title"]</h4>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
-<div class="row form-group">
-    <div class="col-md-6">
-        @{
-            if (Model.AvatarImage != null)
-            {
-                var base64 = Convert.ToBase64String(Model.AvatarImage);
-                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                <img src="@imgSrc" class="manage-avatar-image img-thumbnail" alt="Default avatar" />
-            }
-            else
-            {
-                <img src="~/images/default-profile.png" class="manage-avatar-image img-thumbnail" alt="Default avatar" />
-            }
-        }
-
-    </div>
-</div>
-<div class="row form-group">
-    <div class="col-md-6">
-        <button class="p2 btn btn-primary" data-toggle="modal" data-target="#upload-modal">Change profile picture</button>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-md-6">
         <form method="post">
@@ -43,34 +20,6 @@
     </div>
 </div>
 
-@*upload modal*@
-<div id="upload-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <form asp-area="Identity" asp-controller="Manage" asp-action="Avatar" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <label class="avatar-upload-label">
-                        Drag or click to upload..
-                        <input type="file" name="AvatarImage" />
-                    </label>
-                    <img class="img-rounded avatar-img-preview hidden" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="remove-img" class="btn btn-danger">Discard</button>
-                    <button type="submit" class="btn btn-success">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    <script src="~/js/upload.js"></script>
-}
-
-
 <div class="row">
     <div class="col-md-8">
         <div class="card">
@@ -78,66 +27,76 @@
                 <h5 class="title">Edit Profile</h5>
             </div>
             <div class="card-body">
-                <form>
+                <form method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="row">
                         <div class="col-md-5 pr-md-1">
                             <div class="form-group">
-                                <label>Company (disabled)</label>
-                                <input type="text" class="form-control" disabled="" placeholder="Company" value="Creative Code Inc.">
+                                <label asp-for="Email"></label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="mike@email.com" value="@Model.Email">
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3 px-md-1">
                             <div class="form-group">
-                                <label>Username</label>
-                                <input type="text" class="form-control" placeholder="Username" value="michael23">
+                                <label asp-for="Username"></label>
+                                <input asp-for="Username" type="text" class="form-control" placeholder="Username" value="@Model.Username">
+                                <span asp-validation-for="Username" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4 pl-md-1">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" placeholder="mike@email.com">
+                                <label asp-for="PhoneNumber"></label>
+                                <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Phone Number" value="@Model.PhoneNumber">
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
-                                <label>First Name</label>
-                                <input type="text" class="form-control" placeholder="Company" value="Mike">
+                                <label asp-for="FirstName"></label>
+                                <input asp-for="FirstName" type="text" class="form-control" placeholder="FirstName" value="@Model.FirstName">
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6 pl-md-1">
                             <div class="form-group">
-                                <label>Last Name</label>
-                                <input type="text" class="form-control" placeholder="Last Name" value="Andrew">
+                                <label asp-for="LastName"></label>
+                                <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" value="@Model.LastName">
+                                <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Address</label>
-                                <input type="text" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
+                                <label asp-for="Address"></label>
+                                <input asp-for="Address" type="text" class="form-control" placeholder="Home Address" value="@Model.Address">
+                                <span asp-validation-for="Address" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4 pr-md-1">
                             <div class="form-group">
-                                <label>City</label>
-                                <input type="text" class="form-control" placeholder="City" value="Mike">
+                                <label asp-for="City"></label>
+                                <input asp-for="City" type="text" class="form-control" placeholder="City" value="@Model.City">
+                                <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4 px-md-1">
                             <div class="form-group">
-                                <label>Country</label>
-                                <input type="text" class="form-control" placeholder="Country" value="Andrew">
+                                <label asp-for="Country"></label>
+                                <input asp-for="Country" type="text" class="form-control" placeholder="Country" value="@Model.Country">
+                                <span asp-validation-for="Country" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4 pl-md-1">
                             <div class="form-group">
-                                <label>Postal Code</label>
-                                <input type="number" class="form-control" placeholder="ZIP Code">
+                                <label asp-for="PostalCode"></label>
+                                <input asp-for="PostalCode" type="number" class="form-control" placeholder="ZIP Code" value="@Model.PostalCode">
+                                <span asp-validation-for="Country" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -145,14 +104,17 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>About Me</label>
-                                <textarea rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="Mike">Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</textarea>
+                                <textarea asp-for="Story" rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="@Model.Story"></textarea>
+                                <span asp-validation-for="Story" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Save</button>
+            <div class="card-footer" data-color="blue">
+                <button type="submit" class="btn btn-fill">Save</button>
+
+                <a asp-area="Identity" asp-controller="Manage" asp-action="ChangePassword" class="btn btn-fill">Change password</a>
             </div>
         </div>
     </div>
@@ -166,30 +128,66 @@
                         <div class="block block-three"></div>
                         <div class="block block-four"></div>
                         <a href="javascript:void(0)">
-                            <img class="avatar" src="~/theme/img/emilyz.jpg" alt="...">
-                            <h5 class="title">Mike Andrew</h5>
+                            @{
+                                if (Model.AvatarImage != null)
+                                {
+                                    var base64 = Convert.ToBase64String(Model.AvatarImage);
+                                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                    <img src="@imgSrc" class="avatar" alt="Default avatar" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/default-profile.png" class="avatar" alt="Default avatar" />
+                                }
+                            }
+                            <h5 class="title">@Model.Username</h5>
                         </a>
-                <p class="description">
-                    Ceo/Co-Founder
+                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#upload-modal">Change profile picture</button>
+                    </div>
                 </p>
+                <div class="card-description">
+                    Do not be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                </div>
             </div>
-            </p>
-            <div class="card-description">
-                Do not be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="button-container">
-                <button href="javascript:void(0)" class="btn btn-icon btn-round btn-facebook">
-                    <i class="fab fa-facebook"></i>
-                </button>
-                <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
-                    <i class="fab fa-twitter"></i>
-                </button>
-                <button href="javascript:void(0)" class="btn btn-icon btn-round btn-google">
-                    <i class="fab fa-google-plus"></i>
-                </button>
+            <div class="card-footer">
+                <div class="button-container">
+                    <button href="javascript:void(0)" class="btn btn-icon btn-round btn-facebook">
+                        <i class="fab fa-facebook"></i>
+                    </button>
+                    <button href="javascript:void(0)" class="btn btn-icon btn-round btn-twitter">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button href="javascript:void(0)" class="btn btn-icon btn-round btn-google">
+                        <i class="fab fa-google-plus"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    @*upload modal*@
+    <div id="upload-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form asp-area="Identity" asp-controller="Manage" asp-action="Avatar" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <label class="avatar-upload-label">
+                            Drag or click to upload..
+                            <input type="file" name="AvatarImage" />
+                        </label>
+                        <img class="img-rounded avatar-img-preview hidden" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="remove-img" class="btn btn-danger">Discard</button>
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+        <script src="~/js/upload.js"></script>
+    }

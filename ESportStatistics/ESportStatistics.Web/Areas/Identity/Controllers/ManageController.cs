@@ -94,6 +94,8 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
                 }
             }
 
+            await _userManager.UpdateAsync(user);
+
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
         }
@@ -137,7 +139,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Your password has been changed.";
 
-            return RedirectToAction(nameof(ChangePassword));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]

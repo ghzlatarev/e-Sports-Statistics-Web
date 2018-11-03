@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Identity\Views\Shared\**" />
+    <Content Remove="Areas\Identity\Views\Shared\**" />
+    <EmbeddedResource Remove="Areas\Identity\Views\Shared\**" />
+    <None Remove="Areas\Identity\Views\Shared\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Views\Shared\_FooterPartial.cshtml" />
   </ItemGroup>
 
@@ -27,10 +34,6 @@
     <ProjectReference Include="..\ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj" />
     <ProjectReference Include="..\ESportStatistics.Data\ESportStatistics.Data.csproj" />
     <ProjectReference Include="..\ESportStatistics.Services.Data\ESportStatistics.Services.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Identity\Views\Shared\" />
   </ItemGroup>
 
   <ItemGroup>
