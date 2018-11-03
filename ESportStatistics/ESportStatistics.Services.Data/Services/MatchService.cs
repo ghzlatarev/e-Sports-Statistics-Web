@@ -24,8 +24,8 @@ namespace ESportStatistics.Core.Services
 
         public async Task<IEnumerable<Match>> FilterMatchesAsync(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            Validator.ValidateMinRange(pageNumber, 0, "Page number must be a positive integer!");
-            Validator.ValidateMinRange(pageSize, 0, "Page size must be a positive integer!");
+            Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
+            Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
             var query = await this.dataContext.Matches
                 .Where(m => m.Name.Contains(filter))

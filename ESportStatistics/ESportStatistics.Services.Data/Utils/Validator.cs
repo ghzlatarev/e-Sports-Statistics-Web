@@ -9,7 +9,7 @@ namespace ESportStatistics.Services.Data.Utils
         {
             if (value < min || value > max)
             {
-                throw new ArgumentException(message);
+                throw new ArgumentOutOfRangeException(message);
             }
         }
 
@@ -25,7 +25,7 @@ namespace ESportStatistics.Services.Data.Utils
         {
             if (value < min)
             {
-                throw new ArgumentException(message);
+                throw new ArgumentOutOfRangeException(message);
             }
         }
 

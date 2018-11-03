@@ -1,56 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services;
+﻿using ESportStatistics.Core.Services;
 using ESportStatistics.Data.Context;
 using ESportStatistics.Services.External;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
 {
     [TestClass]
-    public class FilterSeriesAsync_Should
+    public class FilterPlayersAsync_Should
     {
-        [TestMethod]
-        public async Task ThrowException_WhenPassedInvalidPageSize()
+        [DataTestMethod]
+        [DataRow(0)]
+        [DataRow(-10)]
+        public async Task ThrowArgumentOutOfRangeException_WhenPassedInvalidPageNumber(int invalidPageNumber)
         {
             // Arrange
             Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
             Mock<DataContext> dataContextMock = new Mock<DataContext>();
 
-            string validFilter = "testPlayer";
-            int invalidPageSize = -1;
+            string validFilter = It.IsAny<string>();
+            int validPageSize = 10;
+
+            PlayerService SUT = new PlayerService(
+                pandaScoreClientMock.Object,
+                dataContextMock.Object);
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(
+                () => SUT.FilterPlayersAsync(validFilter, invalidPageNumber, validPageSize));
+        }
+
+        [DataTestMethod]
+        [DataRow(-1)]
+        [DataRow(-10)]
+        public async Task ThrowArgumentOutOfRangeException_WhenPassedInvalidPageSize(int invalidPageSize)
+        {
+            // Arrange
+            Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+            Mock<DataContext> dataContextMock = new Mock<DataContext>();
+
+            string validFilter = It.IsAny<string>();
             int validPageNumber = 1;
 
             PlayerService SUT = new PlayerService(
-                    pandaScoreClientMock.Object,
-                    dataContextMock.Object);
+                pandaScoreClientMock.Object,
+                dataContextMock.Object);
 
             // Act & Assert
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                    () => SUT.FilterPlayersAsync(validFilter, validPageNumber, invalidPageSize));
-        }
-
-        [TestMethod]
-        public async Task ThrowException_WhenPassedInvalidPageNumber()
-        {
-            // Arrange
-            Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
-            Mock<DataContext> dataContextMock = new Mock<DataContext>();
-
-            string validFilter = "testPlayer";
-            int validPageSize = 10;
-            int invalidPageNumber = -1;
-
-            PlayerService SUT = new PlayerService(
-                    pandaScoreClientMock.Object,
-                    dataContextMock.Object);
-
-            // Act & Assert
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                    () => SUT.FilterPlayersAsync(validFilter, invalidPageNumber, validPageSize));
+            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(
+                () => SUT.FilterPlayersAsync(validFilter, validPageNumber, invalidPageSize));
         }
     }
 }

@@ -6,10 +6,10 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 
-namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
+namespace ESportStatistics.Services.Data.Tests.LeagueServiceTests
 {
     [TestClass]
-    public class FilterTournamentsAsync_Should
+    public class FilterLeaguesAsync_Should
     {
         [DataTestMethod]
         [DataRow(0)]
@@ -23,13 +23,13 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
             string validFilter = It.IsAny<string>();
             int validPageSize = 10;
 
-            TournamentService SUT = new TournamentService(
+            LeagueService SUT = new LeagueService(
                 pandaScoreClientMock.Object,
                 dataContextMock.Object);
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(
-                () => SUT.FilterTournamentsAsync(validFilter, invalidPageNumber, validPageSize));
+                () => SUT.FilterLeaguesAsync(validFilter, invalidPageNumber, validPageSize));
         }
 
         [DataTestMethod]
@@ -44,13 +44,13 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
             string validFilter = It.IsAny<string>();
             int validPageNumber = 1;
 
-            TournamentService SUT = new TournamentService(
+            LeagueService SUT = new LeagueService(
                 pandaScoreClientMock.Object,
                 dataContextMock.Object);
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(
-                () => SUT.FilterTournamentsAsync(validFilter, validPageNumber, invalidPageSize));
+                () => SUT.FilterLeaguesAsync(validFilter, validPageNumber, invalidPageSize));
         }
     }
 }
