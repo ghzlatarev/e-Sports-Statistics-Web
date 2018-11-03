@@ -94,6 +94,14 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
                 }
             }
 
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Address = model.Address;
+            user.City = model.City;
+            user.Country = model.Country;
+            user.PostalCode = model.PostalCode;
+            user.Story = model.Story;
+
             await _userManager.UpdateAsync(user);
 
             StatusMessage = "Your profile has been updated";
