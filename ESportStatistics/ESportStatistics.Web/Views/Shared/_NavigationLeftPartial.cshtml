@@ -21,11 +21,8 @@
                     <p>About us</p>
                 </a>
             </li>
-            <li class="active-pro">
-                <a href="./upgrade.html">
-                    <i class="tim-icons icon-spaceship"></i>
-                    <p>Upgrade to PRO</p>
-                </a>
+            <li class="dropdown nav-item">
+                @await Html.PartialAsync("_StatisticsPartial")
             </li>
         </ul>
     </div>
