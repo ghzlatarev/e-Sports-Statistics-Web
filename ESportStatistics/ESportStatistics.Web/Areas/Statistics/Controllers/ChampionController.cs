@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
     [Authorize]
-    [Area("Identity")]
+    [Area("Statistics")]
     [Authorize(Roles = "User")]
     [Route("[controller]/[action]")]
     public class ChampionController : Controller
@@ -27,19 +27,17 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+         [HttpGet]
+        public IActionResult Index()
         {
-            
-            var model = new ChampionViewModel
-            { 
+            //var model = new ChampionViewModel
             //{
-            //    PhoneNumber = user.PhoneNumber,
-            //    ImageUrl = user.AvatarImageName,
-            //    StatusMessage = StatusMessage
-            };
-
-            return this.View(model);
+            //    //{
+            //    //    PhoneNumber = user.PhoneNumber,
+            //    //    ImageUrl = user.AvatarImageName,
+            //    //    StatusMessage = StatusMessage
+            //};
+            return this.View();
         }
 
     }
