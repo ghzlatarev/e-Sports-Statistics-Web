@@ -154,6 +154,34 @@ namespace ESportStatistics.Web
                   defaults: new { controller = "League", action = "Index" });
 
 
+                routes.MapAreaRoute(
+                  name: "mastery",
+                  areaName: "Identity",
+                  template: "mastery",
+                  defaults: new { controller = "Mastery", action = "Index" });
+
+
+                routes.MapAreaRoute(
+                  name: "Match",
+                  areaName: "Identity",
+                  template: "match",
+                  defaults: new { controller = "Match", action = "Index" });
+
+
+                routes.MapAreaRoute(
+                  name: "player",
+                  areaName: "Identity",
+                  template: "player",
+                  defaults: new { controller = "Player", action = "Index" });
+
+
+                routes.MapAreaRoute(
+                  name: "serie",
+                  areaName: "Identity",
+                  template: "serie",
+                  defaults: new { controller = "Serie", action = "Index" });
+
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
