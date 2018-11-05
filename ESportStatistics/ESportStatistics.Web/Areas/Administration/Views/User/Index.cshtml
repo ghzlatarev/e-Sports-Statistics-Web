@@ -1,6 +1,42 @@
-﻿@model IndexViewModel
+﻿@model IEnumerable<UserViewModel>
 @{
     ViewData["Title"] = "Index";
 }
 
 <h2>Users Administration</h2>
+
+<div class="card  card-plain">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table tablesorter " id="">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>
+                            User Name
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            Phone NUmber
+                        </th>
+                        <th >
+                            Is Active
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@(!user.IsDeleted)</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

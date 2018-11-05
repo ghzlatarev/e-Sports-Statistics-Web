@@ -3,6 +3,7 @@ using ESportStatistics.Web.Areas.Administration.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Administration.Controllers
@@ -28,7 +29,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             var users = await _userService.FilterUsersAsync();
 
-            var model = new IndexViewModel(users);
+            var model = users.Select(u => new UserViewModel(u));
 
             return View(model);
         }
