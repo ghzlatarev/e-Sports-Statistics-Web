@@ -135,6 +135,12 @@ namespace ESportStatistics.Web
                     template: "users",
                     defaults: new { controller = "User", action = "Index" });
 
+                routes.MapAreaRoute(
+                   name: "champion",
+                   areaName: "Identity",
+                   template: "champion",
+                   defaults: new { controller = "Champions", action = "Index" });
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
