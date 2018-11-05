@@ -9,12 +9,12 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     [Area("Statistics")]
     [Authorize(Roles = "User")]
     [Route("[controller]/[action]")]
-    public class ChampionController : Controller
+    public class MasteryController : Controller
     {
         
         private readonly ILogger _logger;
 
-        public ChampionController(ILogger<AccountController> logger)
+        public MasteryController(ILogger<AccountController> logger)
         {
             _logger = logger;
         }
