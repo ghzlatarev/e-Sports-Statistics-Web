@@ -23,7 +23,7 @@ namespace ESportStatistics.Core.Services
             this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
         }
 
-        public async Task<IEnumerable<Serie>> FilterSeriesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<Serie>> FilterSeriesAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");

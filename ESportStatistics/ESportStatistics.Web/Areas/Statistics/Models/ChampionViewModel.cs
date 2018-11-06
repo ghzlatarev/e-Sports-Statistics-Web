@@ -11,13 +11,13 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
 
         public ChampionViewModel(Champion champion)
         { 
-        //{
-        //    this.Content = comment.Content;
-        //    this.Likes = comment.Likes;
-        //    this.Author = comment.Author.UserName;
-        //    this.CreatedOn = comment.CreatedOn ?? DateTime.Now;
+       
+           this.Name = champion.Name;
+           this.Armor = champion.Armor;
         }
 
-        //da naredq tuka neshtata za viewmodela
+        public string Name { get; set; }
+        public double? Armor { get; set; }
+
     }
 }
