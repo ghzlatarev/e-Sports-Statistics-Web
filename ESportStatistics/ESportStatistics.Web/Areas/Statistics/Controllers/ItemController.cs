@@ -9,12 +9,12 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     [Area("Statistics")]
     [Authorize(Roles = "User")]
     [Route("[controller]/[action]")]
-    public class ChampionController : Controller
+    public class ItemController : Controller
     {
         
         private readonly ILogger _logger;
 
-        public ChampionController(ILogger<AccountController> logger)
+        public ItemController(ILogger<AccountController> logger)
         {
             _logger = logger;
         }
@@ -22,7 +22,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
          [HttpGet]
         public IActionResult Index()
         {
-            //var model = new ChampionViewModel
+            //var model = new ItemViewModel
             //{
             //    //{
             //    //    PhoneNumber = user.PhoneNumber,

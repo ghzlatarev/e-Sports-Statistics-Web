@@ -2,14 +2,14 @@
 
 namespace ESportStatistics.Web.Areas.Statistics.Models
 {
-    public class ChampionViewModel
+    public class MasteryViewModel
     {
 
-        public ChampionViewModel()
+        public MasteryViewModel()
         {
         }
 
-        public ChampionViewModel(Champion champion)
+        public MasteryViewModel(Mastery mastery)
         { 
         //{
         //    this.Content = comment.Content;
