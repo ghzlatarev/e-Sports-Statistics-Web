@@ -10,14 +10,9 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         }
 
         public MasteryViewModel(Mastery mastery)
-        { 
-        //{
-        //    this.Content = comment.Content;
-        //    this.Likes = comment.Likes;
-        //    this.Author = comment.Author.UserName;
-        //    this.CreatedOn = comment.CreatedOn ?? DateTime.Now;
+        {
+            this.Name = mastery.Name;
         }
-
-        //da naredq tuka neshtata za viewmodela
+        public string Name { get; private set; }
     }
 }

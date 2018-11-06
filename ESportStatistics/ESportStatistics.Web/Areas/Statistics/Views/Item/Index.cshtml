@@ -1,4 +1,26 @@
-﻿@{
-    Layout = "_Layout";
+﻿
+@model IEnumerable<ItemViewModel>
+@{
+    ViewData["Title"] = "Index";
 }
-<h1> e te tuka shte lisntem itmes</h1>
+
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Item Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

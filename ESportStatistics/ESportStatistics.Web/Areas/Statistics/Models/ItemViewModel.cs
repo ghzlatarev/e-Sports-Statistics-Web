@@ -10,13 +10,11 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         }
 
         public ItemViewModel(Item item)
-        { 
-        //{
-        //    this.Content = comment.Content;
-        //    this.Likes = comment.Likes;
-        //    this.Author = comment.Author.UserName;
-        //    this.CreatedOn = comment.CreatedOn ?? DateTime.Now;
+        {
+            this.Name = item.Name;
         }
+
+        public string Name { get; private set; }
 
         //da naredq tuka neshtata za viewmodela
     }

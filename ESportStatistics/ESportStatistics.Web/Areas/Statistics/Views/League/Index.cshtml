@@ -1,4 +1,26 @@
-﻿@{
-    Layout = "_Layout";
+﻿
+@model IEnumerable<LeagueViewModel>
+@{
+    ViewData["Title"] = "Index";
 }
-<h1> e te tuka shte lisntem leagues</h1>
+
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    League Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var league in Model)
+            {
+                <tr>
+                    <td>@league.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

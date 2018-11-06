@@ -1,4 +1,26 @@
-﻿@{
-    Layout = "_Layout";
+﻿
+@model IEnumerable<MasteryViewModel>
+@{
+    ViewData["Title"] = "Index";
 }
-<h1> e te tuka shte lisntem masteries</h1>
+
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Mastery Name
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mastery in Model)
+            {
+                <tr>
+                    <td>@mastery.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
