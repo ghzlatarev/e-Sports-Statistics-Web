@@ -29,15 +29,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-item">
 
-                    <li>
-                        <a asp-area="Statistics" asp-controller="Champion" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Champions</a>
-                    </li>
-                    <li>
-                        <a asp-area="Statistics" asp-controller="Items" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Items</a>
-                    </li>
-                    <li>
-                        <a asp-area="Statistics" asp-controller="Items" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Leagues</a>
-                    </li>
+                    @await Html.PartialAsync("_StatisticsPartial")
                 </ul>
             </li>
         </ul>
