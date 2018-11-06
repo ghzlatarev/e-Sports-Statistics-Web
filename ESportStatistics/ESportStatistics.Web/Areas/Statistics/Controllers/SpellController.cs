@@ -1,4 +1,8 @@
-﻿using ESportStatistics.Web.Areas.Identity.Controllers;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Identity.Controllers;
+using ESportStatistics.Web.Areas.Statistics.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,26 +15,23 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     [Route("[controller]/[action]")]
     public class SpellController : Controller
     {
-        
         private readonly ILogger _logger;
+        private readonly ISpellService _spellService;
 
-        public SpellController(ILogger<AccountController> logger)
+        public SpellController(ILogger<AccountController> logger, ISpellService spellService)
         {
             _logger = logger;
+            _spellService = spellService;
         }
 
-         [HttpGet]
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            //var model = new ChampionViewModel
-            //{
-            //    //{
-            //    //    PhoneNumber = user.PhoneNumber,
-            //    //    ImageUrl = user.AvatarImageName,
-            //    //    StatusMessage = StatusMessage
-            //};
-            return this.View();
-        }
+            var spells = await _spellService.FilterSpellsAsync();
 
+            var model = spells.Select(s => new SpellViewModel(s));
+
+            return View(model);
+        }
     }
 }

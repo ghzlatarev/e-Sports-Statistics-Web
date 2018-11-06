@@ -1,4 +1,44 @@
-﻿@{
-    Layout = "_Layout";
+﻿@model IEnumerable<PlayerViewModel>
+@{
+    ViewData["Title"] = "Index";
 }
-<h1> e te tuka shte lisntem players</h1>
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    FirstName
+                </th>
+                <th>
+                    LastName
+                </th>
+                <th>
+                    Role
+                </th>
+                <th>
+                    Bio
+                </th>
+                <th>
+                    Hometown
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in Model)
+            {
+                <tr>
+                    <td>@player.Name</td>
+                    <td>@player.FirstName</td>
+                    <td>@player.LastName</td>
+                    <td>@player.Role</td>
+                    <td>@player.Bio</td>
+                    <td>@player.Hometown</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

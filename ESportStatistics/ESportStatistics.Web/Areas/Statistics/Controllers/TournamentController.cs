@@ -1,4 +1,8 @@
-﻿using ESportStatistics.Web.Areas.Identity.Controllers;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Identity.Controllers;
+using ESportStatistics.Web.Areas.Statistics.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,25 +15,25 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     [Route("[controller]/[action]")]
     public class TournamentController : Controller
     {
-        
-        private readonly ILogger _logger;
 
-        public TournamentController(ILogger<AccountController> logger)
+        private readonly ILogger _logger;
+        private readonly ITournamentService _tournamentService;
+
+
+        public TournamentController(ILogger<AccountController> logger, ITournamentService tournamentService)
         {
             _logger = logger;
+            _tournamentService = tournamentService;
         }
 
-         [HttpGet]
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(TournamentViewModel tournament)
         {
-            //var model = new ChampionViewModel
-            //{
-            //    //{
-            //    //    PhoneNumber = user.PhoneNumber,
-            //    //    ImageUrl = user.AvatarImageName,
-            //    //    StatusMessage = StatusMessage
-            //};
-            return this.View();
+            var tournaments = await _tournamentService.FilterTournamentsAsync();
+
+            var model = tournaments.Select(t => new TournamentViewModel(t));
+
+            return View(model);
         }
 
     }
