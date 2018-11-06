@@ -39,6 +39,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         public string ErrorMessage { get; set; }
 
         [HttpGet]
+        [Route("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
@@ -50,6 +51,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
@@ -69,7 +71,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
-                
+
                 var result = await _signInManager.PasswordSignInAsync(model.UserNameOrEmail, model.Password, model.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
@@ -89,6 +91,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpGet]
+        [Route("register")]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
@@ -97,6 +100,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
@@ -129,6 +133,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpGet]
+        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

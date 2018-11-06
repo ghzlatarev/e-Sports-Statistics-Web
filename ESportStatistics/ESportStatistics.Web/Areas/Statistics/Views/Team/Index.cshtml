@@ -1,0 +1,29 @@
+﻿@model IEnumerable<TeamViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Acronym
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var team in Model)
+            {
+                <tr>
+                    <td>@team.Name</td>
+                    <td>@team.Acronym</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

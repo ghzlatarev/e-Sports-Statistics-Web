@@ -5,6 +5,11 @@ namespace ESportStatistics.Web.Areas.Identity.ManageViewModels
 {
     public class IndexViewModel
     {
+        public IndexViewModel()
+        {
+
+        }
+
         public IndexViewModel(ApplicationUser user, string statusMessage)
         {
             this.Username = user.UserName;
@@ -13,6 +18,13 @@ namespace ESportStatistics.Web.Areas.Identity.ManageViewModels
             this.IsEmailConfirmed = user.EmailConfirmed;
             this.StatusMessage = statusMessage;
             this.AvatarImage = user.AvatarImage;
+            this.FirstName = user.FirstName;
+            this.LastName = user.LastName;
+            this.Address = user.Address;
+            this.City = user.City;
+            this.Country = user.Country;
+            this.PostalCode = user.PostalCode;
+            this.Story = user.Story;
         }
 
         [Required]

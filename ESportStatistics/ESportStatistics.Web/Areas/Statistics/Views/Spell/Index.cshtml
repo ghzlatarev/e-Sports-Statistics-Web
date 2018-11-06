@@ -1,0 +1,25 @@
+﻿@model IEnumerable<SpellViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Name
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var team in Model)
+            {
+                <tr>
+                    <td>@team.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

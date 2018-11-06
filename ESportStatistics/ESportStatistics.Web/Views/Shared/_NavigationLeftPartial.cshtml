@@ -1,4 +1,4 @@
-﻿<div class="sidebar">
+﻿<div class="sidebar" data-color="blue" data="blue">
     <div class="sidebar-wrapper">
         <div class="logo">
             <a href="javascript:void(0)" class="simple-text logo-mini">
@@ -9,7 +9,7 @@
             </a>
         </div>
         <ul class="nav">
-            <li class="active">
+            <li>
                 <a asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="tim-icons icon-bank"></i>
                     <p>Home</p>
@@ -21,11 +21,44 @@
                     <p>About us</p>
                 </a>
             </li>
-            <li class="active-pro">
-                <a href="./upgrade.html">
-                    <i class="tim-icons icon-spaceship"></i>
-                    <p>Upgrade to PRO</p>
+            <li class="dropdown nav-item">
+                <a class="dropdown-danger" data-toggle="dropdown">
+                    <i class="tim-icons icon-chart-pie-36"></i>
+                    <p>Statistics</p>
+                    <b class="caret d-none d-lg-block d-xl-block"></b>
                 </a>
+                <ul class="dropdown-menu dropdown-item">
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Champion" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Champions</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Item" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Items</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="League" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Leagues</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Mastery" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Masteries</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Match" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Matches</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Player" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Players</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Serie" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Series</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Spell" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Spells</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Team" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Teams</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Tournament" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Tournaments</a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>

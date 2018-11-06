@@ -100,40 +100,68 @@ namespace ESportStatistics.Web
                     defaults: new { controller = "Error", action = "PageNotFound" });
 
                 routes.MapAreaRoute(
-                    name: "register",
-                    areaName: "Identity",
-                    template: "register",
-                    defaults: new { controller = "Account", action = "Register" });
+                   name: "champion",
+                   areaName: "Identity",
+                   template: "champion",
+                   defaults: new { controller = "Champions", action = "Index" });
 
                 routes.MapAreaRoute(
-                    name: "login",
-                    areaName: "Identity",
-                    template: "login",
-                    defaults: new { controller = "Account", action = "Login" });
+                   name: "item",
+                   areaName: "Identity",
+                   template: "item",
+                   defaults: new { controller = "Items", action = "Index" });
 
                 routes.MapAreaRoute(
-                    name: "logout",
-                    areaName: "Identity",
-                    template: "logout",
-                    defaults: new { controller = "Account", action = "Logout" });
+                  name: "league",
+                  areaName: "Identity",
+                  template: "league",
+                  defaults: new { controller = "League", action = "Index" });
+
 
                 routes.MapAreaRoute(
-                    name: "profile",
-                    areaName: "Identity",
-                    template: "profile",
-                    defaults: new { controller = "Manage", action = "Index" });
+                  name: "mastery",
+                  areaName: "Identity",
+                  template: "mastery",
+                  defaults: new { controller = "Mastery", action = "Index" });
+
 
                 routes.MapAreaRoute(
-                    name: "changepassword",
-                    areaName: "Identity",
-                    template: "changepassword",
-                    defaults: new { controller = "Manage", action = "ChangePassword" });
+                  name: "Match",
+                  areaName: "Identity",
+                  template: "match",
+                  defaults: new { controller = "Match", action = "Index" });
+
 
                 routes.MapAreaRoute(
-                    name: "users",
-                    areaName: "Administration",
-                    template: "users",
-                    defaults: new { controller = "User", action = "Index" });
+                  name: "player",
+                  areaName: "Identity",
+                  template: "player",
+                  defaults: new { controller = "Player", action = "Index" });
+
+
+                routes.MapAreaRoute(
+                  name: "serie",
+                  areaName: "Identity",
+                  template: "serie",
+                  defaults: new { controller = "Serie", action = "Index" });
+
+                routes.MapAreaRoute(
+                  name: "spell",
+                  areaName: "Identity",
+                  template: "spell",
+                  defaults: new { controller = "Spell", action = "Index" });
+
+                routes.MapAreaRoute(
+                  name: "team",
+                  areaName: "Identity",
+                  template: "team",
+                  defaults: new { controller = "Team", action = "Index" });
+
+                routes.MapAreaRoute(
+                  name: "tournament",
+                  areaName: "Identity",
+                  template: "tournament",
+                  defaults: new { controller = "Tournament", action = "Index" });
 
                 routes.MapRoute(
                     name: "default",

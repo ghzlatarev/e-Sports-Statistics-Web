@@ -3,6 +3,7 @@ using ESportStatistics.Web.Areas.Administration.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Administration.Controllers
@@ -15,22 +16,34 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 
         public UserController(IUserService userService)
         {
-            _userService = userService ?? throw ArgumentNullException(nameof(userService));
-        }
-
-        private Exception ArgumentNullException(object p)
-        {
-            throw new NotImplementedException();
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         [HttpGet]
+        [Route("users")]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.FilterUsersAsync();
 
-            var model = new IndexViewModel(users);
+            var model = users.Select(u => new UserViewModel(u));
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("Administration/[controller]/[action]")]
+        public async Task<IActionResult> Filter(string searchTerm = "")
+        {
+            if (searchTerm is null)
+            {
+                searchTerm = string.Empty;
+            }
+
+            var users = await _userService.FilterUsersAsync(searchTerm);
+
+            var model = users.Select(u => new UserViewModel(u));
+
+            return PartialView("_UserTablePartial", model);
         }
     }
 }

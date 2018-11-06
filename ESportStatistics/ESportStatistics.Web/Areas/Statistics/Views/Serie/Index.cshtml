@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SerieViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Season
+                </th>
+                <th>
+                    Year
+                </th>
+                <th>
+                    Begins At
+                </th>
+                <th>
+                    Ends At
+                </th>
+                <th>
+                    Description
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var serie in Model)
+            {
+            <tr>
+                <td>@serie.Name</td>
+                <td>@serie.Season</td>
+                <td>@serie.Year</td>
+                <td>@serie.BeginAt</td>
+                <td>@serie.EndAt</td>
+                <td>@serie.Description</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

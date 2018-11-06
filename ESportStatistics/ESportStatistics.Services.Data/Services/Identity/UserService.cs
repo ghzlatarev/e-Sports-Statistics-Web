@@ -20,7 +20,7 @@ namespace ESportStatistics.Services.Data.Services.Identity
             this.dataContext = dataContext;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> FilterUsersAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
+        public async Task<IEnumerable<ApplicationUser>> FilterUsersAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");

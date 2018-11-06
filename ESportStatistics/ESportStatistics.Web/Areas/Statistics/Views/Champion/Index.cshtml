@@ -1,0 +1,32 @@
+﻿
+@model IEnumerable<ChampionViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Champion Name
+                </th>
+                <th>
+                    Armor
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var champion in Model)
+            {
+                <tr>
+                    <td>@champion.Name</td>
+                    <td>@champion.Armor</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
