@@ -1,4 +1,4 @@
-﻿<div class="sidebar">
+﻿<div class="sidebar" data-color="blue" data="blue">
     <div class="sidebar-wrapper">
         <div class="logo">
             <a href="javascript:void(0)" class="simple-text logo-mini">
@@ -9,7 +9,7 @@
             </a>
         </div>
         <ul class="nav">
-            <li class="active">
+            <li>
                 <a asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="tim-icons icon-bank"></i>
                     <p>Home</p>
@@ -22,7 +22,23 @@
                 </a>
             </li>
             <li class="dropdown nav-item">
-                @await Html.PartialAsync("_StatisticsPartial")
+                <a class="dropdown-danger" data-toggle="dropdown">
+                    <i class="tim-icons icon-chart-pie-36"></i>
+                    <p>Statistics</p>
+                    <b class="caret d-none d-lg-block d-xl-block"></b>
+                </a>
+                <ul class="dropdown-menu dropdown-item">
+
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Champion" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Champions</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Items" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Items</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Items" asp-action="Index"><i class="fa fa-arrow-circle-o-right fa-fw"></i> Leagues</a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>
