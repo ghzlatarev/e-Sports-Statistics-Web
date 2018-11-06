@@ -46,6 +46,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         public string StatusMessage { get; set; }
 
         [HttpGet]
+        [Route("profile")]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -60,6 +61,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpPost]
+        [Route("profile")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
         {
@@ -109,6 +111,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpGet]
+        [Route("change-password")]
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -122,6 +125,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpPost]
+        [Route("change-password")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {

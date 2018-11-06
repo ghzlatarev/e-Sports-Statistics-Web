@@ -20,6 +20,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
+        [Route("users")]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.FilterUsersAsync();

@@ -100,42 +100,6 @@ namespace ESportStatistics.Web
                     defaults: new { controller = "Error", action = "PageNotFound" });
 
                 routes.MapAreaRoute(
-                    name: "register",
-                    areaName: "Identity",
-                    template: "register",
-                    defaults: new { controller = "Account", action = "Register" });
-
-                routes.MapAreaRoute(
-                    name: "login",
-                    areaName: "Identity",
-                    template: "login",
-                    defaults: new { controller = "Account", action = "Login" });
-
-                routes.MapAreaRoute(
-                    name: "logout",
-                    areaName: "Identity",
-                    template: "logout",
-                    defaults: new { controller = "Account", action = "Logout" });
-
-                routes.MapAreaRoute(
-                    name: "profile",
-                    areaName: "Identity",
-                    template: "profile",
-                    defaults: new { controller = "Manage", action = "Index" });
-
-                routes.MapAreaRoute(
-                    name: "changepassword",
-                    areaName: "Identity",
-                    template: "changepassword",
-                    defaults: new { controller = "Manage", action = "ChangePassword" });
-
-                routes.MapAreaRoute(
-                    name: "users",
-                    areaName: "Administration",
-                    template: "users",
-                    defaults: new { controller = "User", action = "Index" });
-
-                routes.MapAreaRoute(
                    name: "champion",
                    areaName: "Identity",
                    template: "champion",
