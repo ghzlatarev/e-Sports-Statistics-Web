@@ -16,12 +16,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 
         public UserController(IUserService userService)
         {
-            _userService = userService ?? throw ArgumentNullException(nameof(userService));
-        }
-
-        private Exception ArgumentNullException(object p)
-        {
-            throw new NotImplementedException();
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         [HttpGet]
@@ -32,6 +27,22 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             var model = users.Select(u => new UserViewModel(u));
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("Administration/[controller]/[action]")]
+        public async Task<IActionResult> Filter(string searchTerm = "")
+        {
+            if (searchTerm is null)
+            {
+                searchTerm = string.Empty;
+            }
+
+            var users = await _userService.FilterUsersAsync(searchTerm);
+
+            var model = users.Select(u => new UserViewModel(u));
+
+            return PartialView("_UserTablePartial", model);
         }
     }
 }
