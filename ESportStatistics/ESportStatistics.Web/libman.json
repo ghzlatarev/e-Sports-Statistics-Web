@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "filesystem",
+      "library": "microsoft.jquery.unobtrusive.ajax.3.2.6.nupkg",
+      "destination": "wwwroot/lib/microsoft.jquery.unobtrusive.ajax.3.2.6/"
+    }
+  ]
+}

@@ -1,4 +1,25 @@
-﻿@{
-    Layout = "_Layout";
+﻿@model IEnumerable<SpellViewModel>
+@{
+    ViewData["Title"] = "Index";
 }
-<h1> e te tuka shte lisntem spells</h1>
+
+<div class="table-responsive">
+    <table class="table tablesorter " id="">
+        <thead class=" text-primary">
+            <tr>
+                <th>
+                    Name
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var team in Model)
+            {
+                <tr>
+                    <td>@team.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

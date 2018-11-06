@@ -4,20 +4,17 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
 {
     public class SpellViewModel
     {
-
         public SpellViewModel()
         {
         }
 
         public SpellViewModel(Spell spell)
-        { 
-        //{
-        //    this.Content = comment.Content;
-        //    this.Likes = comment.Likes;
-        //    this.Author = comment.Author.UserName;
-        //    this.CreatedOn = comment.CreatedOn ?? DateTime.Now;
+        {
+            this.Name = spell.Name;
+            this.ImageURL = spell.ImageURL;
         }
 
-        //da naredq tuka neshtata za viewmodela
+        public string Name { get; set; }
+        public string ImageURL { get; set; }
     }
 }

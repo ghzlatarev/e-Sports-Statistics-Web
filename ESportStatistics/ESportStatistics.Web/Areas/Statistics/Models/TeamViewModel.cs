@@ -4,20 +4,17 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
 {
     public class TeamViewModel
     {
-
         public TeamViewModel()
         {
         }
 
         public TeamViewModel(Team team)
-        { 
-        //{
-        //    this.Content = comment.Content;
-        //    this.Likes = comment.Likes;
-        //    this.Author = comment.Author.UserName;
-        //    this.CreatedOn = comment.CreatedOn ?? DateTime.Now;
+        {
+            this.Name = team.Name;
+            this.Acronym = team.Acronym;
         }
 
-        //da naredq tuka neshtata za viewmodela
+        public string Name { get; set; }
+        public string Acronym { get; set; }
     }
 }

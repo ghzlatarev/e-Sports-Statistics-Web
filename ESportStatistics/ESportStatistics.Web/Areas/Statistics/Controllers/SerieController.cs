@@ -1,4 +1,8 @@
-﻿using ESportStatistics.Web.Areas.Identity.Controllers;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Identity.Controllers;
+using ESportStatistics.Web.Areas.Statistics.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,26 +15,23 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     [Route("[controller]/[action]")]
     public class SerieController : Controller
     {
-        
         private readonly ILogger _logger;
+        private readonly ISerieService _serieService;
 
-        public SerieController(ILogger<AccountController> logger)
+        public SerieController(ILogger<AccountController> logger, ISerieService serieService)
         {
             _logger = logger;
+            _serieService = serieService;
         }
 
-         [HttpGet]
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            //var model = new ChampionViewModel
-            //{
-            //    //{
-            //    //    PhoneNumber = user.PhoneNumber,
-            //    //    ImageUrl = user.AvatarImageName,
-            //    //    StatusMessage = StatusMessage
-            //};
-            return this.View();
-        }
+            var series = await _serieService.FilterSeriesAsync();
 
+            var model = series.Select(s => new SerieViewModel(s));
+
+            return View(model);
+        }
     }
 }
