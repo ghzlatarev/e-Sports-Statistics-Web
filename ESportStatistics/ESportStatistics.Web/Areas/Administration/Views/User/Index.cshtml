@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@model IndexViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -8,7 +8,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <div id="usersPartial">
-                @await Html.PartialAsync("_UserTablePartial", Model)
+                @await Html.PartialAsync("_UserTablePartial", Model.Table)
             </div>
         </div>
     </div>
@@ -26,9 +26,9 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <form asp-area="Administration" asp-controller="User" asp-action="Filter"
+                    <form asp-area="Administration" asp-controller="User" asp-action="Index" asp-route-pageNumber="1" method="get"
                           data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#usersPartial">
-                        <input type="text" class="form-control" name="searchTerm" placeholder="SEARCH">
+                        <input type="text" class="form-control" name="searchTerm" placeholder="SEARCH" autocomplete="off">
                     </form>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i class="tim-icons icon-simple-remove"></i>

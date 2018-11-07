@@ -3,8 +3,6 @@ using ESportStatistics.Web.Areas.Administration.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Administration.Controllers
 {
@@ -21,29 +19,15 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Route("users")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchTerm, int? pageSize, int? pageNumber)
         {
-            var users = await _userService.FilterUsersAsync();
+            var users = _userService.FilterUsers(searchTerm ?? string.Empty, pageSize ?? 10, pageNumber ?? 1);
 
-            var model = users.Select(u => new UserViewModel(u));
+            var model = new IndexViewModel(users, searchTerm);
 
-            return View(model);
-        }
-
-        [HttpGet]
-        [Route("Administration/[controller]/[action]")]
-        public async Task<IActionResult> Filter(string searchTerm = "")
-        {
-            if (searchTerm is null)
-            {
-                searchTerm = string.Empty;
-            }
-
-            var users = await _userService.FilterUsersAsync(searchTerm);
-
-            var model = users.Select(u => new UserViewModel(u));
-
-            return PartialView("_UserTablePartial", model);
+            return Request.Headers["X-Requested-With"] == "XMLHttpRequest" ?
+                (ActionResult)PartialView("_UserTablePartial", model.Table) :
+                View(model);
         }
     }
 }

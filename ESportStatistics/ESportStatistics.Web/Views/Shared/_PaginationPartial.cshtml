@@ -1,0 +1,51 @@
+﻿@model PaginationViewModel
+
+<div class="pagination-holder black clearfix">
+    <ul id="dark-pagination" class="pagination dark-theme simple-pagination">
+
+        @if (Model.HasPreviousPage)
+        {
+            <li>
+                <a asp-area="Administration" asp-controller="User" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                   data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#usersPartial"
+                   class="page-link">Prev</a>
+            </li>
+        }
+        else
+        {
+            <li><a class="page-link current">Prev</a></li>
+        }
+
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            if (Model.PageNumber == i)
+            {
+                <li><a class="page-link current">@i</a></li>
+            }
+            else
+            {
+                <li>
+                    <a asp-area="Administration" asp-controller="User" asp-action="Index"
+                       asp-route-pageNumber="@i" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                       data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#usersPartial"
+                       class="page-link">@i</a>
+                </li>
+            }
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li>
+                <a asp-area="Administration" asp-controller="User" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                   data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#usersPartial"
+                   class="page-link">Next</a>
+            </li>
+        }
+        else
+        {
+            <li><a class="page-link current">Next</a></li>
+        }
+    </ul>
+</div>
