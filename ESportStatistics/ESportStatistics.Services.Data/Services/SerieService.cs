@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
@@ -23,16 +24,16 @@ namespace ESportStatistics.Core.Services
             this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
         }
 
-        public async Task<IEnumerable<Serie>> FilterSeriesAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
+        public async Task<IPagedList<Serie>> FilterSeriesAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
             var query = await this.dataContext.Series
                 .Where(t => t.Name.Contains(filter))
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToListAsync();
+                .ToPagedListAsync(pageNumber, pageSize);
 
             return query;
         }

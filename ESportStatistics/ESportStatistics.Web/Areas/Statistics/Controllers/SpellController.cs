@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Web.Areas.Identity.Controllers;
 using ESportStatistics.Web.Areas.Statistics.Models;
+using ESportStatistics.Web.Areas.Statistics.Models.Spells;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
+    [Route("spells")]
     public class SpellController : Controller
     {
         private readonly ILogger _logger;
@@ -29,9 +28,23 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             var spells = await _spellService.FilterSpellsAsync();
 
-            var model = spells.Select(s => new SpellViewModel(s));
+            var model = new IndexViewModel(spells);
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("/spells-filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var spells = await _spellService.FilterSpellsAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new IndexViewModel(spells, searchTerm);
+
+            return PartialView("_SpellTablePartial", model.Table);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Tournaments
                     SearchTerm = searchTerm,
                     AreaRoute = "Statistics",
                     ControllerRoute = "Tournament",
-                    ActionRoute = "Index"
+                    ActionRoute = "Filter"
                 }
             };
         }

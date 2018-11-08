@@ -3,16 +3,15 @@ using System.Threading.Tasks;
 using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Web.Areas.Identity.Controllers;
 using ESportStatistics.Web.Areas.Statistics.Models;
+using ESportStatistics.Web.Areas.Statistics.Models.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
-    //[Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
+    [Route("teams")]
     public class TeamController : Controller
     {
         private readonly ILogger _logger;
@@ -29,9 +28,23 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             var teams = await _teamService.FilterTeamsAsync();
 
-            var model = teams.Select(t => new TeamViewModel(t));
+            var model = new IndexViewModel(teams);
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("/teams-filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var teams = await _teamService.FilterTeamsAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new IndexViewModel(teams, searchTerm);
+
+            return PartialView("_TeamTablePartial", model.Table);
         }
     }
 }

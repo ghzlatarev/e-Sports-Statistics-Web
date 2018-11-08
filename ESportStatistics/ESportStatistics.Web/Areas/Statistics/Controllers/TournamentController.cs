@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
     [Area("Statistics")]
-    [Route("[controller]/[action]")]
+    [Route("tournaments")]
     public class TournamentController : Controller
     {
 
@@ -26,7 +26,6 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
-        //[Route("tournaments")]
         public async Task<IActionResult> Index()
         {
             var tournaments = await _tournamentService.FilterTournamentsAsync();
@@ -37,7 +36,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
-        //[Route("users-filter")]
+        [Route("/tournaments-filter")]
         public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
         {
             var tournaments = await _tournamentService.FilterTournamentsAsync(
