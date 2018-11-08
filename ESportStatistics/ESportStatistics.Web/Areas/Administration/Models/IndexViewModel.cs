@@ -1,7 +1,7 @@
 ﻿using ESportStatistics.Data.Models.Identity;
 using ESportStatistics.Web.Models;
-using PagedList.Core;
 using System.Linq;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Administration.Models
 {
@@ -22,7 +22,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
                     SearchTerm = searchTerm,
                     AreaRoute = "Administration",
                     ControllerRoute = "User",
-                    ActionRoute = "Index"
+                    ActionRoute = "Filter"
                 }
             };
         }

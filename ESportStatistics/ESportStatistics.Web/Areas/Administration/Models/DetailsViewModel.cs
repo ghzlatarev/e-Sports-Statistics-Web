@@ -10,7 +10,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
 
         }
 
-        public DetailsViewModel(ApplicationUser user)
+        public DetailsViewModel(ApplicationUser user, bool isAdmin)
         {
             this.Username = user.UserName;
             this.Email = user.Email;
@@ -24,6 +24,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
             this.Country = user.Country;
             this.PostalCode = user.PostalCode;
             this.Story = user.Story;
+            this.UserRole = new UserRoleViewModel(user, isAdmin);
         }
 
         public string Username { get; set; }
@@ -49,5 +50,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
         public int PostalCode { get; set; }
 
         public string Story { get; set; }
+
+        public UserRoleViewModel UserRole { get; set; }
     }
 }

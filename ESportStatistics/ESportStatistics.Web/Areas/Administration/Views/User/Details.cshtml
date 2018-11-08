@@ -11,76 +11,83 @@
                 <h5 class="title">User Information</h5>
             </div>
             <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-5 pr-md-1">
-                            <div class="form-group">
-                                <label asp-for="Email"></label>
-                                <input asp-for="Email" type="email" class="form-control" value="@Model.Email" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-3 px-md-1">
-                            <div class="form-group">
-                                <label asp-for="Username"></label>
-                                <input asp-for="Username" type="text" class="form-control" value="@Model.Username" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-4 pl-md-1">
-                            <div class="form-group">
-                                <label asp-for="PhoneNumber"></label>
-                                <input asp-for="PhoneNumber" type="tel" class="form-control" value="@Model.PhoneNumber" disabled>
-                            </div>
+                <div class="row">
+                    <div class="col-md-5 pr-md-1">
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" type="email" class="form-control" value="@Model.Email" disabled>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 pr-md-1">
-                            <div class="form-group">
-                                <label asp-for="FirstName"></label>
-                                <input asp-for="FirstName" type="text" class="form-control" value="@Model.FirstName" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6 pl-md-1">
-                            <div class="form-group">
-                                <label asp-for="LastName"></label>
-                                <input asp-for="LastName" type="text" class="form-control" value="@Model.LastName" disabled>
-                            </div>
+                    <div class="col-md-3 px-md-1">
+                        <div class="form-group">
+                            <label asp-for="Username"></label>
+                            <input asp-for="Username" type="text" class="form-control" value="@Model.Username" disabled>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label asp-for="Address"></label>
-                                <input asp-for="Address" type="text" class="form-control" value="@Model.Address" disabled>
-                            </div>
+                    <div class="col-md-4 pl-md-1">
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber"></label>
+                            <input asp-for="PhoneNumber" type="tel" class="form-control" value="@Model.PhoneNumber" disabled>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-4 pr-md-1">
-                            <div class="form-group">
-                                <label asp-for="City"></label>
-                                <input asp-for="City" type="text" class="form-control" value="@Model.City" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-4 px-md-1">
-                            <div class="form-group">
-                                <label asp-for="Country"></label>
-                                <input asp-for="Country" type="text" class="form-control" value="@Model.Country" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-4 pl-md-1">
-                            <div class="form-group">
-                                <label asp-for="PostalCode"></label>
-                                <input asp-for="PostalCode" type="number" class="form-control" value="@Model.PostalCode" disabled>
-                            </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 pr-md-1">
+                        <div class="form-group">
+                            <label asp-for="FirstName"></label>
+                            <input asp-for="FirstName" type="text" class="form-control" value="@Model.FirstName" disabled>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <label>About Me</label>
-                                <textarea asp-for="Story" rows="4" cols="80" class="form-control" value="@Model.Story" disabled></textarea>
-                            </div>
+                    <div class="col-md-6 pl-md-1">
+                        <div class="form-group">
+                            <label asp-for="LastName"></label>
+                            <input asp-for="LastName" type="text" class="form-control" value="@Model.LastName" disabled>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="Address"></label>
+                            <input asp-for="Address" type="text" class="form-control" value="@Model.Address" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 pr-md-1">
+                        <div class="form-group">
+                            <label asp-for="City"></label>
+                            <input asp-for="City" type="text" class="form-control" value="@Model.City" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4 px-md-1">
+                        <div class="form-group">
+                            <label asp-for="Country"></label>
+                            <input asp-for="Country" type="text" class="form-control" value="@Model.Country" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-4 pl-md-1">
+                        <div class="form-group">
+                            <label asp-for="PostalCode"></label>
+                            <input asp-for="PostalCode" type="number" class="form-control" value="@Model.PostalCode" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label>About Me</label>
+                            <textarea asp-for="Story" rows="4" cols="80" class="form-control" value="@Model.Story" disabled></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @await Html.PartialAsync("_UserRolePartial", Model.UserRole)
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
