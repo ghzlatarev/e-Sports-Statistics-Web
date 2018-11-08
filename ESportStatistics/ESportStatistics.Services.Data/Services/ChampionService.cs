@@ -37,6 +37,15 @@ namespace ESportStatistics.Core.Services
             return query;
         }
 
+        public async Task<IEnumerable<Champion>> ReturnChampionAsync(Guid Id)
+        {
+            var query = await this.dataContext.Champions
+                .Where(t => t.Id.Equals(Id))
+                .ToListAsync();
+
+            return query;
+        }
+
         public async Task<Champion> AddChampionAsync(string name)
         {
             Validator.ValidateNull(name, "Champion name cannot be null!");

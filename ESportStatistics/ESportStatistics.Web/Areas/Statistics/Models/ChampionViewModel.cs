@@ -1,4 +1,5 @@
 ﻿using ESportStatistics.Data.Models;
+using System;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models
 {
@@ -13,11 +14,13 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         { 
        
            this.Name = champion.Name;
-           this.Armor = champion.Armor;
+            this.ImageURL = champion.ImageURL;
+            this.Id = champion.Id;
         }
 
+        public string ImageURL { get; set; }
         public string Name { get; set; }
-        public double? Armor { get; set; }
+        public Guid Id { get; set; }
 
     }
 }
