@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="PagedList.Core.Mvc" Version="1.1.0" />
+    <PackageReference Include="X.PagedList" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>
