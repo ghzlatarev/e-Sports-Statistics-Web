@@ -1,4 +1,4 @@
-﻿@model TableViewModel<UserViewModel>
+﻿@model TableViewModel<UserTableViewModel>
 
 <div id="tablePartial">
     <div>
@@ -25,11 +25,8 @@
             <tbody>
                 @foreach (var user in Model.Items)
                 {
-                    <tr>
-                        <td>@user.Username</td>
-                        <td>@user.Email</td>
-                        <td>@user.PhoneNumber</td>
-                        <td>@(!user.IsDeleted)</td>
+                    <tr id="@user.Id">
+                        @await  Html.PartialAsync("_UserTableRowPartial",user)
                     </tr>
                 }
             </tbody>

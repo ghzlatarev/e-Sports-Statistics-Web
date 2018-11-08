@@ -19,6 +19,18 @@ namespace ESportStatistics.Services.Data.Services.Identity
             this.dataContext = dataContext;
         }
 
+        public async Task<ApplicationUser> FindAsync(string userId)
+        {
+            ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return user;
+        }
+
         public IPagedList<ApplicationUser> FilterUsers(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateNull(filter, "Filter cannot be null!");
@@ -31,6 +43,38 @@ namespace ESportStatistics.Services.Data.Services.Identity
                 .ToPagedList(pageNumber, pageSize);
 
             return query;
+        }
+
+        public async Task<ApplicationUser> DisableUser(string userId)
+        {
+            ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
+
+            if (userId == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            this.dataContext.Remove(user);
+            await this.dataContext.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<ApplicationUser> RestoreUser(string userId)
+        {
+            ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
+
+            if (userId == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            user.IsDeleted = false;
+            user.DeletedOn = null;
+
+            await this.dataContext.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task SaveAvatarImageAsync(Stream stream, string userId)

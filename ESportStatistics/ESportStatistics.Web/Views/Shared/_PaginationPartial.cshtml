@@ -6,7 +6,7 @@
         @if (Model.HasPreviousPage)
         {
             <li>
-                <a asp-area="Administration" asp-controller="User" asp-action="Filter"
+                <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
                    asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
                    data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
                    class="page-link">Prev</a>
@@ -26,7 +26,7 @@
             else
             {
                 <li>
-                    <a asp-area="Administration" asp-controller="User" asp-action="Filter"
+                    <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
                        asp-route-pageNumber="@i" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
                        data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
                        class="page-link">@i</a>
@@ -37,7 +37,7 @@
         @if (Model.HasNextPage)
         {
             <li>
-                <a asp-area="Administration" asp-controller="User" asp-action="Filter"
+                <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
                    asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
                    data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
                    class="page-link">Next</a>
