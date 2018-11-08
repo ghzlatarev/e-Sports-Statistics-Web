@@ -9,9 +9,9 @@ namespace ESportStatistics.Web.Areas.Administration.Models
     {
         public IndexViewModel(IPagedList<ApplicationUser> users, string searchTerm = "")
         {
-            this.Table = new TableViewModel<UserViewModel>()
+            this.Table = new TableViewModel<UserTableViewModel>()
             {
-                Items = users.Select(u => new UserViewModel(u)),
+                Items = users.Select(u => new UserTableViewModel(u)),
                 Pagination = new PaginationViewModel()
                 {
                     PageCount = users.PageCount,
@@ -27,6 +27,6 @@ namespace ESportStatistics.Web.Areas.Administration.Models
             };
         }
 
-        public TableViewModel<UserViewModel> Table { get; set; }
+        public TableViewModel<UserTableViewModel> Table { get; set; }
     }
 }
