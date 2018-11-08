@@ -1,26 +1,20 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
+﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Spells;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Area("Statistics")]
     [Route("spells")]
+    [Area("Statistics")]
     public class SpellController : Controller
     {
-        private readonly ILogger _logger;
         private readonly ISpellService _spellService;
 
-        public SpellController(ILogger<AccountController> logger, ISpellService spellService)
+        public SpellController(ISpellService spellService)
         {
-            _logger = logger;
-            _spellService = spellService;
+            _spellService = spellService ?? throw new ArgumentNullException(nameof(spellService));
         }
 
         [HttpGet]

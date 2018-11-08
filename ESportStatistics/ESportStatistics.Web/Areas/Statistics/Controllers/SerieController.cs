@@ -1,26 +1,20 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
+﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Series;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Area("Statistics")]
     [Route("series")]
+    [Area("Statistics")]
     public class SerieController : Controller
     {
-        private readonly ILogger _logger;
         private readonly ISerieService _serieService;
 
-        public SerieController(ILogger<AccountController> logger, ISerieService serieService)
+        public SerieController(ISerieService serieService)
         {
-            _logger = logger;
-            _serieService = serieService;
+            _serieService = serieService ?? throw new ArgumentNullException(nameof(serieService));
         }
 
         [HttpGet]
