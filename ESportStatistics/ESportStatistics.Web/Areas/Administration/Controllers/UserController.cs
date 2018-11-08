@@ -19,15 +19,27 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Route("users")]
-        public IActionResult Index(string searchTerm, int? pageSize, int? pageNumber)
+        public IActionResult Index()
         {
-            var users = _userService.FilterUsers(searchTerm ?? string.Empty, pageSize ?? 10, pageNumber ?? 1);
+            var users = _userService.FilterUsers();
+
+            var model = new IndexViewModel(users);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Route("users-filter")]
+        public IActionResult Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var users = _userService.FilterUsers(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
 
             var model = new IndexViewModel(users, searchTerm);
 
-            return Request.Headers["X-Requested-With"] == "XMLHttpRequest" ?
-                (ActionResult)PartialView("_UserTablePartial", model.Table) :
-                View(model);
+            return PartialView("_UserTablePartial", model.Table);
         }
     }
 }

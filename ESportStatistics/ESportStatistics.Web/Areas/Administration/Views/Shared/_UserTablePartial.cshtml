@@ -1,44 +1,39 @@
 ﻿@model TableViewModel<UserViewModel>
 
-<div>
-    <select class="custom-select custom-select-trigger sources" placeholder="Page size">
-        <option value="profile">10</option>
-        <option value="word">20</option>
-        <option value="hashtag">50</option>
-    </select>
-    <table class="table tablesorter">
-        <thead class="text-primary">
-            <tr>
-                <th>
-                    User name
-                </th>
-                <th>
-                    Email
-                </th>
-                <th>
-                    Phone NUmber
-                </th>
-                <th>
-                    Is Active
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model.Items)
-            {
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
                 <tr>
-                    <td>@user.Username</td>
-                    <td>@user.Email</td>
-                    <td>@user.PhoneNumber</td>
-                    <td>@(!user.IsDeleted)</td>
+                    <th>
+                        User name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Phone Number
+                    </th>
+                    <th>
+                        Is Active
+                    </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Items)
+                {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@(!user.IsDeleted)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
 </div>
-
-
-@await Html.PartialAsync("_PaginationPartial", Model.Pagination)

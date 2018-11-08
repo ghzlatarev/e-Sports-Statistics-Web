@@ -7,7 +7,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
 {
     public class IndexViewModel
     {
-        public IndexViewModel(IPagedList<ApplicationUser> users, string searchTerm)
+        public IndexViewModel(IPagedList<ApplicationUser> users, string searchTerm = "")
         {
             this.Table = new TableViewModel<UserViewModel>()
             {

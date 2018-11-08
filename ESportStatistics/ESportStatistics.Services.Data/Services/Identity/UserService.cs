@@ -28,7 +28,7 @@ namespace ESportStatistics.Services.Data.Services.Identity
 
             var query = this.dataContext.Users
                 .Where(t => t.UserName.Contains(filter) || t.Email.Contains(filter))
-                .ToPagedList(pageSize, pageNumber);
+                .ToPagedList(pageNumber, pageSize);
 
             return query;
         }
