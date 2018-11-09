@@ -6,7 +6,7 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IItemService
     {
-        Task<IPagedList<Item>> FilterItemsAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
+        Task<IPagedList<Item>> FilterItemsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10);
 
         Task<Item> FindAsync(string id);
 

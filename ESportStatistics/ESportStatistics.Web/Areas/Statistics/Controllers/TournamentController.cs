@@ -34,11 +34,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             sortOrder = sortOrder ?? string.Empty;
             searchTerm = searchTerm ?? string.Empty;
 
-            var tournaments = await _tournamentService.FilterTournamentsAsync(
-                sortOrder,
-                searchTerm,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            var tournaments = await _tournamentService.FilterTournamentsAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
 
             var model = new TournamentIndexViewModel(tournaments, sortOrder, searchTerm);
 

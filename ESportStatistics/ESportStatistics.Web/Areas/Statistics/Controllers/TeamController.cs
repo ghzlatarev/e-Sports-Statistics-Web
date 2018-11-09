@@ -34,11 +34,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             sortOrder = sortOrder ?? string.Empty;
             searchTerm = searchTerm ?? string.Empty;
 
-            var teams = await _teamService.FilterTeamsAsync(
-                sortOrder,
-                searchTerm,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            var teams = await _teamService.FilterTeamsAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
 
             var model = new TeamIndexViewModel(teams, sortOrder, searchTerm);
 
