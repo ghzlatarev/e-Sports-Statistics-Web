@@ -10,10 +10,13 @@
         <thead class=" text-primary">
             <tr>
                 <th>
-                    Champion Name
+                    Champion
                 </th>
                 <th>
-                    Armor
+                    Image
+                </th>
+                <th>
+                    Details
                 </th>
 
             </tr>
@@ -23,10 +26,15 @@
             {
                 <tr>
                     <td>@champion.Name</td>
-                    <td>@champion.Armor</td>
+                    <td>
+                        <img src="@champion.ImageURL" alt="" class="center" height="60" width="60">
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@champion.Id" class="btn btn-fill">Details</a>
+                    </td>
 
                 </tr>
-            }
+            };
         </tbody>
     </table>
 </div>
