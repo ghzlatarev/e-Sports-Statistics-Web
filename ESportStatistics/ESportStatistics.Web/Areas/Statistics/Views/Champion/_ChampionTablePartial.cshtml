@@ -6,7 +6,10 @@
             <thead class="text-primary">
                 <tr>
                     <th>
-                        Champion
+                        <a asp-area="Statistics" asp-controller="Champion" asp-action="Filter"
+                           asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
+                           asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")"
+                           method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"><b>Champion Name</b></a>
                     </th>
                     <th>
                         Image
