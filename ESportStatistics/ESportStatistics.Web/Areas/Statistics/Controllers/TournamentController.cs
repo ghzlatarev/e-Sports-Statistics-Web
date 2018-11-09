@@ -1,7 +1,11 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Tournaments;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
@@ -10,14 +14,15 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     public class TournamentController : Controller
     {
         private readonly ITournamentService _tournamentService;
+        private readonly IPDFService _pDFService;
 
-        public TournamentController(ITournamentService tournamentService)
+        public TournamentController(ITournamentService tournamentService, IPDFService pDFService)
         {
             _tournamentService = tournamentService ?? throw new ArgumentNullException(nameof(tournamentService));
+            _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
         }
 
-        [HttpGet]
-        [Route("tournaments")]
+        [HttpGet("tournaments")]
         public async Task<IActionResult> Index()
         {
             var tournaments = await _tournamentService.FilterTournamentsAsync();
@@ -27,8 +32,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("/tournaments/filter")]
+        [HttpGet("/tournaments/filter")]
         public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
             sortOrder = sortOrder ?? string.Empty;
@@ -41,8 +45,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return PartialView("_TournamentTablePartial", model.Table);
         }
 
-        [HttpGet]
-        [Route("tournaments/details/{id}")]
+        [HttpGet("tournaments/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -59,6 +62,31 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             var model = new TournamentDetailsViewModel(tournament);
 
             return View(model);
+        }
+
+        [HttpGet("tournaments/download")]
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        {
+            IList<string> fileParameters = typeof(TournamentDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
+
+            var tournaments = await _tournamentService.FilterTournamentsAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (tournaments is null)
+            {
+                throw new ApplicationException("Failed to get database collection!");
+            }
+
+            var model = tournaments.Select(t => new TournamentDownloadViewModel(t));
+            var outputFileName = _pDFService.CreatePDF(model, fileParameters, "tournaments");
+            var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
+
+            try
+            {
+                return File(fileBytes, MediaTypeNames.Application.Octet, outputFileName);
+            }
+            finally
+            {
+                _pDFService.DeleteFile(outputFileName);
+            }
         }
     }
 }

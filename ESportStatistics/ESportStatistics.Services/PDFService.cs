@@ -125,6 +125,7 @@ namespace ESportStatistics.Services
                     p.ParagraphFormat.SpaceAfter = LengthUnitConverter.Convert(3, LengthUnit.Millimeter, LengthUnit.Point);
 
                     var propValue = entity.GetType().GetProperty(propName).GetValue(entity, null);
+                    propValue = propValue ?? "";
 
                     try
                     {
