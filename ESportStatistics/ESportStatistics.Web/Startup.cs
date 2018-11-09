@@ -73,6 +73,8 @@ namespace ESportStatistics.Web
             services.AddScoped<ISpellService, SpellService>();
             services.AddScoped<ITournamentService, TournamentService>();
 
+            services.AddScoped<IEmailSender, EmailSender>();
+
             services.AddMvc();
         }
 

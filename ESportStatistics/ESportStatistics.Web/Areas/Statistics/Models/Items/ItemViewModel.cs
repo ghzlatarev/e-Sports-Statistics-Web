@@ -1,11 +1,9 @@
 ﻿using ESportStatistics.Data.Models;
-using System;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Items
 {
     public class ItemViewModel
     {
-
         public ItemViewModel()
         {
         }
@@ -14,16 +12,13 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Items
         {
             this.Name = item.Name;
             this.ImageURL = item.ImageURL;
-            this.Id = item.Id;
-
+            this.Id = item.Id.ToString();
         }
 
         public string Name { get; private set; }
+
         public string ImageURL { get; private set; }
-        public Guid Id { get; private set; }
 
-
-
-        //da naredq tuka neshtata za viewmodela
+        public string Id { get; private set; }
     }
 }

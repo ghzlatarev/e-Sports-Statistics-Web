@@ -4,9 +4,9 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Matches
 {
     public class MatchDetailsViewModel
     {
-
         public MatchDetailsViewModel()
         {
+
         }
 
         public MatchDetailsViewModel(Match match)
@@ -19,9 +19,13 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Matches
         }
 
         public string Name { get; set; }
+
         public string BeginAt { get; set; }
+
         public int? NumberOfGames { get; set; }
+
         public string Status { get; set; }
+
         public string MatchType { get; set; }
     }
 }

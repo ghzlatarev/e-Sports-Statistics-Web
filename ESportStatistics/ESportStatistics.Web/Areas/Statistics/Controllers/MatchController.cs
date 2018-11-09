@@ -1,7 +1,11 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Matches;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
@@ -10,14 +14,15 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     public class MatchController : Controller
     {
         private readonly IMatchService _matchService;
+        private readonly IPDFService _pDFService;
 
-        public MatchController(IMatchService matchService)
+        public MatchController(IMatchService matchService, IPDFService pDFService)
         {
-            this._matchService = matchService;
+            this._matchService = matchService ?? throw new ArgumentNullException(nameof(matchService));
+            this._pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
         }
 
-        [HttpGet]
-        [Route("matches")]
+        [HttpGet("matches")]
         public async Task<IActionResult> Index(MatchViewModel match)
         {
             var matches = await _matchService.FilterMatchesAsync();
@@ -27,22 +32,20 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("matches/filter")]
-        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        [HttpGet("matches/filter")]
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
-            var matches = await _matchService.FilterMatchesAsync(
-                searchTerm ?? string.Empty,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
 
-            var model = new MatchIndexViewModel(matches, searchTerm);
+            var matches = await _matchService.FilterMatchesAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
+
+            var model = new MatchIndexViewModel(matches, sortOrder, searchTerm);
 
             return PartialView("_MatchTablePartial", model.Table);
         }
 
-        [HttpGet]
-        [Route("matches/details/{id}")]
+        [HttpGet("matches/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
 
@@ -63,5 +66,30 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
+
+        [HttpGet("matches/download")]
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        {
+            IList<string> fileParameters = typeof(MatchDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
+
+            var champions = await _matchService.FilterMatchesAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (champions is null)
+            {
+                throw new ApplicationException("Failed to get database collection!");
+            }
+
+            var model = champions.Select(c => new MatchDownloadViewModel(c));
+            var outputFileName = _pDFService.CreatePDF(model, fileParameters, "matches");
+            var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
+
+            try
+            {
+                return File(fileBytes, MediaTypeNames.Application.Octet, outputFileName);
+            }
+            finally
+            {
+                _pDFService.DeleteFile(outputFileName);
+            }
+        }
     }
 }

@@ -2,21 +2,18 @@
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Matches
 {
-    public class MatchViewModel
+    public class MatchDownloadViewModel
     {
-        public MatchViewModel()
+        public MatchDownloadViewModel()
         {
 
         }
 
-        public MatchViewModel(Match match)
+        public MatchDownloadViewModel(Match match)
         {
             this.Name = match.Name;
-            this.Id = match.Id.ToString();
         }
 
         public string Name { get; set; }
-
-        public string Id { get; set; }
     }
 }

@@ -2,14 +2,14 @@
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Masteries
 {
-    public class MasteryViewModel
+    public class MasteryDownloadViewModel
     {
-        public MasteryViewModel()
+        public MasteryDownloadViewModel()
         {
 
         }
 
-        public MasteryViewModel(Mastery mastery)
+        public MasteryDownloadViewModel(Mastery mastery)
         {
             this.Name = mastery.Name;
         }

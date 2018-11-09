@@ -67,7 +67,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         [HttpGet("champions/download")]
         public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
-            IList<string> fileParameters = typeof(ChampionViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
+            IList<string> fileParameters = typeof(ChampionDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
 
             var champions = await _championService.FilterChampionsAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
             if (champions is null)
@@ -75,7 +75,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
                 throw new ApplicationException("Failed to get database collection!");
             }
 
-            var model = champions.Select(c => new ChampionViewModel(c));
+            var model = champions.Select(c => new ChampionDownloadViewModel(c));
             var outputFileName = _pDFService.CreatePDF(model, fileParameters, "champions");
             var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
 

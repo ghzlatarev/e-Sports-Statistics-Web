@@ -1,5 +1,4 @@
 ﻿using ESportStatistics.Data.Models;
-using ESportStatistics.Web.Areas.Statistics.Models.Leagues;
 using ESportStatistics.Web.Models;
 using System.Linq;
 using X.PagedList;

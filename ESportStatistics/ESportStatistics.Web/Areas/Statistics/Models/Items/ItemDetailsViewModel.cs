@@ -4,9 +4,9 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Items
 {
     public class ItemDetailsViewModel
     {
-
         public ItemDetailsViewModel()
         {
+
         }
 
         public ItemDetailsViewModel(Item item)
@@ -29,21 +29,35 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Items
         }
 
         public string Name { get; set; }
-        public int? TotalGold { get; set; }
-        public int? BaseGold { get; set; }
-        public int? SellGold { get; set; }
-        public int? FlatMagicDamageModifier { get; set; }
-        public int? FlatCritChanceModifier { get; set; }
-        public int? PercentAttackSpeedModifier { get; set; }
-        public int? PercentMovementSpeedModifier { get; set; }
-        public int? FlatArmorModifier { get; set; }
-        public int? FlatSpellBlockModifier { get; set; }
-        public int? FlatPhysicalDamageModifier { get; set; }
-        public int? PercentLifeStealModifier { get; set; }
-        public int? FlatHeatlhRegenModifier { get; set; }
-        public int? FlatManaRegenModifier { get; set; }
-        public int? FlatManaPoolModifier { get; set; }
-        public string ImageURL { get; set; }
 
+        public int? TotalGold { get; set; }
+
+        public int? BaseGold { get; set; }
+
+        public int? SellGold { get; set; }
+
+        public int? FlatMagicDamageModifier { get; set; }
+
+        public int? FlatCritChanceModifier { get; set; }
+
+        public int? PercentAttackSpeedModifier { get; set; }
+
+        public int? PercentMovementSpeedModifier { get; set; }
+
+        public int? FlatArmorModifier { get; set; }
+
+        public int? FlatSpellBlockModifier { get; set; }
+
+        public int? FlatPhysicalDamageModifier { get; set; }
+
+        public int? PercentLifeStealModifier { get; set; }
+
+        public int? FlatHeatlhRegenModifier { get; set; }
+
+        public int? FlatManaRegenModifier { get; set; }
+
+        public int? FlatManaPoolModifier { get; set; }
+
+        public string ImageURL { get; set; }
     }
 }

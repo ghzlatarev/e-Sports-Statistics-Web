@@ -7,7 +7,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Matches
 {
     public class MatchIndexViewModel
     {
-        public MatchIndexViewModel(IPagedList<Match> matches, string searchTerm = "")
+        public MatchIndexViewModel(IPagedList<Match> matches, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<MatchViewModel>()
             {
@@ -20,6 +20,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Matches
                     HasNextPage = matches.HasNextPage,
                     HasPreviousPage = matches.HasPreviousPage,
                     SearchTerm = searchTerm,
+                    SortOrder = sortOrder,
                     AreaRoute = "Statistics",
                     ControllerRoute = "Match",
                     ActionRoute = "Filter"
