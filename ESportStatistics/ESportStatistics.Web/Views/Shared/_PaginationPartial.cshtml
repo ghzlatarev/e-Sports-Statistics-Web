@@ -1,0 +1,64 @@
+﻿@model PaginationViewModel
+
+<div class="pagination-holder black clearfix">
+    <ul id="dark-pagination" class="pagination dark-theme simple-pagination">
+
+        @if (Model.HasPreviousPage)
+        {
+            <li>
+                <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                   data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
+                   class="page-link">Prev</a>
+            </li>
+        }
+        else
+        {
+            <li><a class="page-link current">Prev</a></li>
+        }
+
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            if (Model.PageNumber == i)
+            {
+                <li><a class="page-link current">@i</a></li>
+            }
+            else
+            {
+                <li>
+                    <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
+                       asp-route-pageNumber="@i" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                       data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
+                       class="page-link">@i</a>
+                </li>
+            }
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li>
+                <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                   data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
+                   class="page-link">Next</a>
+            </li>
+        }
+        else
+        {
+            <li><a class="page-link current">Next</a></li>
+        }
+        <!-- <li>
+                <form asp-area="Administration" asp-controller="User" asp-action="Filter"
+                  asp-route-pageNumber="@Model.PageNumber" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                  method="get"
+                  data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
+                <label for="#pageSizeSelect">Page size</label>
+                <select onchange="this.form.submit()" name="pageSize" id="pageSizeSelect">
+                    <option value="1">10</option>
+                    <option value="2">20</option>
+                    <option value="5">50</option>
+                </select>
+            </form>
+        </li>-->
+    </ul>
+</div>

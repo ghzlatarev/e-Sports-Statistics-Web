@@ -1,0 +1,30 @@
+﻿@using ESportStatistics.Web.Models
+
+@model TableViewModel<TeamViewModel>
+
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Acronym
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var team in Model.Items)
+                {
+                    <tr>
+                        <td>@team.Name</td>
+                        <td>@team.Acronym</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+</div>

@@ -1,0 +1,26 @@
+﻿@using ESportStatistics.Web.Models
+
+@model TableViewModel<SpellViewModel>
+
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var spell in Model.Items)
+                {
+                    <tr>
+                        <td>@spell.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+</div>

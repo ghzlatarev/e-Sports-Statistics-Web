@@ -1,37 +1,44 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Statistics.Models.Series;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
+    [Route("series")]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
     public class SerieController : Controller
     {
-        private readonly ILogger _logger;
         private readonly ISerieService _serieService;
 
-        public SerieController(ILogger<AccountController> logger, ISerieService serieService)
+        public SerieController(ISerieService serieService)
         {
-            _logger = logger;
-            _serieService = serieService;
+            _serieService = serieService ?? throw new ArgumentNullException(nameof(serieService));
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var series = await _serieService.FilterSeriesAsync();
+            var spells = await _serieService.FilterSeriesAsync();
 
-            var model = series.Select(s => new SerieViewModel(s));
+            var model = new IndexViewModel(spells);
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("/series-filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var spells = await _serieService.FilterSeriesAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new IndexViewModel(spells, searchTerm);
+
+            return PartialView("_SerieTablePartial", model.Table);
         }
     }
 }

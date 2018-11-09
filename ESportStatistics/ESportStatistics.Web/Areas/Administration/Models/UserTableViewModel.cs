@@ -2,16 +2,18 @@
 
 namespace ESportStatistics.Web.Areas.Administration.Models
 {
-    public class UserViewModel
+    public class UserTableViewModel
     {
-        public UserViewModel(ApplicationUser user)
+        public UserTableViewModel(ApplicationUser user)
         {
+            this.Id = user.Id;
             this.Username = user.UserName;
             this.Email = user.Email;
             this.PhoneNumber = user.PhoneNumber;
             this.IsDeleted = user.IsDeleted;
-            this.AvatarImage = user.AvatarImage;
         }
+
+        public string Id { get; set; }
 
         public string Username { get; set; }
 
@@ -21,6 +23,6 @@ namespace ESportStatistics.Web.Areas.Administration.Models
 
         public bool IsDeleted { get; set; }
 
-        public byte[] AvatarImage { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

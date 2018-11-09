@@ -4,10 +4,10 @@ using ESportStatistics.Services.Data.Exceptions;
 using ESportStatistics.Services.Data.Services.Identity.Contracts;
 using ESportStatistics.Services.Data.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Services.Data.Services.Identity
 {
@@ -20,18 +20,50 @@ namespace ESportStatistics.Services.Data.Services.Identity
             this.dataContext = dataContext;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> FilterUsersAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
+        public async Task<IPagedList<ApplicationUser>> FilterUsersAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
             var query = await this.dataContext.Users
-                .Where(t => t.UserName.Contains(filter) || t.Email.Contains(filter))
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToListAsync();
+                .Where(u => u.UserName.Contains(filter) || u.Email.Contains(filter))
+                .ToPagedListAsync(pageNumber, pageSize);
 
             return query;
+        }
+
+        public async Task<ApplicationUser> DisableUser(string userId)
+        {
+            ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
+
+            if (userId == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            this.dataContext.Remove(user);
+            await this.dataContext.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<ApplicationUser> RestoreUser(string userId)
+        {
+            ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
+
+            if (userId == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            user.IsDeleted = false;
+            user.DeletedOn = null;
+
+            await this.dataContext.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task SaveAvatarImageAsync(Stream stream, string userId)

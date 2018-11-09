@@ -17,21 +17,21 @@
                         <div class="col-md-5 pr-md-1">
                             <div class="form-group">
                                 <label asp-for="Email"></label>
-                                <input asp-for="Email" type="email" class="form-control" placeholder="mike@email.com" value="@Model.Email">
+                                <input asp-for="Email" type="email" class="form-control" placeholder="mike@email.com" value="@Model.Email" maxlength="40" minlength="6" required>
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3 px-md-1">
                             <div class="form-group">
                                 <label asp-for="Username"></label>
-                                <input asp-for="Username" type="text" class="form-control" placeholder="Username" value="@Model.Username">
+                                <input asp-for="Username" type="text" class="form-control" placeholder="Username" value="@Model.Username" maxlength="40" minlength="6" required>
                                 <span asp-validation-for="Username" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4 pl-md-1">
                             <div class="form-group">
                                 <label asp-for="PhoneNumber"></label>
-                                <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Phone Number" value="@Model.PhoneNumber">
+                                <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Phone Number" value="@Model.PhoneNumber" maxlength="20" minlength="6">
                                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
@@ -40,14 +40,14 @@
                         <div class="col-md-6 pr-md-1">
                             <div class="form-group">
                                 <label asp-for="FirstName"></label>
-                                <input asp-for="FirstName" type="text" class="form-control" placeholder="FirstName" value="@Model.FirstName">
+                                <input asp-for="FirstName" type="text" class="form-control" placeholder="FirstName" value="@Model.FirstName" maxlength="25" minlength="3">
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6 pl-md-1">
                             <div class="form-group">
                                 <label asp-for="LastName"></label>
-                                <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" value="@Model.LastName">
+                                <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" value="@Model.LastName" maxlength="25" minlength="3">
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label asp-for="Address"></label>
-                                <input asp-for="Address" type="text" class="form-control" placeholder="Home Address" value="@Model.Address">
+                                <input asp-for="Address" type="text" class="form-control" placeholder="Home Address" value="@Model.Address" maxlength="125" minlength="3">
                                 <span asp-validation-for="Address" class="text-danger"></span>
                             </div>
                         </div>
@@ -65,14 +65,14 @@
                         <div class="col-md-4 pr-md-1">
                             <div class="form-group">
                                 <label asp-for="City"></label>
-                                <input asp-for="City" type="text" class="form-control" placeholder="City" value="@Model.City">
+                                <input asp-for="City" type="text" class="form-control" placeholder="City" value="@Model.City" maxlength="40" minlength="3">
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-4 px-md-1">
                             <div class="form-group">
                                 <label asp-for="Country"></label>
-                                <input asp-for="Country" type="text" class="form-control" placeholder="Country" value="@Model.Country">
+                                <input asp-for="Country" type="text" class="form-control" placeholder="Country" value="@Model.Country" maxlength="40" minlength="3">
                                 <span asp-validation-for="Country" class="text-danger"></span>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label>About Me</label>
-                                <textarea asp-for="Story" rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="@Model.Story"></textarea>
+                                <textarea asp-for="Story" rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="@Model.Story" maxlength="250" minlength="3"></textarea>
                                 <span asp-validation-for="Story" class="text-danger"></span>
                             </div>
                         </div>
