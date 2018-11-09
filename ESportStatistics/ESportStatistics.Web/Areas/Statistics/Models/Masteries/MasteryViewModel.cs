@@ -1,6 +1,6 @@
 ﻿using ESportStatistics.Data.Models;
 
-namespace ESportStatistics.Web.Areas.Statistics.Models
+namespace ESportStatistics.Web.Areas.Statistics.Models.Masteries
 {
     public class MasteryViewModel
     {
@@ -13,6 +13,8 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         {
             this.Name = mastery.Name;
         }
+
         public string Name { get; private set; }
+
     }
 }
