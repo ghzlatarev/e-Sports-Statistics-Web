@@ -61,11 +61,10 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         [Route("users/filter")]
         public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
-            var users = await _userService.FilterUsersAsync(
-                sortOrder ?? string.Empty,
-                searchTerm ?? string.Empty,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
+
+            var users = await _userService.FilterUsersAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
 
             var model = new IndexViewModel(users, sortOrder, searchTerm);
 

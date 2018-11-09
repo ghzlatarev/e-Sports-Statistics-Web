@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Data.Models;
+﻿using ESportStatistics.Data.Models;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Players
 {

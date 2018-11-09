@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Data.Models;
+﻿using ESportStatistics.Data.Models;
 using ESportStatistics.Web.Models;
+using System.Linq;
 using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Series
 {
-    public class IndexViewModel
+    public class SerieIndexViewModel
     {
-        public IndexViewModel(IPagedList<Serie> series, string searchTerm = "")
+        public SerieIndexViewModel(IPagedList<Serie> series, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<SerieViewModel>()
             {
@@ -23,6 +20,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Series
                     HasNextPage = series.HasNextPage,
                     HasPreviousPage = series.HasPreviousPage,
                     SearchTerm = searchTerm,
+                    SortOrder = sortOrder,
                     AreaRoute = "Statistics",
                     ControllerRoute = "Serie",
                     ActionRoute = "Filter"

@@ -7,7 +7,7 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface ISpellService
     {
-        Task<IPagedList<Spell>> FilterSpellsAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
+        Task<IPagedList<Spell>> FilterSpellsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10);
 
         Task RebaseSpellsAsync(string accessToken);
 
