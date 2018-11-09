@@ -1,35 +1,66 @@
-﻿using ESportStatistics.Web.Areas.Identity.Controllers;
-using Microsoft.AspNetCore.Authorization;
+﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Statistics.Models.Matches;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
     public class MatchController : Controller
     {
-        
-        private readonly ILogger _logger;
+        private readonly IMatchService _matchService;
 
-        public MatchController(ILogger<AccountController> logger)
+        public MatchController(IMatchService matchService)
         {
-            _logger = logger;
+            this._matchService = matchService;
         }
 
-         [HttpGet]
-        public IActionResult Index()
+        [HttpGet]
+        [Route("matches")]
+        public async Task<IActionResult> Index(MatchViewModel match)
         {
-            //var model = new ChampionViewModel
-            //{
-            //    //{
-            //    //    PhoneNumber = user.PhoneNumber,
-            //    //    ImageUrl = user.AvatarImageName,
-            //    //    StatusMessage = StatusMessage
-            //};
-            return this.View();
+            var matches = await _matchService.FilterMatchesAsync();
+
+            var model = new MatchIndexViewModel(matches);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Route("matches/filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var matches = await _matchService.FilterMatchesAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new MatchIndexViewModel(matches, searchTerm);
+
+            return PartialView("_MatchTablePartial", model.Table);
+        }
+
+        [HttpGet]
+        [Route("matches/details/{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+
+            if (id == null)
+            {
+                throw new ApplicationException($"Passed ID parameter is absent.");
+            }
+
+            var match = await _matchService.FindAsync(id);
+
+            if (match == null)
+            {
+                throw new ApplicationException($"Unable to find match with ID '{id}'.");
+            }
+
+            var model = new MatchDetailsViewModel(match);
+
+            return View(model);
         }
 
     }

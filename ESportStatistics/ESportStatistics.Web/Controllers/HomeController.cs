@@ -1,9 +1,6 @@
-﻿using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Models;
+﻿using ESportStatistics.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Controllers
 {

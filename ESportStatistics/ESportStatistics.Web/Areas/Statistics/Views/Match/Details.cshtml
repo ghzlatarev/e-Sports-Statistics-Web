@@ -1,0 +1,35 @@
+﻿@model MatchDetailsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>@Model.Name</h1>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="table-responsive">
+            <table class="table tablesorter " id="">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <td>BeginAt</td>
+                        <td>@Model.BeginAt</td>
+                    </tr>
+                    <tr>
+                        <td>BeginAt</td>
+                        <td>@Model.Status</td>
+                    </tr>
+                    <tr>
+                        <td>BeginAt</td>
+                        <td>@Model.MatchType</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
