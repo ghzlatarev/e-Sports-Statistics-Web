@@ -1,0 +1,50 @@
+﻿@using ESportStatistics.Web.Areas.Statistics.Models.Players
+
+@model PlayerDetailsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>@Model.Name</h1>
+
+<div class="row">
+    <div class="col-lg-3">
+        <img src="@Model.ImageURL" alt="" class="center">
+    </div>
+    <div class="col-lg-7">
+        <div class="table-responsive">
+            <table class="table tablesorter " id="">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <td>First Name</td>
+                        <td>@Model.FirstName</td>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td>@Model.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>Role</td>
+                        <td>@Model.Role</td>
+                    </tr>
+                    <tr>
+                        <td>Hometown</td>
+                        <td>@Model.Hometown</td>
+                    </tr>
+                    <tr>
+                        <td>Bio</td>
+                        <td>@Model.Bio</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

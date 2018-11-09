@@ -10,5 +10,7 @@ namespace ESportStatistics.Core.Services.Contracts
         Task<IPagedList<Spell>> FilterSpellsAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
 
         Task RebaseSpellsAsync(string accessToken);
+
+        Task<Spell> FindAsync(string id);
     }
 }

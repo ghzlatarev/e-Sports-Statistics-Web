@@ -11,25 +11,29 @@
                         Name
                     </th>
                     <th>
-                        Slug
-                    </th>
-                    <th>
                         Begins At
                     </th>
                     <th>
                         Ends At
+                    </th>
+                    <th>
+                        Actions
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var tournament in Model.Items)
                 {
-                    <tr>
-                        <td>@tournament.Name</td>
-                        <td>@tournament.Slug</td>
-                        <td>@tournament.BeginAt</td>
-                        <td>@tournament.EndAt</td>
-                    </tr>
+                <tr>
+                    <td>@tournament.Name</td>
+                    <td>@tournament.BeginAt</td>
+                    <td>@tournament.EndAt</td>
+                    <td>
+                        <div class="dark-theme">
+                            <a class="page-link" asp-area="Statistics" asp-controller="Tournament" asp-action="Details" asp-route-id="@tournament.Id">Details</a>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

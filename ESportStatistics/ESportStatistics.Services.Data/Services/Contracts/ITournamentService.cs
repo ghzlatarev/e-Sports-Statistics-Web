@@ -10,5 +10,7 @@ namespace ESportStatistics.Core.Services.Contracts
         Task<IPagedList<Tournament>> FilterTournamentsAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
 
         Task RebaseTournamentsAsync(string accessToken);
+
+        Task<Tournament> FindAsync(string id);
     }
 }

@@ -10,14 +10,28 @@
                     <th>
                         Name
                     </th>
+                    <th>
+                        Image
+                    </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var spell in Model.Items)
                 {
-                    <tr>
-                        <td>@spell.Name</td>
-                    </tr>
+                <tr>
+                    <td>@spell.Name</td>
+                    <td>
+                        <img src="@spell.ImageURL" class="center" style="height:5em;width:auto">
+                    </td>
+                    <td>
+                        <div class="dark-theme">
+                            <a class="page-link" asp-area="Statistics" asp-controller="Spell" asp-action="Details" asp-route-id="@spell.Id">Details</a>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

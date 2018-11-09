@@ -8,6 +8,9 @@
             <thead class="text-primary">
                 <tr>
                     <th>
+                        Image
+                    </th>
+                    <th>
                         Name
                     </th>
                     <th>
@@ -20,24 +23,27 @@
                         Role
                     </th>
                     <th>
-                        Bio
-                    </th>
-                    <th>
-                        Hometown
+                        Actions
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var player in Model.Items)
                 {
-                    <tr>
-                        <td>@player.Name</td>
-                        <td>@player.FirstName</td>
-                        <td>@player.LastName</td>
-                        <td>@player.Role</td>
-                        <td>@player.Bio</td>
-                        <td>@player.Hometown</td>
-                    </tr>
+                <tr>
+                    <td>
+                        <img src="@player.ImageURL" class="center" style="height:5em;width:auto">
+                    </td>
+                    <td>@player.Name</td>
+                    <td>@player.FirstName</td>
+                    <td>@player.LastName</td>
+                    <td>@player.Role</td>
+                    <td>
+                        <div class="dark-theme">
+                            <a class="page-link" asp-area="Statistics" asp-controller="Player" asp-action="Details" asp-route-id="@player.Id">Details</a>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

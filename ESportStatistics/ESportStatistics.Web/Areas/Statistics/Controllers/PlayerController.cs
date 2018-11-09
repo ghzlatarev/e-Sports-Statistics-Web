@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Route("players")]
     [Area("Statistics")]
     public class PlayerController : Controller
     {
@@ -18,6 +17,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
+        [Route("players")]
         public async Task<IActionResult> Index()
         {
             var players = await _playerService.FilterPlayersAsync();
@@ -28,7 +28,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
-        [Route("/players-filter")]
+        [Route("/players/filter")]
         public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
         {
             var players = await _playerService.FilterPlayersAsync(
@@ -39,6 +39,26 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             var model = new IndexViewModel(players, searchTerm);
 
             return PartialView("_PlayerTablePartial", model.Table);
+        }
+
+        [HttpGet]
+        [Route("players/details/{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                throw new ApplicationException($"Passed ID parameter is absent.");
+            }
+
+            var player = await _playerService.FindAsync(id);
+            if (player == null)
+            {
+                throw new ApplicationException($"Unable to find player with ID '{id}'.");
+            }
+
+            var model = new PlayerDetailsViewModel(player);
+
+            return View(model);
         }
     }
 }

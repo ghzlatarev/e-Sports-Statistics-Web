@@ -1,0 +1,47 @@
+﻿@using ESportStatistics.Web.Areas.Statistics.Models.Series
+
+@model SerieDetailsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>@Model.FullName</h1>
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table tablesorter " id="">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>@Model.FullName</td>
+                </tr>
+                <tr>
+                    <td>Season</td>
+                    <td>@Model.Season</td>
+                </tr>
+                <tr>
+                    <td>Year</td>
+                    <td>@Model.Year</td>
+                </tr>
+                <tr>
+                    <td>Begins At</td>
+                    <td>@Model.BeginAt</td>
+                </tr>
+                <tr>
+                    <td>Ends At</td>
+                    <td>@Model.EndAt</td>
+                </tr>
+                <tr>
+                    <td>Slug</td>
+                    <td>@Model.Slug</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td>@Model.Description</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

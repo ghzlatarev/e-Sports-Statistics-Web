@@ -24,6 +24,16 @@ namespace ESportStatistics.Core.Services
             this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
         }
 
+        public async Task<Serie> FindAsync(string serieId)
+        {
+            Validator.ValidateNull(serieId, "Serie Id cannot be null!");
+            Validator.ValidateGuid(serieId, "Serie id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Series.FindAsync(Guid.Parse(serieId));
+
+            return query;
+        }
+
         public async Task<IPagedList<Serie>> FilterSeriesAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateNull(filter, "Filter cannot be null!");

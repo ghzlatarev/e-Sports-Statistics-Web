@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Route("spells")]
     [Area("Statistics")]
     public class SpellController : Controller
     {
@@ -18,6 +17,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
+        [Route("spells")]
         public async Task<IActionResult> Index()
         {
             var spells = await _spellService.FilterSpellsAsync();
@@ -28,7 +28,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
-        [Route("/spells-filter")]
+        [Route("/spells/filter")]
         public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
         {
             var spells = await _spellService.FilterSpellsAsync(
@@ -39,6 +39,26 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             var model = new IndexViewModel(spells, searchTerm);
 
             return PartialView("_SpellTablePartial", model.Table);
+        }
+
+        [HttpGet]
+        [Route("spells/details/{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                throw new ApplicationException($"Passed ID parameter is absent.");
+            }
+
+            var spell = await _spellService.FindAsync(id);
+            if (spell == null)
+            {
+                throw new ApplicationException($"Unable to find spell with ID '{id}'.");
+            }
+
+            var model = new SpellViewModel(spell);
+
+            return View(model);
         }
     }
 }
