@@ -22,8 +22,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
         }
 
-        [HttpGet]
-        [Route("champions")]
+        [HttpGet("champions")]
         public async Task<IActionResult> Index()
         {
             var champions = await _championService.FilterChampionsAsync();
@@ -33,26 +32,20 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("champions/filter")]
+        [HttpGet("champions/filter")]
         public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
             sortOrder = sortOrder ?? string.Empty;
             searchTerm = searchTerm ?? string.Empty;
 
-            var champions = await _championService.FilterChampionsAsync(
-                sortOrder,
-                searchTerm,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            var champions = await _championService.FilterChampionsAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
 
             var model = new ChampionIndexViewModel(champions, sortOrder, searchTerm);
 
             return PartialView("_ChampionTablePartial", model.Table);
         }
 
-        [HttpGet]
-        [Route("champions/details/{id}")]
+        [HttpGet("champions/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -74,19 +67,17 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         [HttpGet("champions/download")]
         public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
-            sortOrder = sortOrder ?? string.Empty;
-            searchTerm = searchTerm ?? string.Empty;
+            IList<string> fileParameters = typeof(ChampionViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
 
-            var champions = await _championService.FilterChampionsAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
+            var champions = await _championService.FilterChampionsAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (champions is null)
+            {
+                throw new ApplicationException("Failed to get database collection!");
+            }
 
             var model = champions.Select(c => new ChampionViewModel(c));
-
-            IList<string> fileParameters = typeof(ChampionViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
-            const string fileName = "champions";
-
-            string outputFileName = this._pDFService.CreatePDF(model, fileParameters, fileName);
-
-            byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(outputFileName);
+            var outputFileName = _pDFService.CreatePDF(model, fileParameters, "champions");
+            var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
 
             try
             {

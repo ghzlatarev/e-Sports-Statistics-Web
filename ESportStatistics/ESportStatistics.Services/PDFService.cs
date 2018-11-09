@@ -5,6 +5,7 @@ using SautinSoft.Document.Tables;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Services
 {
@@ -16,6 +17,21 @@ namespace ESportStatistics.Services
         }
 
         private ILoggerService Logger { get; }
+
+        public async Task<byte[]> GetFileBytesAsync(string filePath)
+        {
+            if (filePath == null)
+            {
+                throw new ArgumentNullException("File path cannot be null!");
+            }
+
+            if (!File.Exists(filePath))
+            {
+                throw new ArgumentException(string.Format($"File {0} does not exist!", filePath));
+            }
+
+            return await File.ReadAllBytesAsync(filePath);
+        }
 
         public string CreatePDF<T>(IEnumerable<T> entities, IList<string> columns, string fileName)
             where T : class
@@ -38,7 +54,7 @@ namespace ESportStatistics.Services
             return documentPath;
         }
 
-        public bool DeleteFile(string fileName)
+        public void DeleteFile(string fileName)
         {
             if (fileName == null)
             {
@@ -51,8 +67,6 @@ namespace ESportStatistics.Services
             }
 
             File.Delete(fileName);
-
-            return true;
         }
 
         private Table RenderPDF<T>(IEnumerable<T> entities, IList<string> columns, DocumentCore dc)
