@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ESportStatistics.Core.Providers.Contracts;
+﻿using ESportStatistics.Core.Providers.Contracts;
 using ESportStatistics.Services.Contracts;
 using SautinSoft.Document;
 using SautinSoft.Document.Tables;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ESportStatistics.Services
 {
@@ -12,32 +12,51 @@ namespace ESportStatistics.Services
     {
         public PDFService(ILoggerService logger)
         {
-            this.Logger = logger ?? throw new ArgumentNullException();
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         private ILoggerService Logger { get; }
 
-        public void ToPDF<T>(IEnumerable<T> entities, List<string> columns, string fileName)
+        public string CreatePDF<T>(IEnumerable<T> entities, IList<string> columns, string fileName)
             where T : class
         {
-            // Filter input
             Type elementType = typeof(T);
 
-            string documentPath = $"{fileName}-{DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss")}.pdf";
+            string documentPath = $"{fileName}-{Guid.NewGuid()}.pdf";
 
             DocumentCore dc = new DocumentCore();
 
             Section s = new Section(dc);
             dc.Sections.Add(s);
 
-            Table table = this.CreatePDF(entities, columns, dc);
+            Table table = RenderPDF(entities, columns, dc);
 
             s.Blocks.Add(table);
 
             dc.Save(documentPath, new PdfSaveOptions() { Compliance = PdfCompliance.PDF_A });
+
+            return documentPath;
         }
 
-        private Table CreatePDF<T>(IEnumerable<T> entities, IList<string> columns, /*PdfPTable table,*/ DocumentCore dc)
+        public bool DeleteFile(string fileName)
+        {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException("File name cannot be null!");
+            }
+
+            if (!File.Exists(fileName))
+            {
+                throw new ArgumentException("File does not exists!");
+            }
+
+            File.Delete(fileName);
+
+            return true;
+        }
+
+        private Table RenderPDF<T>(IEnumerable<T> entities, IList<string> columns, DocumentCore dc)
+            where T : class
         {
             Table table = new Table(dc);
             double width = LengthUnitConverter.Convert(100, LengthUnit.Millimeter, LengthUnit.Point);

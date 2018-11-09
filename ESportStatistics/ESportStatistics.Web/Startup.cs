@@ -4,6 +4,8 @@ using ESportStatistics.Core.Services;
 using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models.Identity;
+using ESportStatistics.Services;
+using ESportStatistics.Services.Contracts;
 using ESportStatistics.Services.Data.Services.Identity;
 using ESportStatistics.Services.Data.Services.Identity.Contracts;
 using ESportStatistics.Services.External;
@@ -43,15 +45,23 @@ namespace ESportStatistics.Web
                      options.UseSqlServer(Configuration.GetConnectionString("ProductionConnection")));
             }
 
+            // Database
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
+            // Services External
             services.AddScoped<HttpClient>();
             services.AddScoped<IPandaScoreClient, PandaScoreClient>();
 
+            // Services
+            services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped<IPDFService, PDFService>();
+
+            // Services Data Identity
             services.AddScoped<IUserService, UserService>();
 
+            // Services Data
             services.AddScoped<IChampionService, ChampionService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ILeagueService, LeagueService>();
@@ -62,8 +72,6 @@ namespace ESportStatistics.Web
             services.AddScoped<ISerieService, SerieService>();
             services.AddScoped<ISpellService, SpellService>();
             services.AddScoped<ITournamentService, TournamentService>();
-
-            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddMvc();
         }

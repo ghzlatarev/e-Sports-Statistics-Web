@@ -1,7 +1,11 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Champions;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
@@ -10,10 +14,12 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     public class ChampionController : Controller
     {
         private readonly IChampionService _championService;
+        private readonly IPDFService _pDFService;
 
-        public ChampionController(IChampionService championService)
+        public ChampionController(IChampionService championService, IPDFService pDFService)
         {
             _championService = championService ?? throw new ArgumentNullException(nameof(championService));
+            _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
         }
 
         [HttpGet]
@@ -65,5 +71,31 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
+        [HttpGet("champions/download")]
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        {
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
+
+            var champions = await _championService.FilterChampionsAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
+
+            var model = champions.Select(c => new ChampionViewModel(c));
+
+            IList<string> fileParameters = typeof(ChampionViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
+            const string fileName = "champions";
+
+            string outputFileName = this._pDFService.CreatePDF(model, fileParameters, fileName);
+
+            byte[] fileBytes = await System.IO.File.ReadAllBytesAsync(outputFileName);
+
+            try
+            {
+                return File(fileBytes, MediaTypeNames.Application.Octet, outputFileName);
+            }
+            finally
+            {
+                _pDFService.DeleteFile(outputFileName);
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj" />
-    <ProjectReference Include="..\ESportStatistics.Services\ESportStatistics.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace ESportStatistics.Services.Contracts
 {
     public interface IPDFService
     {
-       void ToPDF<T>(IEnumerable<T> query, List<string> requiredColumns, string fileName) where T : class;
+        string CreatePDF<T>(IEnumerable<T> query, IList<string> requiredColumns, string fileName) where T : class;
+
+        bool DeleteFile(string fileName);
     }
 }
