@@ -1,7 +1,11 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Series;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
@@ -10,14 +14,15 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     public class SerieController : Controller
     {
         private readonly ISerieService _serieService;
+        private readonly IPDFService _pDFService;
 
-        public SerieController(ISerieService serieService)
+        public SerieController(ISerieService serieService, IPDFService pDFService)
         {
             _serieService = serieService ?? throw new ArgumentNullException(nameof(serieService));
+            _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
         }
 
-        [HttpGet]
-        [Route("series")]
+        [HttpGet("series")]
         public async Task<IActionResult> Index()
         {
             var spells = await _serieService.FilterSeriesAsync();
@@ -27,8 +32,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("/series/filter")]
+        [HttpGet("/series/filter")]
         public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
             sortOrder = sortOrder ?? string.Empty;
@@ -41,8 +45,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return PartialView("_SerieTablePartial", model.Table);
         }
 
-        [HttpGet]
-        [Route("series/details/{id}")]
+        [HttpGet("series/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -59,6 +62,31 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             var model = new SerieDetailsViewModel(serie);
 
             return View(model);
+        }
+
+        [HttpGet("series/download")]
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        {
+            IList<string> fileParameters = typeof(SerieDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
+
+            var series = await _serieService.FilterSeriesAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (series is null)
+            {
+                throw new ApplicationException("Failed to get database collection!");
+            }
+
+            var model = series.Select(s => new SerieDownloadViewModel(s));
+            var outputFileName = _pDFService.CreatePDF(model, fileParameters, "series");
+            var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
+
+            try
+            {
+                return File(fileBytes, MediaTypeNames.Application.Octet, outputFileName);
+            }
+            finally
+            {
+                _pDFService.DeleteFile(outputFileName);
+            }
         }
     }
 }

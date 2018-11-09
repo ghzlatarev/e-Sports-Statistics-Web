@@ -26,7 +26,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <form asp-area="Statistics" asp-controller="Spell" asp-action="Filter" asp-route-pageNumber="1" method="get"
+                    <form asp-area="Statistics" asp-controller="Spell" asp-action="Filter" asp-route-pageNumber="1" asp-route-pageSize="10" method="get"
                           data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
                         <input type="text" class="form-control" name="searchTerm" placeholder="SEARCH" autocomplete="off">
                     </form>
