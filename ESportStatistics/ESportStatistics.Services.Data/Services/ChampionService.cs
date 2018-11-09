@@ -37,11 +37,10 @@ namespace ESportStatistics.Core.Services
             return query;
         }
 
-        public async Task<IEnumerable<Champion>> ReturnChampionAsync(Guid Id)
+        public async Task<Champion> ReturnChampionAsync(Guid Id)
         {
             var query = await this.dataContext.Champions
-                .Where(t => t.Id.Equals(Id))
-                .ToListAsync();
+                .Where(t => t.Id.Equals(Id)).FirstAsync();
 
             return query;
         }

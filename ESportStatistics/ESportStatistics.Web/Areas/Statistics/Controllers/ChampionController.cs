@@ -42,7 +42,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             var result = await _championService.ReturnChampionAsync(Id);
 
-            var model = result.Select(c => new ChampionDetailsViewModel(c)).FirstOrDefault();
+            var model = new ChampionDetailsViewModel(result);
 
             return View(model);
         }

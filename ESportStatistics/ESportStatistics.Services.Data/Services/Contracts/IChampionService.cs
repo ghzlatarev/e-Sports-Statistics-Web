@@ -9,7 +9,7 @@ namespace ESportStatistics.Core.Services.Contracts
     {
         Task<IEnumerable<Champion>> FilterChampionsAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
 
-        Task<IEnumerable<Champion>> ReturnChampionAsync(Guid id);
+        Task<Champion> ReturnChampionAsync(Guid id);
 
         Task<Champion> AddChampionAsync(string name);
 
