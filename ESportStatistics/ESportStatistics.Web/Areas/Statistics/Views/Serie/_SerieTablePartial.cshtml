@@ -1,0 +1,46 @@
+﻿@using ESportStatistics.Web.Models
+
+@model TableViewModel<SerieViewModel>
+
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Season
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Year
+                    </th>
+                    <th>
+                        Begins At
+                    </th>
+                    <th>
+                        Ends At
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var serie in Model.Items)
+                {
+                <tr>
+                    <td>@serie.Name</td>
+                    <td>@serie.Season</td>
+                    <td>@serie.Description</td>
+                    <td>@serie.Year</td>
+                    <td>@serie.BeginAt</td>
+                    <td>@serie.EndAt</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+</div>

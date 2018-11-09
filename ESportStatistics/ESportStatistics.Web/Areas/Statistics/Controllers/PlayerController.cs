@@ -1,27 +1,20 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Statistics.Models.Players;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
+    [Route("players")]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
     public class PlayerController : Controller
     {
-        private readonly ILogger _logger;
         private readonly IPlayerService _playerService;
 
-        public PlayerController(ILogger<AccountController> logger, IPlayerService playerService)
+        public PlayerController(IPlayerService playerService)
         {
-            _logger = logger;
-            _playerService = playerService;
+            _playerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
         }
 
         [HttpGet]
@@ -29,9 +22,23 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             var players = await _playerService.FilterPlayersAsync();
 
-            var model = players.Select(p => new PlayerViewModel(p));
+            var model = new IndexViewModel(players);
 
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("/players-filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var players = await _playerService.FilterPlayersAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new IndexViewModel(players, searchTerm);
+
+            return PartialView("_PlayerTablePartial", model.Table);
         }
     }
 }

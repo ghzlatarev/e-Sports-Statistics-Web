@@ -1,53 +1,36 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@model TableViewModel<UserTableViewModel>
 
-<table class="table tablesorter">
-    <thead class="text-primary">
-        <tr>
-            <th>
-                User Name
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Phone NUmber
-            </th>
-            <th>
-                Is Active
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Username</td>
-                <td>@user.Email</td>
-                <td>@user.PhoneNumber</td>
-                <td>@(!user.IsDeleted)</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@section Search {
-    <li class="search-bar input-group">
-        <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal">
-            <i class="tim-icons icon-zoom-split"></i>
-            <span class="d-lg-none d-md-block">Search</span>
-        </button>
-    </li>
-
-    <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="tim-icons icon-simple-remove"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        User name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Phone Number
+                    </th>
+                    <th>
+                        Is Active
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Items)
+                {
+                    <tr id="@user.Id">
+                        @await  Html.PartialAsync("_UserTableRowPartial",user)
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-}
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+</div>

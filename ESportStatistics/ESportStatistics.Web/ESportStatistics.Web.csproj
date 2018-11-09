@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="3.2.11" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" PrivateAssets="All" />
-    <PackageReference Include="PagedList.Core.Mvc" Version="1.1.0" />
+    <PackageReference Include="X.PagedList" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -226,10 +226,6 @@
     <Content Update="Areas\Statistics\Views\Tournament\Index.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Administration\Views\Shared\" />
   </ItemGroup>
 
 </Project>
