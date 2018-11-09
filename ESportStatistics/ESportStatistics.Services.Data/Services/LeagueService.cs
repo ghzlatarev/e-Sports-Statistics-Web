@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
@@ -22,16 +23,26 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task<IEnumerable<League>> FilterLeaguesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
+        public async Task<IPagedList<League>> FilterLeaguesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
         {
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
             var query = await this.dataContext.Leagues
                 .Where(t => t.Name.Contains(filter))
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToListAsync();
+                .ToPagedListAsync(pageNumber, pageSize);
+
+            return query;
+        }
+
+        public async Task<League> FindAsync(string leagueId)
+        {
+            Validator.ValidateNull(leagueId, "League Id cannot be null!");
+            Validator.ValidateGuid(leagueId, "League id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Leagues.FindAsync(Guid.Parse(leagueId));
 
             return query;
         }

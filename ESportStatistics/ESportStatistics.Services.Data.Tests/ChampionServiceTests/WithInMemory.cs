@@ -135,7 +135,7 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.DeleteChampionAsync(Id);
+                result = await SUT.DeleteChampionAsync(Id.ToString());
             }
 
             // Assert
@@ -179,7 +179,7 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.RestoreChampionAsync(Id);
+                result = await SUT.RestoreChampionAsync(Id.ToString());
             }
 
             // Assert

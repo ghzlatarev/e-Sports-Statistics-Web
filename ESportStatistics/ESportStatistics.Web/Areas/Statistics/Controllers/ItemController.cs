@@ -1,49 +1,65 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
-using Microsoft.AspNetCore.Authorization;
+using ESportStatistics.Web.Areas.Statistics.Models.Items;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
     public class ItemController : Controller
     {
         
-        private readonly ILogger _logger;
         private readonly IItemService _itemService;
 
-        public ItemController(ILogger<AccountController> logger, IItemService itemService)
+        public ItemController( IItemService itemService)
         {
-            _logger = logger;
             _itemService = itemService;
         }
 
         [HttpGet]
+        [Route("items")]
         public async Task<IActionResult> Index(ItemViewModel item)
         {
-            var name = item.Name;
-
             var items = await _itemService.FilterItemsAsync();
 
-            var model = items.Select(c => new ItemViewModel(c));
+            var model = new ItemIndexViewModel(items);
 
             return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(Guid Id)
+        [Route("items/filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
         {
-            var result = await _itemService.ReturnItemsAsync(Id);
+            var items = await _itemService.FilterItemsAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
 
-            var model =  new ItemDetailsViewModel(result);
+            var model = new ItemIndexViewModel(items, searchTerm);
+
+            return PartialView("_ItemTablePartial", model.Table);
+        }
+
+        [HttpGet]
+        [Route("items/details/{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+
+            if (id == null)
+            {
+                throw new ApplicationException($"Passed ID parameter is absent.");
+            }
+
+            var item = await _itemService.FindAsync(id);
+
+            if (item == null)
+            {
+                throw new ApplicationException($"Unable to find item with ID '{id}'.");
+            }
+
+            var model =  new ItemDetailsViewModel(item);
 
             return View(model);
         }

@@ -1,0 +1,38 @@
+﻿@model TableViewModel<LeagueViewModel>
+
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Image
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var league in Model.Items)
+                {
+                    <tr>
+                        <td>@league.Name</td>
+                        <td>
+                            <img src="@league.ImageURL" class="center" style="height:5em;width:auto">
+                        </td>
+                        <td>
+                            <div class="dark-theme">
+                                <a class="page-link" asp-area="Statistics" asp-controller="League" asp-action="Details" asp-route-id="@league.Id">Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+</div>
