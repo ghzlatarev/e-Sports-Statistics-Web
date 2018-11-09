@@ -1,0 +1,32 @@
+﻿@model TableViewModel<MatchViewModel>
+
+<div id="tablePartial">
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        Match
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var match in Model.Items)
+                {
+                    <tr>
+                        <td>@match.Name</td>
+                        <td>
+                            <div class="dark-theme">
+                                <a class="page-link" asp-area="Statistics" asp-controller="Match" asp-action="Details" asp-route-id="@match.Id">Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+</div>
