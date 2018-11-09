@@ -4,6 +4,7 @@ using ESportStatistics.Web.Areas.Statistics.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +34,16 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             var items = await _itemService.FilterItemsAsync();
 
             var model = items.Select(c => new ItemViewModel(c));
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid Id)
+        {
+            var result = await _itemService.ReturnItemsAsync(Id);
+
+            var model =  new ItemDetailsViewModel(result);
 
             return View(model);
         }

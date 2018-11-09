@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -27,16 +28,22 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(ChampionViewModel champion)
+        public async Task<IActionResult> Index()
         {
-            var name = champion.Name;
-
-            var armor = champion.Armor;
-
             var champions = await _championService.FilterChampionsAsync();
 
             var model = champions.Select(c => new ChampionViewModel(c));
             
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid Id)
+        {
+            var result = await _championService.ReturnChampionAsync(Id);
+
+            var model = new ChampionDetailsViewModel(result);
+
             return View(model);
         }
 

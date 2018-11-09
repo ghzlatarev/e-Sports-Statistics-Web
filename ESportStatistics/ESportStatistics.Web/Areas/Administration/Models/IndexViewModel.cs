@@ -1,17 +1,17 @@
 ﻿using ESportStatistics.Data.Models.Identity;
 using ESportStatistics.Web.Models;
-using PagedList.Core;
 using System.Linq;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Administration.Models
 {
     public class IndexViewModel
     {
-        public IndexViewModel(IPagedList<ApplicationUser> users, string searchTerm)
+        public IndexViewModel(IPagedList<ApplicationUser> users, string searchTerm = "")
         {
-            this.Table = new TableViewModel<UserViewModel>()
+            this.Table = new TableViewModel<UserTableViewModel>()
             {
-                Items = users.Select(u => new UserViewModel(u)),
+                Items = users.Select(u => new UserTableViewModel(u)),
                 Pagination = new PaginationViewModel()
                 {
                     PageCount = users.PageCount,
@@ -22,11 +22,11 @@ namespace ESportStatistics.Web.Areas.Administration.Models
                     SearchTerm = searchTerm,
                     AreaRoute = "Administration",
                     ControllerRoute = "User",
-                    ActionRoute = "Index"
+                    ActionRoute = "Filter"
                 }
             };
         }
 
-        public TableViewModel<UserViewModel> Table { get; set; }
+        public TableViewModel<UserTableViewModel> Table { get; set; }
     }
 }

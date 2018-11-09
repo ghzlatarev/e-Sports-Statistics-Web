@@ -1,40 +1,44 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Web.Areas.Statistics.Models.Tournaments;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
+    [Route("tournaments")]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
     public class TournamentController : Controller
     {
-
-        private readonly ILogger _logger;
         private readonly ITournamentService _tournamentService;
 
-
-        public TournamentController(ILogger<AccountController> logger, ITournamentService tournamentService)
+        public TournamentController(ITournamentService tournamentService)
         {
-            _logger = logger;
-            _tournamentService = tournamentService;
+            _tournamentService = tournamentService ?? throw new ArgumentNullException(nameof(tournamentService));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(TournamentViewModel tournament)
+        public async Task<IActionResult> Index()
         {
             var tournaments = await _tournamentService.FilterTournamentsAsync();
 
-            var model = tournaments.Select(t => new TournamentViewModel(t));
+            var model = new IndexViewModel(tournaments);
 
             return View(model);
         }
 
+        [HttpGet]
+        [Route("/tournaments-filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var tournaments = await _tournamentService.FilterTournamentsAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new IndexViewModel(tournaments, searchTerm);
+
+            return PartialView("_TournamentTablePartial", model.Table);
+        }
     }
 }

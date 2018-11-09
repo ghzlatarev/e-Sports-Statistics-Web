@@ -36,6 +36,14 @@ namespace ESportStatistics.Core.Services
             return query;
         }
 
+        public async Task<Item> ReturnItemsAsync(Guid Id)
+        {
+            var query = await this.dataContext.Items
+                .Where(t => t.Id.Equals(Id)).FirstAsync();
+
+            return query;
+        }
+
         public async Task RebaseItemsAsync(string accessToken)
         {
             Validator.ValidateNull(accessToken, "Empty access token!");
@@ -52,5 +60,7 @@ namespace ESportStatistics.Core.Services
 
             await this.dataContext.SaveChangesAsync(false);
         }
+
+        
     }
 }
