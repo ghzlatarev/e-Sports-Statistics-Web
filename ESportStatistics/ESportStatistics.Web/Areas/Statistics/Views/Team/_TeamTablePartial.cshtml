@@ -8,20 +8,34 @@
             <thead class="text-primary">
                 <tr>
                     <th>
+                        Image
+                    </th>
+                    <th>
                         Name
                     </th>
                     <th>
                         Acronym
+                    </th>
+                    <th>
+                        Actions
                     </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var team in Model.Items)
                 {
-                    <tr>
-                        <td>@team.Name</td>
-                        <td>@team.Acronym</td>
-                    </tr>
+                <tr>
+                    <td>
+                        <img src="@team.ImageURL" class="center" style="height:5em;width:auto">
+                    </td>
+                    <td>@team.Name</td>
+                    <td>@team.Acronym</td>
+                    <td>
+                        <div class="dark-theme">
+                            <a class="page-link" asp-area="Statistics" asp-controller="Team" asp-action="Details" asp-route-id="@team.Id">Details</a>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

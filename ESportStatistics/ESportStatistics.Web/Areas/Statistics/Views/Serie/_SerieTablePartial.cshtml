@@ -11,12 +11,6 @@
                         Name
                     </th>
                     <th>
-                        Season
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th>
                         Year
                     </th>
                     <th>
@@ -25,19 +19,25 @@
                     <th>
                         Ends At
                     </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var serie in Model.Items)
                 {
-                    <tr>
-                        <td>@serie.Name</td>
-                        <td>@serie.Season</td>
-                        <td>@serie.Description</td>
-                        <td>@serie.Year</td>
-                        <td>@serie.BeginAt</td>
-                        <td>@serie.EndAt</td>
-                    </tr>
+                <tr>
+                    <td>@serie.FullName</td>
+                    <td>@serie.Season</td>
+                    <td>@serie.BeginAt</td>
+                    <td>@serie.EndAt</td>
+                    <td>
+                        <div class="dark-theme">
+                            <a class="page-link" asp-area="Statistics" asp-controller="Serie" asp-action="Details" asp-route-id="@serie.Id">Details</a>
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

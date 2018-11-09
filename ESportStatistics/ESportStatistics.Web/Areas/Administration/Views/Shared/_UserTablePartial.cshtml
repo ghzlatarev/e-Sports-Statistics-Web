@@ -2,14 +2,28 @@
 
 <div id="tablePartial">
     <div>
+        <form asp-area="Administration" asp-controller="User" asp-action="Filter"
+              asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-sortOrder="@Model.Pagination.SortOrder" asp-route-searchTerm="@Model.Pagination.SearchTerm"
+              method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
+            <label>Page size:</label>
+            <input name="pageSize" class="form-control" value="@Model.Pagination.PageSize" type="number" min="1" max="50" style="width:5em;" />
+        </form>
+    </div>
+    <div>
         <table class="table tablesorter">
             <thead class="text-primary">
                 <tr>
                     <th>
-                        User name
+                        <a asp-area="Administration" asp-controller="User" asp-action="Filter"
+                           asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
+                           asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("username_asc") ? "username_desc" : "username_asc")"
+                           method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"><b>User name</b></a>
                     </th>
                     <th>
-                        Email
+                        <a asp-area="Administration" asp-controller="User" asp-action="Filter"
+                           asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
+                           asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("email_asc") ? "email_desc" : "email_asc")"
+                           method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"><b>Email</b></a>
                     </th>
                     <th>
                         Phone Number
@@ -26,7 +40,7 @@
                 @foreach (var user in Model.Items)
                 {
                     <tr id="@user.Id">
-                        @await  Html.PartialAsync("_UserTableRowPartial",user)
+                        @await Html.PartialAsync("_UserTableRowPartial", user)
                     </tr>
                 }
             </tbody>
