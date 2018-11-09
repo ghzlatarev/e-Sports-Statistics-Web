@@ -48,14 +48,12 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         [HttpGet("matches/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
-
             if (id == null)
             {
                 throw new ApplicationException($"Passed ID parameter is absent.");
             }
 
             var match = await _matchService.FindAsync(id);
-
             if (match == null)
             {
                 throw new ApplicationException($"Unable to find match with ID '{id}'.");
@@ -65,8 +63,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return View(model);
         }
-
-
+        
         [HttpGet("matches/download")]
         public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {

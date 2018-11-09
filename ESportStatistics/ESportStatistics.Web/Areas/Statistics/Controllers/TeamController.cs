@@ -59,7 +59,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
                 throw new ApplicationException($"Unable to find team with ID '{id}'.");
             }
 
-            var model = new TeamViewModel(team);
+            var model = new TeamDetailsViewModel(team);
 
             return View(model);
         }

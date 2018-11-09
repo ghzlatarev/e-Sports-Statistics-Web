@@ -59,7 +59,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
                 throw new ApplicationException($"Unable to find spell with ID '{id}'.");
             }
 
-            var model = new SpellViewModel(spell);
+            var model = new SpellDetailsViewModel(spell);
 
             return View(model);
         }
