@@ -8,7 +8,10 @@
             <thead class="text-primary">
                 <tr>
                     <th>
-                        Name
+                        <a asp-area="Statistics" asp-controller="Tournament" asp-action="Filter"
+                           asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
+                           asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")"
+                           method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"><b>Name</b></a>
                     </th>
                     <th>
                         Begins At
@@ -24,16 +27,16 @@
             <tbody>
                 @foreach (var tournament in Model.Items)
                 {
-                <tr>
-                    <td>@tournament.Name</td>
-                    <td>@tournament.BeginAt</td>
-                    <td>@tournament.EndAt</td>
-                    <td>
-                        <div class="dark-theme">
-                            <a class="page-link" asp-area="Statistics" asp-controller="Tournament" asp-action="Details" asp-route-id="@tournament.Id">Details</a>
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>@tournament.Name</td>
+                        <td>@tournament.BeginAt</td>
+                        <td>@tournament.EndAt</td>
+                        <td>
+                            <div class="dark-theme">
+                                <a class="page-link" asp-area="Statistics" asp-controller="Tournament" asp-action="Details" asp-route-id="@tournament.Id">Details</a>
+                            </div>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

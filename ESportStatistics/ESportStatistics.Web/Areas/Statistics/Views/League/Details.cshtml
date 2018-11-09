@@ -1,6 +1,4 @@
-﻿@using ESportStatistics.Web.Areas.Statistics.Models.Teams
-
-@model TeamDetailsViewModel
+﻿@model LeagueDetailsViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -21,11 +19,12 @@
                         <td>@Model.Name</td>
                     </tr>
                     <tr>
-                        <td>Acronym</td>
-                        <td>@Model.Acronym</td>
+                        <td>Slug</td>
+                        <td>@Model.Slug</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+

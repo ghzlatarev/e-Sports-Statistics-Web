@@ -1,0 +1,63 @@
+﻿@model ItemDetailsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>@Model.Name</h1>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="table-responsive">
+            <table class="table tablesorter " id="">
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gold Cost</td>
+                        <td>@Model.TotalGold</td>
+                    </tr>
+                    <tr>
+                        <td>BaseGold</td>
+                        <td>@Model.BaseGold</td>
+                    </tr>
+                    <tr>
+                        <td>SellGold</td>
+                        <td>@Model.SellGold</td>
+                    </tr>
+                    <tr>
+                        <td>FlatMagicDamageModifier</td>
+                        <td>@Model.FlatMagicDamageModifier</td>
+                    </tr>
+                    <tr>
+                        <td>PercentAttackSpeedModifier</td>
+                        <td>@Model.PercentAttackSpeedModifier</td>
+                    </tr>
+                    <tr>
+                        <td>PercentMovementSpeedModifier</td>
+                        <td>@Model.PercentMovementSpeedModifier</td>
+                    </tr>
+                    <tr>
+                        <td>FlatArmorModifier</td>
+                        <td>@Model.FlatArmorModifier</td>
+                    </tr>
+                    <tr>
+                        <td>FlatPhysicalDamageModifier</td>
+                        <td>@Model.FlatPhysicalDamageModifier</td>
+                    </tr>
+                    <tr>
+                        <td>PercentLifeStealModifier</td>
+                        <td>@Model.PercentLifeStealModifier</td>
+                    </tr>
+                    <tr>
+                        <td>FlatHeatlhRegenModifier</td>
+                        <td>@Model.FlatHeatlhRegenModifier</td>
+                    </tr>
+                    <tr>
+                        <td>FlatManaRegenModifier</td>
+                        <td>@Model.FlatManaRegenModifier</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

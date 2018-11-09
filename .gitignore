@@ -332,3 +332,5 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+/ESportStatistics/ESportStatistics.Web/Areas/Statistics/Models/Champions/ChampionDetailsViewModel.cs
+/ESportStatistics/ESportStatistics.Web/Areas/Statistics/Models/Champions/ChampionViewModel.cs

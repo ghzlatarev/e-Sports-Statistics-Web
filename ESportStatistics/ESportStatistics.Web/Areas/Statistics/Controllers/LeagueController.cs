@@ -1,41 +1,68 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Web.Areas.Identity.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models;
-using Microsoft.AspNetCore.Authorization;
+using ESportStatistics.Web.Areas.Statistics.Models.Leagues;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
-    [Authorize(Roles = "User")]
-    [Route("[controller]/[action]")]
     public class LeagueController : Controller
     {
         
-        private readonly ILogger _logger;
         private readonly ILeagueService _leagueService;
 
-        public LeagueController(ILogger<AccountController> logger, ILeagueService leagueService)
+        public LeagueController( ILeagueService leagueService)
         {
-            _logger = logger;
             _leagueService = leagueService;
         }
 
         [HttpGet]
+        [Route("leagues")]
         public async Task<IActionResult> Index(LeagueViewModel league)
         {
-
-
             var leagues = await _leagueService.FilterLeaguesAsync();
 
-            var model = leagues.Select(c => new LeagueViewModel(c));
+            var model = new LeagueIndexViewModel(leagues);
 
             return View(model);
         }
 
+        [HttpGet]
+        [Route("leagues/filter")]
+        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        {
+            var leagues = await _leagueService.FilterLeaguesAsync(
+                searchTerm ?? string.Empty,
+                pageNumber ?? 1,
+                pageSize ?? 10);
+
+            var model = new LeagueIndexViewModel(leagues, searchTerm);
+
+            return PartialView("_LeagueTablePartial", model.Table);
+        }
+
+        [HttpGet]
+        [Route("leagues/details/{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+
+            if (id == null)
+            {
+                throw new ApplicationException($"Passed ID parameter is absent.");
+            }
+
+            var league = await _leagueService.FindAsync(id);
+
+            if (league == null)
+            {
+                throw new ApplicationException($"Unable to find league with ID '{id}'.");
+            }
+
+            var model = new LeagueDetailsViewModel(league);
+
+            return View(model);
+        }
     }
 }
