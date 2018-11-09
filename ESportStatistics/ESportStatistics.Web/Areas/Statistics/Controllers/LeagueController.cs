@@ -31,14 +31,18 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
         [HttpGet]
         [Route("leagues/filter")]
-        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
+
             var leagues = await _leagueService.FilterLeaguesAsync(
-                searchTerm ?? string.Empty,
+                sortOrder,
+                searchTerm,
                 pageNumber ?? 1,
                 pageSize ?? 10);
 
-            var model = new LeagueIndexViewModel(leagues, searchTerm);
+            var model = new LeagueIndexViewModel(leagues, sortOrder, searchTerm);
 
             return PartialView("_LeagueTablePartial", model.Table);
         }

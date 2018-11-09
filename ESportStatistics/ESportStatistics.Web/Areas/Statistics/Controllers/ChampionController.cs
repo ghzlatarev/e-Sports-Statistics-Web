@@ -29,14 +29,18 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
         [HttpGet]
         [Route("champions/filter")]
-        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
+
             var champions = await _championService.FilterChampionsAsync(
-                searchTerm ?? string.Empty,
+                sortOrder,
+                searchTerm,
                 pageNumber ?? 1,
                 pageSize ?? 10);
 
-            var model = new ChampionIndexViewModel(champions, searchTerm);
+            var model = new ChampionIndexViewModel(champions, sortOrder, searchTerm);
 
             return PartialView("_ChampionTablePartial", model.Table);
         }

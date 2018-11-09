@@ -7,7 +7,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Champions
 {
     public class ChampionIndexViewModel
     {
-        public ChampionIndexViewModel(IPagedList<Champion> champions, string searchTerm = "")
+        public ChampionIndexViewModel(IPagedList<Champion> champions, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<ChampionViewModel>()
             {
@@ -19,6 +19,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Champions
                     PageSize = champions.PageSize,
                     HasNextPage = champions.HasNextPage,
                     HasPreviousPage = champions.HasPreviousPage,
+                    SortOrder = sortOrder,
                     SearchTerm = searchTerm,
                     AreaRoute = "Statistics",
                     ControllerRoute = "Champion",
