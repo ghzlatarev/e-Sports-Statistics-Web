@@ -22,7 +22,7 @@ namespace ESportStatistics.Services.Data.Services.Identity
         public async Task<IPagedList<ApplicationUser>> FilterUsersAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateNull(filter, "Filter cannot be null!");
-            Validator.ValidateNull(sortOrder, "SortOrder cannot be null!");
+            Validator.ValidateNull(sortOrder, "Sort order cannot be null!");
 
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");

@@ -5,9 +5,9 @@ using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Spells
 {
-    public class IndexViewModel
+    public class SpellIndexViewModel
     {
-        public IndexViewModel(IPagedList<Spell> spells, string searchTerm = "")
+        public SpellIndexViewModel(IPagedList<Spell> spells, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<SpellViewModel>()
             {
@@ -20,6 +20,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Spells
                     HasNextPage = spells.HasNextPage,
                     HasPreviousPage = spells.HasPreviousPage,
                     SearchTerm = searchTerm,
+                    SortOrder = sortOrder,
                     AreaRoute = "Statistics",
                     ControllerRoute = "Spell",
                     ActionRoute = "Filter"

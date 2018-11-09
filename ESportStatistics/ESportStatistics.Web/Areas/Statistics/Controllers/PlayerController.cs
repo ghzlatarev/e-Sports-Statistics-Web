@@ -22,21 +22,21 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             var players = await _playerService.FilterPlayersAsync();
 
-            var model = new IndexViewModel(players);
+            var model = new PlayerIndexViewModel(players);
 
             return View(model);
         }
 
         [HttpGet]
         [Route("/players/filter")]
-        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
-            var players = await _playerService.FilterPlayersAsync(
-                searchTerm ?? string.Empty,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
 
-            var model = new IndexViewModel(players, searchTerm);
+            var players = await _playerService.FilterPlayersAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
+
+            var model = new PlayerIndexViewModel(players, sortOrder, searchTerm);
 
             return PartialView("_PlayerTablePartial", model.Table);
         }
