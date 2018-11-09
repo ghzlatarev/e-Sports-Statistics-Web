@@ -7,7 +7,7 @@ namespace ESportStatistics.Services.Data.Services.Identity.Contracts
 {
     public interface IUserService
     {
-        Task<IPagedList<ApplicationUser>> FilterUsersAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
+        Task<IPagedList<ApplicationUser>> FilterUsersAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10);
 
         Task<ApplicationUser> DisableUser(string userId);
 

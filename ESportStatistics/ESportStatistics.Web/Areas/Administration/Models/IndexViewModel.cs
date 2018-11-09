@@ -7,7 +7,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
 {
     public class IndexViewModel
     {
-        public IndexViewModel(IPagedList<ApplicationUser> users, string searchTerm = "")
+        public IndexViewModel(IPagedList<ApplicationUser> users, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<UserTableViewModel>()
             {
@@ -20,6 +20,7 @@ namespace ESportStatistics.Web.Areas.Administration.Models
                     HasNextPage = users.HasNextPage,
                     HasPreviousPage = users.HasPreviousPage,
                     SearchTerm = searchTerm,
+                    SortOrder = sortOrder,
                     AreaRoute = "Administration",
                     ControllerRoute = "User",
                     ActionRoute = "Filter"

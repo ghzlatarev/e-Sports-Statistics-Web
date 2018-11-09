@@ -12,6 +12,8 @@
 
         public bool HasPreviousPage { get; set; }
 
+        public string SortOrder { get; set; }
+
         public string SearchTerm { get; set; }
 
         public string AreaRoute { get; set; }

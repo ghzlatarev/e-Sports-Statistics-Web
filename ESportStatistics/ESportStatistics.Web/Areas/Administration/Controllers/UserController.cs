@@ -59,14 +59,15 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Route("users/filter")]
-        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
             var users = await _userService.FilterUsersAsync(
+                sortOrder ?? string.Empty,
                 searchTerm ?? string.Empty,
                 pageNumber ?? 1,
                 pageSize ?? 10);
 
-            var model = new IndexViewModel(users, searchTerm);
+            var model = new IndexViewModel(users, sortOrder, searchTerm);
 
             return PartialView("_UserTablePartial", model.Table);
         }
