@@ -3,7 +3,6 @@ using ESportStatistics.Web.Areas.Identity.Controllers;
 using ESportStatistics.Web.Areas.Statistics.Models.Masteries;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
@@ -11,7 +10,6 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     [Area("Statistics")]
     public class MasteryController : Controller
     {
-        
         private readonly IMasteryService _masteryService;
 
         public MasteryController(ILogger<AccountController> logger, IMasteryService masteryService)
@@ -23,7 +21,6 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         [Route("masteries")]
         public async Task<IActionResult> Index(MasteryViewModel mastery)
         {
-
             var masteries = await _masteryService.FilterMasteriesAsync();
 
             var model = new MasteryIndexViewModel(masteries);
@@ -33,14 +30,14 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
         [HttpGet]
         [Route("masteries/filter")]
-        public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
-            var masteries = await _masteryService.FilterMasteriesAsync(
-                searchTerm ?? string.Empty,
-                pageNumber ?? 1,
-                pageSize ?? 10);
+            sortOrder = sortOrder ?? string.Empty;
+            searchTerm = searchTerm ?? string.Empty;
 
-            var model = new MasteryIndexViewModel(masteries, searchTerm);
+            var masteries = await _masteryService.FilterMasteriesAsync(sortOrder, searchTerm, pageNumber ?? 1, pageSize ?? 10);
+
+            var model = new MasteryIndexViewModel(masteries, sortOrder, searchTerm);
 
             return PartialView("_MasteryTablePartial", model.Table);
         }

@@ -23,18 +23,28 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task<IPagedList<Item>> FilterItemsAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
+        public async Task<IPagedList<Item>> FilterItemsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateNull(filter, "Filter cannot be null!");
+            Validator.ValidateNull(sortOrder, "Sort order cannot be null!");
 
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
-            var query = await this.dataContext.Items
-                .Where(t => t.Name.Contains(filter))
-                .ToPagedListAsync(pageNumber, pageSize);
+            var query = this.dataContext.Items
+                .Where(t => t.Name.Contains(filter));
 
-            return query;
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    query = query.OrderBy(u => u.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(u => u.Name);
+                    break;
+            }
+
+            return await query.ToPagedListAsync(pageNumber, pageSize);
         }
 
         public async Task<Item> FindAsync(string itemId)
@@ -64,6 +74,6 @@ namespace ESportStatistics.Core.Services
             await this.dataContext.SaveChangesAsync(false);
         }
 
-        
+
     }
 }

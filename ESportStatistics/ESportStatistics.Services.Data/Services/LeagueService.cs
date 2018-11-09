@@ -23,18 +23,28 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task<IPagedList<League>> FilterLeaguesAsync(string filter = default(string), int pageNumber = 1, int pageSize = 10)
+        public async Task<IPagedList<League>> FilterLeaguesAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
+            Validator.ValidateNull(sortOrder, "SortOrder cannot be null!");
             Validator.ValidateNull(filter, "Filter cannot be null!");
 
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
-            var query = await this.dataContext.Leagues
-                .Where(t => t.Name.Contains(filter))
-                .ToPagedListAsync(pageNumber, pageSize);
+            var query = this.dataContext.Leagues
+                .Where(t => t.Name.Contains(filter));
 
-            return query;
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    query = query.OrderBy(l => l.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(l => l.Name);
+                    break;
+            }
+
+            return await query.ToPagedListAsync(pageNumber, pageSize);
         }
 
         public async Task<League> FindAsync(string leagueId)

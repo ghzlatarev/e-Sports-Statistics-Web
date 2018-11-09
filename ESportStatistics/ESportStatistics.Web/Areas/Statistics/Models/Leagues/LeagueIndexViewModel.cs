@@ -8,7 +8,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Leagues
 {
     public class LeagueIndexViewModel
     {
-        public LeagueIndexViewModel(IPagedList<League> leagues, string searchTerm = "")
+        public LeagueIndexViewModel(IPagedList<League> leagues, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<LeagueViewModel>()
             {
@@ -20,6 +20,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Leagues
                     PageSize = leagues.PageSize,
                     HasNextPage = leagues.HasNextPage,
                     HasPreviousPage = leagues.HasPreviousPage,
+                    SortOrder = sortOrder,
                     SearchTerm = searchTerm,
                     AreaRoute = "Statistics",
                     ControllerRoute = "League",
