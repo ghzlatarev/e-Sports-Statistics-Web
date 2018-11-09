@@ -37,5 +37,13 @@ namespace ESportStatistics.Services.Data.Utils
                 throw new ArgumentException(message);
             }
         }
+
+        public static void ValidateGuid(string value, string message)
+        {
+            if (!Guid.TryParse(value, out Guid temp))
+            {
+                throw new ArgumentException(message);
+            }
+        }
     }
 }
