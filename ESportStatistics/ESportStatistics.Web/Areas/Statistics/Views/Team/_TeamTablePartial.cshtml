@@ -5,7 +5,7 @@
 <div id="tablePartial">
     <div>
         <form asp-area="Statistics" asp-controller="Team" asp-action="Filter"
-              asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-sortOrder="@Model.Pagination.SortOrder" asp-route-searchTerm="@Model.Pagination.SearchTerm"
+              asp-route-pageNumber="1" asp-route-sortOrder="@Model.Pagination.SortOrder" asp-route-searchTerm="@Model.Pagination.SearchTerm"
               method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
             <label>Page size:</label>
             <input name="pageSize" class="form-control" value="@Model.Pagination.PageSize" type="number" min="1" max="50" style="width:5em;" />
@@ -27,7 +27,7 @@
                     </th>
                     <th>
                         <a asp-area="Statistics" asp-controller="Team" asp-action="Filter"
-                           asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
+                           asp-route-pageNumber="1" asp-route-pageSize="@Model.Pagination.PageSize"
                            asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")"
                            method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"><b>Name</b></a>
                     </th>

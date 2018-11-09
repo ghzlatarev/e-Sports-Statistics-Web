@@ -1,7 +1,11 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Players;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
@@ -10,14 +14,15 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     public class PlayerController : Controller
     {
         private readonly IPlayerService _playerService;
+        private readonly IPDFService _pDFService;
 
-        public PlayerController(IPlayerService playerService)
+        public PlayerController(IPlayerService playerService, IPDFService pDFService)
         {
             _playerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
+            _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
         }
 
-        [HttpGet]
-        [Route("players")]
+        [HttpGet("players")]
         public async Task<IActionResult> Index()
         {
             var players = await _playerService.FilterPlayersAsync();
@@ -27,8 +32,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("/players/filter")]
+        [HttpGet("/players/filter")]
         public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
             sortOrder = sortOrder ?? string.Empty;
@@ -41,8 +45,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             return PartialView("_PlayerTablePartial", model.Table);
         }
 
-        [HttpGet]
-        [Route("players/details/{id}")]
+        [HttpGet("players/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -59,6 +62,31 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
             var model = new PlayerDetailsViewModel(player);
 
             return View(model);
+        }
+
+        [HttpGet("players/download")]
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        {
+            IList<string> fileParameters = typeof(PlayerDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
+
+            var players = await _playerService.FilterPlayersAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (players is null)
+            {
+                throw new ApplicationException("Failed to get database collection!");
+            }
+
+            var model = players.Select(s => new PlayerDownloadViewModel(s));
+            var outputFileName = _pDFService.CreatePDF(model, fileParameters, "players");
+            var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
+
+            try
+            {
+                return File(fileBytes, MediaTypeNames.Application.Octet, outputFileName);
+            }
+            finally
+            {
+                _pDFService.DeleteFile(outputFileName);
+            }
         }
     }
 }
