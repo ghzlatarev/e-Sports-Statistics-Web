@@ -3,7 +3,6 @@ using ESportStatistics.Data.Models.Identity;
 using ESportStatistics.Services.Data.Exceptions;
 using ESportStatistics.Services.Data.Services.Identity.Contracts;
 using ESportStatistics.Services.Data.Utils;
-using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +35,9 @@ namespace ESportStatistics.Services.Data.Services.Identity
 
         public async Task<ApplicationUser> DisableUser(string userId)
         {
+            Validator.ValidateNull(userId, "User Id cannot be null!");
+            Validator.ValidateGuid(userId, "User id is not in the correct format.Unable to parse to Guid!");
+
             ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
 
             if (userId == null)
@@ -51,6 +53,9 @@ namespace ESportStatistics.Services.Data.Services.Identity
 
         public async Task<ApplicationUser> RestoreUser(string userId)
         {
+            Validator.ValidateNull(userId, "User Id cannot be null!");
+            Validator.ValidateGuid(userId, "User id is not in the correct format.Unable to parse to Guid!");
+
             ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
 
             if (userId == null)
@@ -70,6 +75,7 @@ namespace ESportStatistics.Services.Data.Services.Identity
         {
             Validator.ValidateNull(stream, "Image stream cannot be null!");
             Validator.ValidateNull(userId, "User Id cannot be null!");
+            Validator.ValidateGuid(userId, "User id is not in the correct format.Unable to parse to Guid!");
 
             ApplicationUser user = await this.dataContext.Users.FindAsync(userId);
 
