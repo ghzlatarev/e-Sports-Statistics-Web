@@ -1,4 +1,4 @@
-﻿@using ESportStatistics.Web.Models
+﻿@using ESportStatistics.Web.Areas.Statistics.Models.Series
 
 @model TableViewModel<SerieViewModel>
 
@@ -30,14 +30,14 @@
             <tbody>
                 @foreach (var serie in Model.Items)
                 {
-                <tr>
-                    <td>@serie.Name</td>
-                    <td>@serie.Season</td>
-                    <td>@serie.Description</td>
-                    <td>@serie.Year</td>
-                    <td>@serie.BeginAt</td>
-                    <td>@serie.EndAt</td>
-                </tr>
+                    <tr>
+                        <td>@serie.Name</td>
+                        <td>@serie.Season</td>
+                        <td>@serie.Description</td>
+                        <td>@serie.Year</td>
+                        <td>@serie.BeginAt</td>
+                        <td>@serie.EndAt</td>
+                    </tr>
                 }
             </tbody>
         </table>

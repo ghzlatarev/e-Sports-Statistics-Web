@@ -1,12 +1,12 @@
 ﻿using ESportStatistics.Data.Models;
 
-namespace ESportStatistics.Web.Areas.Statistics.Models
+namespace ESportStatistics.Web.Areas.Statistics.Models.Tournaments
 {
     public class TournamentViewModel
     {
-
         public TournamentViewModel()
         {
+
         }
 
         public TournamentViewModel(Tournament tournament)
@@ -18,8 +18,11 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         }
 
         public string Name { get; set; }
+
         public string Slug { get; set; }
+
         public string BeginAt { get; set; }
+
         public string EndAt { get; set; }
     }
 }

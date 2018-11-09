@@ -11,7 +11,6 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 {
     [Area("Administration")]
     [Authorize(Roles = "Administrator")]
-    [Route("users")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -26,6 +25,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
+        [Route("users")]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.FilterUsersAsync();
@@ -36,7 +36,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        [Route("/details/{id}")]
+        [Route("users/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
             const string adminRole = "Administrator";
@@ -58,7 +58,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        [Route("/filter")]
+        [Route("users/filter")]
         public async Task<IActionResult> Filter(string searchTerm, int? pageSize, int? pageNumber)
         {
             var users = await _userService.FilterUsersAsync(
@@ -72,7 +72,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        [Route("/disable/{id}")]
+        [Route("users/disable/{id}")]
         public async Task<IActionResult> Disable(string id)
         {
             if (id == null)
@@ -92,7 +92,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        [Route("/restore/{id}")]
+        [Route("users/restore/{id}")]
         public async Task<IActionResult> Restore(string id)
         {
             if (id == null)
@@ -112,7 +112,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        [Route("/promote/{id}")]
+        [Route("users/promote/{id}")]
         public async Task<IActionResult> Promote(string id)
         {
             const string adminRole = "Administrator";
@@ -136,7 +136,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        [Route("/demote/{id}")]
+        [Route("users/demote/{id}")]
         public async Task<IActionResult> Demote(string id)
         {
             const string adminRole = "Administrator";

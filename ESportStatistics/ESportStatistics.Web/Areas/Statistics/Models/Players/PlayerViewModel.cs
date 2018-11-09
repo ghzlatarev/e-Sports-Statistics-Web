@@ -1,11 +1,12 @@
 ﻿using ESportStatistics.Data.Models;
 
-namespace ESportStatistics.Web.Areas.Statistics.Models
+namespace ESportStatistics.Web.Areas.Statistics.Models.Players
 {
     public class PlayerViewModel
     {
         public PlayerViewModel()
         {
+
         }
 
         public PlayerViewModel(Player player)

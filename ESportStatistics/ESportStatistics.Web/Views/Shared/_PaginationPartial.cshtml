@@ -17,7 +17,7 @@
             <li><a class="page-link current">Prev</a></li>
         }
 
-        @for (int i = 1; i <= Model.PageCount; i++)
+        @for (int i = (Model.PageNumber <= 5 ? 1 : Model.PageNumber - 5); i <= (Model.PageNumber >= Model.PageCount - 5 ? Model.PageCount : Model.PageNumber + 5); i++)
         {
             if (Model.PageNumber == i)
             {

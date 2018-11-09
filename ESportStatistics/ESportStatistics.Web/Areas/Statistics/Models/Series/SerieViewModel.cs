@@ -1,12 +1,13 @@
-﻿using System;
-using ESportStatistics.Data.Models;
+﻿using ESportStatistics.Data.Models;
+using System;
 
-namespace ESportStatistics.Web.Areas.Statistics.Models
+namespace ESportStatistics.Web.Areas.Statistics.Models.Series
 {
     public class SerieViewModel
     {
         public SerieViewModel()
         {
+
         }
 
         public SerieViewModel(Serie serie)

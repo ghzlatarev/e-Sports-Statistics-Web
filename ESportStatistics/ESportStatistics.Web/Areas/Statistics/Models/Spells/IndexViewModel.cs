@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ESportStatistics.Data.Models;
+﻿using ESportStatistics.Data.Models;
 using ESportStatistics.Web.Models;
+using System.Linq;
 using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Spells

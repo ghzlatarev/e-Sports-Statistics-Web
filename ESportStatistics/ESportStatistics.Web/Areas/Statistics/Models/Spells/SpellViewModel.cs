@@ -1,6 +1,6 @@
 ﻿using ESportStatistics.Data.Models;
 
-namespace ESportStatistics.Web.Areas.Statistics.Models
+namespace ESportStatistics.Web.Areas.Statistics.Models.Spells
 {
     public class SpellViewModel
     {
@@ -15,6 +15,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         }
 
         public string Name { get; set; }
+
         public string ImageURL { get; set; }
     }
 }

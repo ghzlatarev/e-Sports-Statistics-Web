@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
@@ -23,24 +24,26 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task<IEnumerable<Champion>> FilterChampionsAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
+        public async Task<IPagedList<Champion>> FilterChampionsAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+
             Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
             Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
             var query = await this.dataContext.Champions
                 .Where(t => t.Name.Contains(filter))
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToListAsync();
+                .ToPagedListAsync(pageNumber, pageSize);
 
             return query;
         }
 
-        public async Task<Champion> ReturnChampionAsync(Guid Id)
+        public async Task<Champion> FindAsync(string championId)
         {
-            var query = await this.dataContext.Champions
-                .Where(t => t.Id.Equals(Id)).FirstAsync();
+            Validator.ValidateNull(championId, "Champion Id cannot be null!");
+            Validator.ValidateGuid(championId, "Champion id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Champions.FindAsync(Guid.Parse(championId));
 
             return query;
         }
@@ -65,11 +68,12 @@ namespace ESportStatistics.Core.Services
             return champion;
         }
 
-        public async Task<Champion> DeleteChampionAsync(Guid Id)
+        public async Task<Champion> DeleteChampionAsync(string championId)
         {
-            Validator.ValidateNull(Id, "Champion Id cannot be null!");
+            Validator.ValidateNull(championId, "Champion Id cannot be null!");
+            Validator.ValidateGuid(championId, "Champion id is not in the correct format.Unable to parse to Guid!");
 
-            var champion = await this.dataContext.Champions.FindAsync(Id);
+            var champion = await this.dataContext.Champions.FindAsync(Guid.Parse(championId));
 
             Validator.ValidateNull(champion, "Invalid champion!");
 
@@ -84,11 +88,12 @@ namespace ESportStatistics.Core.Services
             return champion;
         }
 
-        public async Task<Champion> RestoreChampionAsync(Guid Id)
+        public async Task<Champion> RestoreChampionAsync(string championId)
         {
-            Validator.ValidateNull(Id, "Champion Id cannot be null!");
+            Validator.ValidateNull(championId, "Champion Id cannot be null!");
+            Validator.ValidateGuid(championId, "Champion id is not in the correct format.Unable to parse to Guid!");
 
-            var champion = await this.dataContext.Champions.FindAsync(Id);
+            var champion = await this.dataContext.Champions.FindAsync(Guid.Parse(championId));
 
             Validator.ValidateNull(champion, "Invalid champion!");
 

@@ -1,11 +1,12 @@
 ﻿using ESportStatistics.Data.Models;
 
-namespace ESportStatistics.Web.Areas.Statistics.Models
+namespace ESportStatistics.Web.Areas.Statistics.Models.Teams
 {
     public class TeamViewModel
     {
         public TeamViewModel()
         {
+
         }
 
         public TeamViewModel(Team team)
@@ -15,6 +16,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models
         }
 
         public string Name { get; set; }
+
         public string Acronym { get; set; }
     }
 }
