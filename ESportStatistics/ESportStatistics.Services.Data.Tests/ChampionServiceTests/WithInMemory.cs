@@ -104,91 +104,91 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
             }
         }
 
-        [TestMethod]
-        public async Task DeleteChampionAsync_ShouldFlagChampionAsDelete_WhenPassedValidParameters()
-        {
-            // Arrange
-            var contextOptions = new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: "DeleteChampionAsync_ShouldFlagAChampionAsDelete_WhenPassedValidParameters")
-                .Options;
+        //[TestMethod]
+        //public async Task DeleteChampionAsync_ShouldFlagChampionAsDelete_WhenPassedValidParameters()
+        //{
+        //    // Arrange
+        //    var contextOptions = new DbContextOptionsBuilder<DataContext>()
+        //        .UseInMemoryDatabase(databaseName: "DeleteChampionAsync_ShouldFlagAChampionAsDelete_WhenPassedValidParameters")
+        //        .Options;
 
-            Guid Id = Guid.NewGuid();
-            bool validIsDeleted = true;
+        //    Guid Id = Guid.NewGuid();
+        //    bool validIsDeleted = true;
 
-            Champion validChampion = new Champion
-            {
-                Id = Id,
-                Name = "testChamp"
-            };
+        //    Champion validChampion = new Champion
+        //    {
+        //        Id = Id,
+        //        Name = "testChamp"
+        //    };
 
-            Champion result = null;
+        //    Champion result = null;
 
-            // Act
-            using (DataContext actContext = new DataContext(contextOptions))
-            {
-                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+        //    // Act
+        //    using (DataContext actContext = new DataContext(contextOptions))
+        //    {
+        //        Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
 
-                await actContext.AddAsync(validChampion);
-                await actContext.SaveChangesAsync();
+        //        await actContext.AddAsync(validChampion);
+        //        await actContext.SaveChangesAsync();
 
-                ChampionService SUT = new ChampionService(
-                    pandaScoreClientMock.Object,
-                    actContext);
+        //        ChampionService SUT = new ChampionService(
+        //            pandaScoreClientMock.Object,
+        //            actContext);
 
-                result = await SUT.DeleteChampionAsync(Id);
-            }
+        //        result = await SUT.DeleteChampionAsync(Id);
+        //    }
 
-            // Assert
-            using (DataContext assertContext = new DataContext(contextOptions))
-            {
-                Assert.IsNotNull(result);
-                Assert.IsNotNull(result.DeletedOn);
-                Assert.IsTrue(result.IsDeleted.Equals(validIsDeleted));
-            }
-        }
+        //    // Assert
+        //    using (DataContext assertContext = new DataContext(contextOptions))
+        //    {
+        //        Assert.IsNotNull(result);
+        //        Assert.IsNotNull(result.DeletedOn);
+        //        Assert.IsTrue(result.IsDeleted.Equals(validIsDeleted));
+        //    }
+        //}
 
-        [TestMethod]
-        public async Task RestoreChampionAsync_ShouldFlagChampionAsNotDelete_WhenPassedValidParameters()
-        { // Arrange
-            var contextOptions = new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: "RestoreChampionAsync_ShouldFlagChampionAsNotDelete_WhenPassedValidParameters")
-                .Options;
+        //[TestMethod]
+        //public async Task RestoreChampionAsync_ShouldFlagChampionAsNotDelete_WhenPassedValidParameters()
+        //{ // Arrange
+        //    var contextOptions = new DbContextOptionsBuilder<DataContext>()
+        //        .UseInMemoryDatabase(databaseName: "RestoreChampionAsync_ShouldFlagChampionAsNotDelete_WhenPassedValidParameters")
+        //        .Options;
 
-            Guid Id = Guid.NewGuid();
-            bool validIsDeleted = false;
+        //    Guid Id = Guid.NewGuid();
+        //    bool validIsDeleted = false;
 
-            Champion validChampion = new Champion
-            {
-                Id = Id,
-                Name = "testChamp",
-                DeletedOn = DateTime.UtcNow.AddHours(2),
-                IsDeleted = true
-            };
+        //    Champion validChampion = new Champion
+        //    {
+        //        Id = Id,
+        //        Name = "testChamp",
+        //        DeletedOn = DateTime.UtcNow.AddHours(2),
+        //        IsDeleted = true
+        //    };
 
-            Champion result = null;
+        //    Champion result = null;
 
-            // Act
-            using (DataContext actContext = new DataContext(contextOptions))
-            {
-                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+        //    // Act
+        //    using (DataContext actContext = new DataContext(contextOptions))
+        //    {
+        //        Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
 
-                await actContext.AddAsync(validChampion);
-                await actContext.SaveChangesAsync();
+        //        await actContext.AddAsync(validChampion);
+        //        await actContext.SaveChangesAsync();
 
-                ChampionService SUT = new ChampionService(
-                    pandaScoreClientMock.Object,
-                    actContext);
+        //        ChampionService SUT = new ChampionService(
+        //            pandaScoreClientMock.Object,
+        //            actContext);
 
-                result = await SUT.RestoreChampionAsync(Id);
-            }
+        //        result = await SUT.RestoreChampionAsync(Id);
+        //    }
 
-            // Assert
-            using (DataContext assertContext = new DataContext(contextOptions))
-            {
-                Assert.IsNotNull(result);
-                Assert.IsNull(result.DeletedOn);
-                Assert.IsTrue(result.IsDeleted.Equals(validIsDeleted));
-            }
-        }
+        //    // Assert
+        //    using (DataContext assertContext = new DataContext(contextOptions))
+        //    {
+        //        Assert.IsNotNull(result);
+        //        Assert.IsNull(result.DeletedOn);
+        //        Assert.IsTrue(result.IsDeleted.Equals(validIsDeleted));
+        //    }
+        //}
     }
 }

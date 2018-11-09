@@ -23,6 +23,16 @@ namespace ESportStatistics.Core.Services
             this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
+        public async Task<Player> FindAsync(string playerId)
+        {
+            Validator.ValidateNull(playerId, "Player Id cannot be null!");
+            Validator.ValidateGuid(playerId, "Player id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Players.FindAsync(Guid.Parse(playerId));
+
+            return query;
+        }
+
         public async Task<IPagedList<Player>> FilterPlayersAsync(string filter = "", int pageNumber = 1, int pageSize = 10)
         {
             Validator.ValidateNull(filter, "Filter cannot be null!");

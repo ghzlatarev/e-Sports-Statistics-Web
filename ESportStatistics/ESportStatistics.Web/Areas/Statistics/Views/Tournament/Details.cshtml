@@ -1,0 +1,35 @@
+﻿@using ESportStatistics.Web.Areas.Statistics.Models.Tournaments
+
+@model TournamentDetailsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>@Model.Name</h1>
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table tablesorter " id="">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>@Model.Name</td>
+                </tr>
+                <tr>
+                    <td>Starts At</td>
+                    <td>@Model.BeginAt</td>
+                </tr>
+                <tr>
+                    <td>Ends At</td>
+                    <td>@Model.EndAt</td>
+                </tr>
+                <tr>
+                    <td>Slug</td>
+                    <td>@Model.Slug</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
