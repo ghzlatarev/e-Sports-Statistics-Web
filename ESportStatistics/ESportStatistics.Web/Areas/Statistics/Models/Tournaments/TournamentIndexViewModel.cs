@@ -5,9 +5,9 @@ using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Models.Tournaments
 {
-    public class IndexViewModel
+    public class TournamentIndexViewModel
     {
-        public IndexViewModel(IPagedList<Tournament> tournaments, string searchTerm = "")
+        public TournamentIndexViewModel(IPagedList<Tournament> tournaments, string sortOrder = "", string searchTerm = "")
         {
             this.Table = new TableViewModel<TournamentViewModel>()
             {
@@ -19,6 +19,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Models.Tournaments
                     PageSize = tournaments.PageSize,
                     HasNextPage = tournaments.HasNextPage,
                     HasPreviousPage = tournaments.HasPreviousPage,
+                    SortOrder = sortOrder,
                     SearchTerm = searchTerm,
                     AreaRoute = "Statistics",
                     ControllerRoute = "Tournament",

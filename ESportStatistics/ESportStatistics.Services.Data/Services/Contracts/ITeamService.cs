@@ -6,7 +6,7 @@ namespace ESportStatistics.Core.Services.Contracts
 {
     public interface ITeamService
     {
-        Task<IPagedList<Team>> FilterTeamsAsync(string filter = "", int pageNumber = 1, int pageSize = 10);
+        Task<IPagedList<Team>> FilterTeamsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10);
 
         Task RebaseTeamsAsync(string accessToken);
 
