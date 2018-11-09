@@ -7,6 +7,12 @@
         {
             <li>
                 <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
+                   asp-route-pageNumber="1" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                   data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
+                   class="page-link">First</a>
+            </li>
+            <li>
+                <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
                    asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
                    data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
                    class="page-link">Prev</a>
@@ -14,6 +20,7 @@
         }
         else
         {
+            <li><a class="page-link current">First</a></li>
             <li><a class="page-link current">Prev</a></li>
         }
 
@@ -42,23 +49,30 @@
                    data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
                    class="page-link">Next</a>
             </li>
+            <li>
+                <a asp-area="@Model.AreaRoute" asp-controller="@Model.ControllerRoute" asp-action="@Model.ActionRoute"
+                   asp-route-pageNumber="@Model.PageCount" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+                   data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"
+                   class="page-link">Last</a>
+            </li>
         }
         else
         {
             <li><a class="page-link current">Next</a></li>
+            <li><a class="page-link current">Last</a></li>
         }
         <!-- <li>
-                <form asp-area="Administration" asp-controller="User" asp-action="Filter"
-                  asp-route-pageNumber="@Model.PageNumber" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
-                  method="get"
-                  data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
-                <label for="#pageSizeSelect">Page size</label>
-                <select onchange="this.form.submit()" name="pageSize" id="pageSizeSelect">
-                    <option value="1">10</option>
-                    <option value="2">20</option>
-                    <option value="5">50</option>
-                </select>
-            </form>
-        </li>-->
+            <form asp-area="Administration" asp-controller="User" asp-action="Filter"
+              asp-route-pageNumber="@Model.PageNumber" asp-route-searchTerm="@(Model.SearchTerm)" asp-route-pageSize="@(Model.PageSize)"
+              method="get"
+              data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
+            <label for="#pageSizeSelect">Page size</label>
+            <select onchange="this.form.submit()" name="pageSize" id="pageSizeSelect">
+                <option value="1">10</option>
+                <option value="2">20</option>
+                <option value="5">50</option>
+            </select>
+        </form>
+    </li>-->
     </ul>
 </div>
