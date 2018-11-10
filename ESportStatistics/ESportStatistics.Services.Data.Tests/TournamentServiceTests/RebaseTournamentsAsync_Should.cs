@@ -1,12 +1,9 @@
 ﻿using ESportStatistics.Core.Services;
 using ESportStatistics.Data.Context;
-using ESportStatistics.Data.Models;
 using ESportStatistics.Services.External;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
