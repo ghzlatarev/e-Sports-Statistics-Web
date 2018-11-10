@@ -67,5 +67,54 @@ namespace ESportStatistics.Services.Data.Tests.TeamServiceTests
                 Assert.IsTrue(assertContext.Teams.Any(t => t.Acronym.Equals(team.Acronym)));
             }
         }
+
+        [TestMethod]
+        public async Task RebaseTeamsAsync_ShouldRepopulateTeamTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseTeamsAsync_ShouldRepopulateTeamTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "teams";
+            int validPageSize = 100;
+
+            Team validTeam = new Team
+            {
+                Id = Guid.NewGuid(),
+                Name = "testTeam",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Team> validTeamList = new List<Team>()
+            {
+                validTeam
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<Team>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validTeamList));
+
+                TeamService SUT = new TeamService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseTeamsAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Teams.Count() == 1);
+                Assert.IsTrue(assertContext.Teams.Contains(validTeam));
+            }
+        }
     }
 }

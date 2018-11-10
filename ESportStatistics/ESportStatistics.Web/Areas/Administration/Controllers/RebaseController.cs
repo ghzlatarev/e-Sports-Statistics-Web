@@ -197,7 +197,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             }
             catch (Exception ex)
             {
-                StatusMessage = "Team repopulation unsuccessful!";
+                StatusMessage = "Teams repopulation unsuccessful!";
                 _logger.LogError(ex.Message);
             }
 
@@ -214,7 +214,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             }
             catch (Exception ex)
             {
-                StatusMessage = "Tournament repopulation unsuccessful!";
+                StatusMessage = "Tournaments repopulation unsuccessful!";
                 _logger.LogError(ex.Message);
             }
 

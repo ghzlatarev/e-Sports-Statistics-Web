@@ -62,5 +62,54 @@ namespace ESportStatistics.Services.Data.Tests.SpellServiceTests
                 Assert.IsTrue(assertContext.Spells.Any(s => s.Name.Equals(spell.Name)));
             }
         }
+
+        [TestMethod]
+        public async Task RebaseSpellsAsync_ShouldRepopulateSpellTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseSpellsAsync_ShouldRepopulateSpellTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "spells";
+            int validPageSize = 100;
+
+            Spell validSpell = new Spell
+            {
+                Id = Guid.NewGuid(),
+                Name = "testTeam",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Spell> validSpellList = new List<Spell>()
+            {
+                validSpell
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<Spell>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validSpellList));
+
+                SpellService SUT = new SpellService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseSpellsAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Spells.Count() == 1);
+                Assert.IsTrue(assertContext.Spells.Contains(validSpell));
+            }
+        }
     }
 }
