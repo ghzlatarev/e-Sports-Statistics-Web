@@ -69,6 +69,47 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
         }
 
         [TestMethod]
+        public async Task FindAsync_ShouldReturnTournament_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnTournament_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Tournament validTournament = new Tournament
+            {
+                Id = validId,
+                Name = "testTournament"
+            };
+
+            Tournament result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Tournaments.AddAsync(validTournament);
+                await actContext.SaveChangesAsync();
+
+                TournamentService SUT = new TournamentService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Tournaments.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Tournaments.Any(c => c.Name.Equals(result.Name)));
+            }
+        }
+
+        [TestMethod]
         public async Task RebaseTournamentsAsync_ShouldRepopulateTournamentTable_WhenPassedValidParameters()
         {
             // Arrange

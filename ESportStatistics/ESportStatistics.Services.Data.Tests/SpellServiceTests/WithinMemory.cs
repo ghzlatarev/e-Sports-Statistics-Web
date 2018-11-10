@@ -64,6 +64,47 @@ namespace ESportStatistics.Services.Data.Tests.SpellServiceTests
         }
 
         [TestMethod]
+        public async Task FindAsync_ShouldReturnSpell_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnSpell_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Spell validSpell = new Spell
+            {
+                Id = validId,
+                Name = "testSpell"
+            };
+
+            Spell result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Spells.AddAsync(validSpell);
+                await actContext.SaveChangesAsync();
+
+                SpellService SUT = new SpellService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Spells.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Spells.Any(c => c.Name.Equals(result.Name)));
+            }
+        }
+
+        [TestMethod]
         public async Task RebaseSpellsAsync_ShouldRepopulateSpellTable_WhenPassedValidParameters()
         {
             // Arrange

@@ -69,6 +69,47 @@ namespace ESportStatistics.Services.Data.Tests.TeamServiceTests
         }
 
         [TestMethod]
+        public async Task FindAsync_ShouldReturnTeam_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnTeam_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Team validTeam = new Team
+            {
+                Id = validId,
+                Name = "testTeam"
+            };
+
+            Team result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Teams.AddAsync(validTeam);
+                await actContext.SaveChangesAsync();
+
+                TeamService SUT = new TeamService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Teams.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Teams.Any(c => c.Name.Equals(result.Name)));
+            }
+        }
+
+        [TestMethod]
         public async Task RebaseTeamsAsync_ShouldRepopulateTeamTable_WhenPassedValidParameters()
         {
             // Arrange
