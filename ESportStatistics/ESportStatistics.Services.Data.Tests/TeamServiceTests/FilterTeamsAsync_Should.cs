@@ -11,6 +11,48 @@ namespace ESportStatistics.Services.Data.Tests.TeamServiceTests
     [TestClass]
     public class FilterTeamsAsync_Should
     {
+        [TestMethod]
+        public async Task ThrowArgumentNullException_WhenPassedNullSortOrder()
+        {
+            // Arrange
+            Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+            Mock<DataContext> dataContextMock = new Mock<DataContext>();
+
+            string invalidSortOrder = null;
+            string validFilter = string.Empty;
+            int validPageNumber = 1;
+            int validPageSize = 10;
+
+            TeamService SUT = new TeamService(
+                pandaScoreClientMock.Object,
+                dataContextMock.Object);
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(
+                () => SUT.FilterTeamsAsync(invalidSortOrder, validFilter, validPageNumber, validPageSize));
+        }
+
+        [TestMethod]
+        public async Task ThrowArgumentNullException_WhenPassedNullFilter()
+        {
+            // Arrange
+            Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+            Mock<DataContext> dataContextMock = new Mock<DataContext>();
+
+            string validSortOrder = string.Empty;
+            string invalidFilter = null;
+            int validPageNumber = 1;
+            int validPageSize = 10;
+
+            TeamService SUT = new TeamService(
+                pandaScoreClientMock.Object,
+                dataContextMock.Object);
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<ArgumentNullException>(
+                () => SUT.FilterTeamsAsync(validSortOrder, invalidFilter, validPageNumber, validPageSize));
+        }
+
         [DataTestMethod]
         [DataRow(0)]
         [DataRow(-10)]
