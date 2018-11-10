@@ -49,7 +49,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet("/teams/filter")]
-        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageNumber, int? pageSize)
         {
             sortOrder = sortOrder ?? string.Empty;
             searchTerm = searchTerm ?? string.Empty;
