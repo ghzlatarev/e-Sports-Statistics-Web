@@ -73,7 +73,5 @@ namespace ESportStatistics.Core.Services
 
             await this.dataContext.SaveChangesAsync(false);
         }
-
-
     }
 }

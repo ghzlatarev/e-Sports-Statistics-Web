@@ -69,6 +69,51 @@ namespace ESportStatistics.Services.Data.Tests.ItemServiceTests
         }
 
         [TestMethod]
+        public async Task FindAsync_ShouldReturnPlayer_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnPlayer_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Item validItem = new Item
+            {
+                Id = validId,
+                Name = "testName",
+                TotalGold = It.IsAny<int>(),
+                BaseGold = It.IsAny<int>()
+            };
+
+            Item result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Items.AddAsync(validItem);
+                await actContext.SaveChangesAsync();
+
+                ItemService SUT = new ItemService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Items.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Items.Any(c => c.Name.Equals(result.Name)));
+                Assert.IsTrue(assertContext.Items.Any(c => c.TotalGold.Equals(result.TotalGold)));
+                Assert.IsTrue(assertContext.Items.Any(c => c.BaseGold.Equals(result.BaseGold)));
+            }
+        }
+
+        [TestMethod]
         public async Task RebaseItemsAsync_ShouldRepopulateChampionTable_WhenPassedValidParameters()
         {
             // Arrange
