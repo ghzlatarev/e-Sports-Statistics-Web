@@ -65,6 +65,51 @@ namespace ESportStatistics.Services.Data.Tests.SerieServiceTests
         }
 
         [TestMethod]
+        public async Task FindAsync_ShouldReturnSerie_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnSerie_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Serie validPlayer = new Serie
+            {
+                Id = validId,
+                Name = "testChamp",
+                Slug = "testSlug",
+                Season = "testSeason"
+            };
+
+            Serie result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Series.AddAsync(validPlayer);
+                await actContext.SaveChangesAsync();
+
+                SerieService SUT = new SerieService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Series.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Series.Any(c => c.Name.Equals(result.Name)));
+                Assert.IsTrue(assertContext.Series.Any(c => c.Slug.Equals(result.Slug)));
+                Assert.IsTrue(assertContext.Series.Any(c => c.Season.Equals(result.Season)));
+            }
+        }
+
+        [TestMethod]
         public async Task RebaseSeriesAsync_ShouldRepopulateSpellSerie_WhenPassedValidParameters()
         {
             // Arrange
