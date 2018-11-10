@@ -13,6 +13,7 @@ using ESportStatistics.Web.Utilities.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -128,14 +129,11 @@ namespace ESportStatistics.Web
                     policy.RequireAuthenticatedUser();
                     policy.RequireRole("Administrator");
                 });
-            });
 
-            services.AddAuthorization(options =>
-            {
                 options.AddPolicy("Default", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireRole("User");
+                    policy.RequireRole("User", "Administrator");
                 });
             });
         }
@@ -176,7 +174,20 @@ namespace ESportStatistics.Web
             services.AddResponseCaching();
             services.AddMemoryCache();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.CacheProfiles.Add("Default",
+                    new CacheProfile()
+                    {
+                        Duration = 60
+                    });
+
+                options.CacheProfiles.Add("Short",
+                    new CacheProfile()
+                    {
+                        Duration = 30
+                    });
+            });
         }
     }
 }

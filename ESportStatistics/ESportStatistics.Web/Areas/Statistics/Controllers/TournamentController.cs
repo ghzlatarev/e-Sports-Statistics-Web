@@ -1,13 +1,16 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Tournaments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -17,17 +20,30 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly ITournamentService _tournamentService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public TournamentController(ITournamentService tournamentService, IPDFService pDFService)
+        public TournamentController(ITournamentService tournamentService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _tournamentService = tournamentService ?? throw new ArgumentNullException(nameof(tournamentService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("tournaments")]
         public async Task<IActionResult> Index()
         {
-            var tournaments = await _tournamentService.FilterTournamentsAsync();
+            if (!_memoryCache.TryGetValue("ListOfTournaments", out IPagedList<Tournament> tournaments))
+            {
+                tournaments = await _tournamentService.FilterTournamentsAsync();
+
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfTournaments", tournaments, options);
+            }
 
             var model = new TournamentIndexViewModel(tournaments);
 
@@ -46,7 +62,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return PartialView("_TournamentTablePartial", model.Table);
         }
-        
+
         [HttpGet("tournaments/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
@@ -65,7 +81,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return View(model);
         }
-        
+
         [HttpGet("tournaments/download")]
         public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {

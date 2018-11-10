@@ -1,13 +1,16 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Series;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -17,19 +20,32 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly ISerieService _serieService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public SerieController(ISerieService serieService, IPDFService pDFService)
+        public SerieController(ISerieService serieService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _serieService = serieService ?? throw new ArgumentNullException(nameof(serieService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("series")]
         public async Task<IActionResult> Index()
         {
-            var spells = await _serieService.FilterSeriesAsync();
+            if (!_memoryCache.TryGetValue("ListOfSeries", out IPagedList<Serie> series))
+            {
+                series = await _serieService.FilterSeriesAsync();
 
-            var model = new SerieIndexViewModel(spells);
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfSeries", series, options);
+            }
+
+            var model = new SerieIndexViewModel(series);
 
             return View(model);
         }
@@ -46,7 +62,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return PartialView("_SerieTablePartial", model.Table);
         }
-        
+
         [HttpGet("series/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
@@ -65,7 +81,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return View(model);
         }
-        
+
         [HttpGet("series/download")]
         public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {

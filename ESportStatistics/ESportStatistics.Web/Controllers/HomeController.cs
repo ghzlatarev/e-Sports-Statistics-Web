@@ -6,25 +6,27 @@ namespace ESportStatistics.Web.Controllers
 {
     public class HomeController : Controller
     {
+        [ResponseCache(CacheProfileName = "Default")]
         public IActionResult Index()
         {
             return View();
         }
 
+        [HttpGet("about")]
+        [ResponseCache(CacheProfileName = "Default")]
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
-
             return View();
         }
 
+        [HttpGet("contact")]
+        [ResponseCache(CacheProfileName = "Default")]
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
+        [HttpGet("error")]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

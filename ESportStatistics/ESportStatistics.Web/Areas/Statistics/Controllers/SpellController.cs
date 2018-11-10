@@ -1,12 +1,15 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Spells;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -15,17 +18,30 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly ISpellService _spellService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public SpellController(ISpellService spellService, IPDFService pDFService)
+        public SpellController(ISpellService spellService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _spellService = spellService ?? throw new ArgumentNullException(nameof(spellService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("spells")]
         public async Task<IActionResult> Index()
         {
-            var spells = await _spellService.FilterSpellsAsync();
+            if (!_memoryCache.TryGetValue("ListOfSpells", out IPagedList<Spell> spells))
+            {
+                spells = await _spellService.FilterSpellsAsync();
+
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfSpells", spells, options);
+            }
 
             var model = new SpellIndexViewModel(spells);
 

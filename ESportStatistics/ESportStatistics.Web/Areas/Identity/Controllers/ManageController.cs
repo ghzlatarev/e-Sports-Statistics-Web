@@ -39,6 +39,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         public string StatusMessage { get; set; }
 
         [HttpGet("profile")]
+        [ResponseCache(CacheProfileName = "Short")]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -102,6 +103,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         }
 
         [HttpGet("change-password")]
+        [ResponseCache(CacheProfileName = "Short")]
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -168,6 +170,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return this.RedirectToAction(nameof(Index));
         }
 
+        [NonAction]
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -176,6 +179,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             }
         }
 
+        [NonAction]
         private bool IsValidImage(IFormFile image)
         {
             string type = image.ContentType;
@@ -189,6 +193,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return image.Length < 1024 * 1024;
         }
 
+        [NonAction]
         private string GetUploadRoot()
         {
             var environment = this.HttpContext.RequestServices
