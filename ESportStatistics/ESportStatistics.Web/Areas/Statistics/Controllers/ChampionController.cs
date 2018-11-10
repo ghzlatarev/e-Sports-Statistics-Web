@@ -31,7 +31,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         [HttpGet("champions")]
         public async Task<IActionResult> Index()
         {
-            if(!_memoryCache.TryGetValue("ListOfChampions",out IPagedList<Champion> champions))
+            if (!_memoryCache.TryGetValue("ListOfChampions", out IPagedList<Champion> champions))
             {
                 champions = await _championService.FilterChampionsAsync();
 
@@ -43,14 +43,14 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
                 _memoryCache.Set("ListOfChampions", champions, options);
             }
-            
+
             var model = new ChampionIndexViewModel(champions);
 
             return View(model);
         }
 
         [HttpGet("champions/filter")]
-        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageNumber, int? pageSize)
         {
             sortOrder = sortOrder ?? string.Empty;
             searchTerm = searchTerm ?? string.Empty;

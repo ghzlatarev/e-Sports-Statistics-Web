@@ -1,0 +1,63 @@
+﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Services.Contracts;
+using ESportStatistics.Web.Areas.Statistics.Controllers;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
+
+namespace ESportStatistics.Web.Tests.Areas.Statistics.ChampionControllerTests
+{
+    [TestClass]
+    public class Constructor_Should
+    {
+        [TestMethod]
+        public void ThrowArgumentNullException_WHenPassedNullChampionService()
+        {
+            // Arrange
+            Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
+            Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
+
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+                 new ChampionController(
+                     null,
+                     pDFServiceMock.Object,
+                     memoryCacheMock.Object));
+        }
+
+        [TestMethod]
+        public void ThrowArgumentNullException_WHenPassedNullPDFService()
+        {
+            // Arrange
+            Mock<IChampionService> championServiceMock = new Mock<IChampionService>();
+            Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
+            Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
+
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+                 new ChampionController(
+                     championServiceMock.Object,
+                     null,
+                     memoryCacheMock.Object));
+        }
+
+        [TestMethod]
+        public void ThrowArgumentNullException_WHenPassedNullMemoryCache()
+        {
+            // Arrange
+            Mock<IChampionService> championServiceMock = new Mock<IChampionService>();
+            Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
+
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() =>
+                 new ChampionController(
+                     championServiceMock.Object,
+                     pDFServiceMock.Object,
+                     null));
+        }
+    }
+}
