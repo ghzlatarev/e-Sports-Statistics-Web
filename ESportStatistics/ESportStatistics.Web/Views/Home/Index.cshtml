@@ -48,47 +48,6 @@
     </div>
     <div class="col-lg-4">
         <figure class="snip1573">
-            <img src="~/images/stats/league_of_legends_arcade_loading_screen.png" alt="tournaments" />
-            <figcaption>
-                <h3>Tournaments</h3>
-            </figcaption>
-            <a asp-area="Statistics" asp-controller="Tournament" asp-action="Index"></a>
-        </figure>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-4">
-        <figure class="snip1573">
-            <img src="~/images/stats/star-guardian-ezreal-1015201.jpg" alt="leagues" />
-            <figcaption href="#21321">
-                <h3>Leagues</h3>
-            </figcaption>
-            <a asp-area="Statistics" asp-controller="League" asp-action="Index"></a>
-        </figure>
-    </div>
-    <div class="col-lg-4">
-        <figure class="snip1573">
-            <img src="~/images/stats/image1123.jpg" alt="series" />
-            <figcaption>
-                <h3>Series</h3>
-            </figcaption>
-            <a asp-area="Statistics" asp-controller="Serie" asp-action="Index"></a>
-        </figure>
-    </div>
-    <div class="col-lg-4">
-        <figure class="snip1573">
-            <img src="~/images/stats/tumblr_nlvx8jrsqg1qgrdiqo1_500.png" alt="matches" />
-            <figcaption>
-                <h3>Matches</h3>
-            </figcaption>
-            <a asp-area="Statistics" asp-controller="Match" asp-action="Index"></a>
-        </figure>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-4"></div>
-    <div class="col-lg-4">
-        <figure class="snip1573">
             <img src="~/images/stats/Victorious-Orianna-Skin-LoL-2.jpg" alt="masteries" />
             <figcaption href="#21321">
                 <h3>Masteries</h3>
@@ -97,3 +56,47 @@
         </figure>
     </div>
 </div>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-lg-4">
+            <figure class="snip1573">
+                <img src="~/images/stats/star-guardian-ezreal-1015201.jpg" alt="leagues" />
+                <figcaption href="#21321">
+                    <h3>Leagues</h3>
+                </figcaption>
+                <a asp-area="Statistics" asp-controller="League" asp-action="Index"></a>
+            </figure>
+        </div>
+        <div class="col-lg-4">
+            <figure class="snip1573">
+                <img src="~/images/stats/image1123.jpg" alt="series" />
+                <figcaption>
+                    <h3>Series</h3>
+                </figcaption>
+                <a asp-area="Statistics" asp-controller="Serie" asp-action="Index"></a>
+            </figure>
+        </div>
+        <div class="col-lg-4">
+            <figure class="snip1573">
+                <img src="~/images/stats/league_of_legends_arcade_loading_screen.png" alt="tournaments" />
+                <figcaption>
+                    <h3>Tournaments</h3>
+                </figcaption>
+                <a asp-area="Statistics" asp-controller="Tournament" asp-action="Index"></a>
+            </figure>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <figure class="snip1573">
+                <img src="~/images/stats/tumblr_nlvx8jrsqg1qgrdiqo1_500.png" alt="matches" />
+                <figcaption>
+                    <h3>Matches</h3>
+                </figcaption>
+                <a asp-area="Statistics" asp-controller="Match" asp-action="Index"></a>
+            </figure>
+        </div>
+    </div>
+}

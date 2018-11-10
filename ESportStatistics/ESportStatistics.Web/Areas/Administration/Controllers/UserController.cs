@@ -24,8 +24,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
-        [HttpGet]
-        [Route("users")]
+        [HttpGet("users")]
         public async Task<IActionResult> Index()
         {
             var users = await _userService.FilterUsersAsync();
@@ -35,8 +34,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("users/details/{id}")]
+        [HttpGet("users/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
             const string adminRole = "Administrator";
@@ -57,8 +55,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("users/filter")]
+        [HttpGet("users/filter")]
         public async Task<IActionResult> Filter(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {
             sortOrder = sortOrder ?? string.Empty;
@@ -71,8 +68,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             return PartialView("_UserTablePartial", model.Table);
         }
 
-        [HttpGet]
-        [Route("users/disable/{id}")]
+        [HttpGet("users/disable/{id}")]
         public async Task<IActionResult> Disable(string id)
         {
             if (id == null)
@@ -91,8 +87,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             return PartialView("_UserTableRowPartial", model);
         }
 
-        [HttpGet]
-        [Route("users/restore/{id}")]
+        [HttpGet("users/restore/{id}")]
         public async Task<IActionResult> Restore(string id)
         {
             if (id == null)
@@ -111,8 +106,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             return PartialView("_UserTableRowPartial", model);
         }
 
-        [HttpGet]
-        [Route("users/promote/{id}")]
+        [HttpGet("users/promote/{id}")]
         public async Task<IActionResult> Promote(string id)
         {
             const string adminRole = "Administrator";
@@ -135,8 +129,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             return PartialView("_UserRolePartial", model);
         }
 
-        [HttpGet]
-        [Route("users/demote/{id}")]
+        [HttpGet("users/demote/{id}")]
         public async Task<IActionResult> Demote(string id)
         {
             const string adminRole = "Administrator";

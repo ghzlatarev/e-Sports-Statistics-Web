@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Identity.Controllers
@@ -23,30 +22,23 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUserService _userService;
         private readonly ILogger _logger;
-        private readonly UrlEncoder _urlEncoder;
-
-        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
           IUserService userService,
-          ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          ILogger<ManageController> logger)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _userService = userService;
-            _logger = logger;
-            _urlEncoder = urlEncoder;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [TempData]
         public string StatusMessage { get; set; }
 
-        [HttpGet]
-        [Route("profile")]
+        [HttpGet("profile")]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -60,8 +52,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [Route("profile")]
+        [HttpPost("profile")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
         {
@@ -110,8 +101,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        [Route("change-password")]
+        [HttpGet("change-password")]
         public async Task<IActionResult> ChangePassword()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -124,9 +114,8 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [Route("change-password")]
         [ValidateAntiForgeryToken]
+        [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -154,9 +143,8 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Identity/[controller]/[action]")]
+        [HttpPost("Identity/[controller]/[action]")]
         public async Task<IActionResult> Avatar(IFormFile avatarImage)
         {
             if (avatarImage == null)

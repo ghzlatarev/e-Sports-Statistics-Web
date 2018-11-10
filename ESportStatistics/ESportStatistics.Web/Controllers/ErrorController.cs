@@ -20,10 +20,5 @@ namespace ESportStatistics.Web.Controllers
         {
             return this.View();
         }
-
-        public IActionResult InternalServerError()
-        {
-            return this.View();
-        }
     }
 }

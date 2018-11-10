@@ -1,5 +1,4 @@
-﻿using ESportStatistics.Core.Providers.Contracts;
-using ESportStatistics.Data.Models.Identity;
+﻿using ESportStatistics.Data.Models.Identity;
 using ESportStatistics.Web.Areas.Identity.AccountViewModels;
 using ESportStatistics.Web.Controllers;
 using Microsoft.AspNetCore.Authentication;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Identity.Controllers
@@ -18,40 +18,34 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender,
             ILogger<AccountController> logger)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
-            _emailSender = emailSender;
-            _logger = logger;
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
+            _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [TempData]
         public string ErrorMessage { get; set; }
 
-        [HttpGet]
-        [Route("login")]
+        [HttpGet("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
@@ -86,22 +80,19 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        [HttpGet]
-        [Route("register")]
         [AllowAnonymous]
+        [HttpGet("register")]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-        [HttpPost]
-        [Route("register")]
         [AllowAnonymous]
+        [HttpPost("register")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
@@ -132,8 +123,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        [Route("logout")]
+        [HttpGet("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
