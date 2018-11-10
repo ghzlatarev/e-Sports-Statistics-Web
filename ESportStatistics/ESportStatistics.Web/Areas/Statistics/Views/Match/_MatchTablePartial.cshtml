@@ -1,5 +1,6 @@
 ﻿@model TableViewModel<MatchViewModel>
 
+<div id="statusMessage"></div>
 <div id="tablePartial">
     <div>
         <form asp-area="Statistics" asp-controller="Match" asp-action="Filter"
@@ -15,6 +16,13 @@
                    asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")">Download Page</a>
             </form>
         </div>
+        @if (User.IsInRole("Administrator"))
+        {
+            <div class="dark-theme">
+                <a asp-area="Administration" asp-controller="Rebase" asp-action="Matches" class="page-link"
+                   method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#statusMessage">Rebase</a>
+            </div>
+        }
     </div>
     <div>
         <table class="table tablesorter">
