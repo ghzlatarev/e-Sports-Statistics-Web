@@ -52,10 +52,10 @@
                     </tr>
                 }
                 <tr>
-                    <td>
+                    <td width="50%" colspan="2">
                         @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
                     </td>
-                    <td>
+                    <td colspan="2" align="right">
                         @if (User.IsInRole("Administrator"))
                         {
                             <div class="dark-theme">
