@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Net.Http;
 
 namespace ESportStatistics.Web
@@ -34,26 +35,15 @@ namespace ESportStatistics.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            if (Environment.IsDevelopment())
-            {
-                services.AddDbContext<DataContext>(options =>
-                     options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
-            }
-            else
-            {
-                services.AddDbContext<DataContext>(options =>
-                     options.UseSqlServer(Configuration.GetConnectionString("ProductionConnection")));
-            }
+            RegisterData(services);
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<DataContext>()
-                .AddDefaultTokenProviders();
+            RegisterAuthentication(services);
 
             RegisterServices(services);
             RegisterServicesExternal(services);
             RegisterServicesData(services);
 
-            services.AddMvc();
+            RegisterInfrastructure(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -93,6 +83,63 @@ namespace ESportStatistics.Web
             });
         }
 
+        private void RegisterData(IServiceCollection services)
+        {
+            if (Environment.IsDevelopment())
+            {
+                services.AddDbContext<DataContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
+            }
+            else
+            {
+                services.AddDbContext<DataContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("ProductionConnection")));
+            }
+        }
+
+        private void RegisterAuthentication(IServiceCollection services)
+        {
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
+
+            if (this.Environment.IsDevelopment())
+            {
+                services.Configure<IdentityOptions>(options =>
+                {
+                    // Password settings
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 3;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequiredUniqueChars = 0;
+
+                    // Lockout settings
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(1);
+                    options.Lockout.MaxFailedAccessAttempts = 999;
+                });
+            }
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole("Administrator");
+                });
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Default", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole("User");
+                });
+            });
+        }
+
         private void RegisterServices(IServiceCollection services)
         {
             services.AddScoped<ILoggerService, LoggerService>();
@@ -120,6 +167,16 @@ namespace ESportStatistics.Web
             services.AddScoped<ISerieService, SerieService>();
             services.AddScoped<ISpellService, SpellService>();
             services.AddScoped<ITournamentService, TournamentService>();
+        }
+
+        private void RegisterInfrastructure(IServiceCollection services)
+        {
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddResponseCaching();
+            services.AddMemoryCache();
+
+            services.AddMvc();
         }
     }
 }

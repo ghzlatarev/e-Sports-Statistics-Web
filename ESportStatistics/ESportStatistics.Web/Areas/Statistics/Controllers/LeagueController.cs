@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
+    [Authorize(Policy = "Default")]
     public class LeagueController : Controller
     {
         private readonly ILeagueService _leagueService;

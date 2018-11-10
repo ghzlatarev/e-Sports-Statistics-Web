@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
-    [Authorize]
     [Area("Statistics")]
+    [Authorize(Policy = "Default")]
     public class SerieController : Controller
     {
         private readonly ISerieService _serieService;

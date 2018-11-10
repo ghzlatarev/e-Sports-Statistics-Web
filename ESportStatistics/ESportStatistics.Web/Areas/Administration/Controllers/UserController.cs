@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ESportStatistics.Web.Areas.Administration.Controllers
 {
     [Area("Administration")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Policy = "Admin")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
