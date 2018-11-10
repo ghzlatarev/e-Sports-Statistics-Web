@@ -5,6 +5,7 @@ using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,6 +61,55 @@ namespace ESportStatistics.Services.Data.Tests.SerieServiceTests
                 Assert.IsTrue(assertContext.Series.Count().Equals(result.Count()));
                 Assert.IsTrue(assertContext.Series.Any(s => s.Name.Equals(serie.Name)));
                 Assert.IsTrue(assertContext.Series.Any(s => s.Season.Equals(serie.Season)));
+            }
+        }
+
+        [TestMethod]
+        public async Task RebaseSeriesAsync_ShouldRepopulateSpellSerie_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseSeriesAsync_ShouldRepopulateSerieTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "series";
+            int validPageSize = 100;
+
+            Serie validSerie = new Serie
+            {
+                Id = Guid.NewGuid(),
+                Name = "testSerie",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Serie> validSerieList = new List<Serie>()
+            {
+                validSerie
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<Serie>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validSerieList));
+
+                SerieService SUT = new SerieService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseSeriesAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Series.Count() == 1);
+                Assert.IsTrue(assertContext.Series.Contains(validSerie));
             }
         }
     }

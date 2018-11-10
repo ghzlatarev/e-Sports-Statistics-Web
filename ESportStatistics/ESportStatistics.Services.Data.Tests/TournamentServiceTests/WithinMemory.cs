@@ -67,5 +67,54 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
                 Assert.IsTrue(assertContext.Tournaments.Any(t => t.Slug.Equals(tournament.Slug)));
             }
         }
+
+        [TestMethod]
+        public async Task RebaseTournamentsAsync_ShouldRepopulateTournamentTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseTournamentsAsync_ShouldRepopulateTournamentsTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "tournaments";
+            int validPageSize = 100;
+
+            Tournament validTournament = new Tournament
+            {
+                Id = Guid.NewGuid(),
+                Name = "testTournament",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Tournament> validTournamentList = new List<Tournament>()
+            {
+                validTournament
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<Tournament>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validTournamentList));
+
+                TournamentService SUT = new TournamentService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseTournamentsAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Tournaments.Count() == 1);
+                Assert.IsTrue(assertContext.Tournaments.Contains(validTournament));
+            }
+        }
     }
 }
