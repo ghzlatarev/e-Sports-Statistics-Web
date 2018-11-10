@@ -1,12 +1,16 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Champions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -15,18 +19,31 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly IChampionService _championService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public ChampionController(IChampionService championService, IPDFService pDFService)
+        public ChampionController(IChampionService championService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _championService = championService ?? throw new ArgumentNullException(nameof(championService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("champions")]
         public async Task<IActionResult> Index()
         {
-            var champions = await _championService.FilterChampionsAsync();
+            if(!_memoryCache.TryGetValue("ListOfChampions",out IPagedList<Champion> champions))
+            {
+                champions = await _championService.FilterChampionsAsync();
 
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfChampions", champions, options);
+            }
+            
             var model = new ChampionIndexViewModel(champions);
 
             return View(model);

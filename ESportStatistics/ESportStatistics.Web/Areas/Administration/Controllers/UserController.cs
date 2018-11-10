@@ -35,6 +35,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         }
 
         [HttpGet("users/details/{id}")]
+        [ResponseCache(CacheProfileName = "Short")]
         public async Task<IActionResult> Details(string id)
         {
             const string adminRole = "Administrator";

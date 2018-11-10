@@ -137,6 +137,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             return View();
         }
 
+        [NonAction]
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -145,6 +146,7 @@ namespace ESportStatistics.Web.Areas.Identity.Controllers
             }
         }
 
+        [NonAction]
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

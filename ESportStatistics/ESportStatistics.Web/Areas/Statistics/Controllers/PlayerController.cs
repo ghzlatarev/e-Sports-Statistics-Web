@@ -1,12 +1,15 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Players;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -15,17 +18,30 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly IPlayerService _playerService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public PlayerController(IPlayerService playerService, IPDFService pDFService)
+        public PlayerController(IPlayerService playerService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _playerService = playerService ?? throw new ArgumentNullException(nameof(playerService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("players")]
         public async Task<IActionResult> Index()
         {
-            var players = await _playerService.FilterPlayersAsync();
+            if (!_memoryCache.TryGetValue("ListOfPlayers", out IPagedList<Player> players))
+            {
+                players = await _playerService.FilterPlayersAsync();
+
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfPlayers", players, options);
+            }
 
             var model = new PlayerIndexViewModel(players);
 

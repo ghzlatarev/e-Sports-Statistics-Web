@@ -1,13 +1,16 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Leagues;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -17,17 +20,30 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly ILeagueService _leagueService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public LeagueController(ILeagueService leagueService, IPDFService pDFService)
+        public LeagueController(ILeagueService leagueService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _leagueService = leagueService ?? throw new ArgumentNullException(nameof(leagueService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("leagues")]
         public async Task<IActionResult> Index(LeagueViewModel league)
         {
-            var leagues = await _leagueService.FilterLeaguesAsync();
+            if (!_memoryCache.TryGetValue("ListOfILeagues", out IPagedList<League> leagues))
+            {
+                leagues = await _leagueService.FilterLeaguesAsync();
+
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfILeagues", leagues, options);
+            }
 
             var model = new LeagueIndexViewModel(leagues);
 
@@ -50,7 +66,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return PartialView("_LeagueTablePartial", model.Table);
         }
-        
+
         [HttpGet("leagues/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
@@ -71,7 +87,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return View(model);
         }
-        
+
         [HttpGet("leagues/download")]
         public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
         {

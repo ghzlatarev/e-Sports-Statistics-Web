@@ -1,12 +1,15 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Masteries;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
@@ -15,17 +18,30 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
     {
         private readonly IMasteryService _masteryService;
         private readonly IPDFService _pDFService;
+        private readonly IMemoryCache _memoryCache;
 
-        public MasteryController(IMasteryService masteryService, IPDFService pDFService)
+        public MasteryController(IMasteryService masteryService, IPDFService pDFService, IMemoryCache memoryCache)
         {
             _masteryService = masteryService ?? throw new ArgumentNullException(nameof(masteryService));
             _pDFService = pDFService ?? throw new ArgumentNullException(nameof(pDFService));
+            _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
         [HttpGet("masteries")]
         public async Task<IActionResult> Index(MasteryViewModel mastery)
         {
-            var masteries = await _masteryService.FilterMasteriesAsync();
+            if (!_memoryCache.TryGetValue("ListOfMasteries", out IPagedList<Mastery> masteries))
+            {
+                masteries = await _masteryService.FilterMasteriesAsync();
+
+                MemoryCacheEntryOptions options = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(25),
+                    SlidingExpiration = TimeSpan.FromSeconds(5)
+                };
+
+                _memoryCache.Set("ListOfMasteries", masteries, options);
+            }
 
             var model = new MasteryIndexViewModel(masteries);
 
