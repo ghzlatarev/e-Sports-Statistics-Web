@@ -65,6 +65,51 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
         }
 
         [TestMethod]
+        public async Task FindAsync_ShouldReturnChampion_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnChampion_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Champion validChampion = new Champion
+            {
+                Id = validId,
+                Name = "testChamp",
+                HP = 100,
+                MP = 100
+            };
+
+            Champion result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Champions.AddAsync(validChampion);
+                await actContext.SaveChangesAsync();
+
+                ChampionService SUT = new ChampionService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Champions.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Champions.Any(c => c.Name.Equals(result.Name)));
+                Assert.IsTrue(assertContext.Champions.Any(c => c.HP.Equals(result.HP)));
+                Assert.IsTrue(assertContext.Champions.Any(c => c.MP.Equals(result.MP)));
+            }
+        }
+
+        [TestMethod]
         public async Task AddChampionAsync_ShouldAddChampion_WhenPassedValidParameters()
         {
             // Arrange

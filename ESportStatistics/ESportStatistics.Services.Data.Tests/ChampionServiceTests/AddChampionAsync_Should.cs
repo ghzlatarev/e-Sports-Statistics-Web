@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
 {
     [TestClass]
-    public class RebaseChampionsAsync_Should
+    public class AddChampionAsync_Should
     {
         [TestMethod]
-        public async Task ThrowArgumentNullException_WhenPassedNullAccessToken()
+        public async Task ThrowArgumentNullException_WhenPassedNullName()
         {
             // Arrange
             Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
@@ -25,7 +25,7 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
 
             // Assert
             await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () =>
-               await SUT.RebaseChampionsAsync(null));
+               await SUT.AddChampionAsync(null));
         }
     }
 }
