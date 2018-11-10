@@ -5,7 +5,6 @@ using ESportStatistics.Web.Areas.Statistics.Models.Champions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -82,7 +81,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet("champions/download")]
-        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageNumber, int? pageSize)
         {
             IList<string> fileParameters = typeof(ChampionDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
 
