@@ -1,6 +1,7 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Models.Matches;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace ESportStatistics.Web.Areas.Statistics.Controllers
 {
+    [Authorize]
     [Area("Statistics")]
     public class MatchController : Controller
     {
@@ -44,7 +46,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
 
             return PartialView("_MatchTablePartial", model.Table);
         }
-
+        
         [HttpGet("matches/details/{id}")]
         public async Task<IActionResult> Details(string id)
         {

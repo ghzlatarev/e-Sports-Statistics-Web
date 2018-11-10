@@ -45,35 +45,13 @@ namespace ESportStatistics.Web
                      options.UseSqlServer(Configuration.GetConnectionString("ProductionConnection")));
             }
 
-            // Database
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
-            // Services External
-            services.AddScoped<HttpClient>();
-            services.AddScoped<IPandaScoreClient, PandaScoreClient>();
-
-            // Services
-            services.AddScoped<ILoggerService, LoggerService>();
-            services.AddScoped<IPDFService, PDFService>();
-
-            // Services Data Identity
-            services.AddScoped<IUserService, UserService>();
-
-            // Services Data
-            services.AddScoped<IChampionService, ChampionService>();
-            services.AddScoped<IItemService, ItemService>();
-            services.AddScoped<ILeagueService, LeagueService>();
-            services.AddScoped<IMasteryService, MasteryService>();
-            services.AddScoped<IMatchService, MatchService>();
-            services.AddScoped<IPlayerService, PlayerService>();
-            services.AddScoped<ITeamService, TeamService>();
-            services.AddScoped<ISerieService, SerieService>();
-            services.AddScoped<ISpellService, SpellService>();
-            services.AddScoped<ITournamentService, TournamentService>();
-
-            services.AddScoped<IEmailSender, EmailSender>();
+            RegisterServices(services);
+            RegisterServicesExternal(services);
+            RegisterServicesData(services);
 
             services.AddMvc();
         }
@@ -113,6 +91,35 @@ namespace ESportStatistics.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}");
             });
+        }
+
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.AddScoped<ILoggerService, LoggerService>();
+            services.AddScoped<IPDFService, PDFService>();
+        }
+
+        private void RegisterServicesExternal(IServiceCollection services)
+        {
+            services.AddScoped<HttpClient>();
+            services.AddScoped<IPandaScoreClient, PandaScoreClient>();
+        }
+
+        private void RegisterServicesData(IServiceCollection services)
+        {
+            // Identity
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IChampionService, ChampionService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<ILeagueService, LeagueService>();
+            services.AddScoped<IMasteryService, MasteryService>();
+            services.AddScoped<IMatchService, MatchService>();
+            services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<ISerieService, SerieService>();
+            services.AddScoped<ISpellService, SpellService>();
+            services.AddScoped<ITournamentService, TournamentService>();
         }
     }
 }
