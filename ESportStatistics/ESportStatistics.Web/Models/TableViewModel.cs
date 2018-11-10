@@ -11,6 +11,8 @@ namespace ESportStatistics.Web.Models
 
         public IEnumerable<T> Items { get; set; }
 
+        public string StatusMessage { get; set; }
+
         public PaginationViewModel Pagination { get; set; }
     }
 }
