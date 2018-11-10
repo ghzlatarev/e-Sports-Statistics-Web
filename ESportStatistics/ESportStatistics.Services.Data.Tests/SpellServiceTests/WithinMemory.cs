@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services;
+﻿using ESportStatistics.Core.Services;
 using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Services.Data.Tests.SpellServiceTests
 {
@@ -24,6 +23,7 @@ namespace ESportStatistics.Services.Data.Tests.SpellServiceTests
                 .UseInMemoryDatabase(databaseName: "FilterSpellsAsync_ShouldReturnSpells_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testSpell";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -50,7 +50,7 @@ namespace ESportStatistics.Services.Data.Tests.SpellServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.FilterSpellsAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterSpellsAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
             }
 
             // Assert

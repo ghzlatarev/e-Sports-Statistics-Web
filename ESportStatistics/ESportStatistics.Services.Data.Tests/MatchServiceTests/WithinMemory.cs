@@ -22,6 +22,7 @@ namespace ESportStatistics.Services.Data.Tests.MatchServiceTests
                 .UseInMemoryDatabase(databaseName: "FilterMatches_ShouldReturnMatches_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testMatch";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -54,7 +55,7 @@ namespace ESportStatistics.Services.Data.Tests.MatchServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.FilterMatchesAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterMatchesAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
             }
 
             // Assert

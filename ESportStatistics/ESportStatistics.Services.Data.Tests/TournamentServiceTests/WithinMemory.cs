@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ESportStatistics.Core.Services;
+﻿using ESportStatistics.Core.Services;
 using ESportStatistics.Data.Context;
-using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
 {
@@ -25,6 +23,7 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
                 .UseInMemoryDatabase(databaseName: "FilterTournamentsAsync_ShouldReturnTournaments_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testTournament";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -55,7 +54,7 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.FilterTournamentsAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterTournamentsAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
             }
 
             // Assert

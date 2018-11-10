@@ -1,9 +1,9 @@
-﻿using Moq;
-using System;
+﻿using ESportStatistics.Core.Services;
 using ESportStatistics.Data.Context;
-using ESportStatistics.Core.Services;
 using ESportStatistics.Services.External;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 
 namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
 {
@@ -16,11 +16,11 @@ namespace ESportStatistics.Services.Data.Tests.TournamentServiceTests
             // Arrange
             Mock<IPandaScoreClient> pandaScoreClient = new Mock<IPandaScoreClient>();
 
-        // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(
-                () => new TournamentService(
-                    pandaScoreClient.Object,
-                    null));
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(
+                    () => new TournamentService(
+                        pandaScoreClient.Object,
+                        null));
         }
 
         [TestMethod]

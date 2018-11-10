@@ -22,6 +22,7 @@ namespace ESportStatistics.Services.Data.Tests.ItemServiceTests
                 .UseInMemoryDatabase(databaseName: "ItemService_ShouldReturnItems_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testItem";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -51,7 +52,7 @@ namespace ESportStatistics.Services.Data.Tests.ItemServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.FilterItemsAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterItemsAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
             }
 
             // Assert

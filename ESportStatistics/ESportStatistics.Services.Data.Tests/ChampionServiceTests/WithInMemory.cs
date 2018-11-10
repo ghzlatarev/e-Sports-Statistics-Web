@@ -20,9 +20,10 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
         {
             // Arrange
             var contextOptions = new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: "ChampionService_ShouldReturnChampions_WhenPassedValidParameters")
+                .UseInMemoryDatabase(databaseName: "FilterChampionsAsync_ShouldReturnChampions_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testChamp";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -48,7 +49,7 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.FilterChampionsAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterChampionsAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
             }
 
             // Assert
@@ -188,6 +189,55 @@ namespace ESportStatistics.Services.Data.Tests.ChampionServiceTests
                 Assert.IsNotNull(result);
                 Assert.IsNull(result.DeletedOn);
                 Assert.IsTrue(result.IsDeleted.Equals(validIsDeleted));
+            }
+        }
+
+        [TestMethod]
+        public async Task RebaseChampionsAsync_ShouldRepopulateChampionTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseChampionsAsync_ShouldRepopulateChampionTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "champions";
+            int validPageSize = 100;
+
+            Champion validChampion = new Champion
+            {
+                Id = Guid.NewGuid(),
+                Name = "testChamp",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Champion> validChampionList = new List<Champion>()
+            {
+                validChampion
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<Champion>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validChampionList));
+
+                ChampionService SUT = new ChampionService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseChampionsAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Champions.Count() == 1);
+                Assert.IsTrue(assertContext.Champions.Contains(validChampion));
             }
         }
     }

@@ -22,6 +22,7 @@ namespace ESportStatistics.Services.Data.Tests.LeagueServiceTests
                 .UseInMemoryDatabase(databaseName: "LeagueService_ShouldReturnLeagues_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testLeague";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -51,7 +52,7 @@ namespace ESportStatistics.Services.Data.Tests.LeagueServiceTests
                     pandaScoreClientMock.Object,
                     actContext);
 
-                result = await SUT.FilterLeaguesAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterLeaguesAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
 
                 Assert.IsTrue(result.Count() == 1);
                 Assert.IsTrue(result.ToArray()[0].Name.Equals(validFirstName));

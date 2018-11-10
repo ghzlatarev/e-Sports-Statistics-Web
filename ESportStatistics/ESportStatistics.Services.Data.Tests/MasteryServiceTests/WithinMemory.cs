@@ -22,6 +22,7 @@ namespace ESportStatistics.Services.Data.Tests.MasteryServiceTests
                 .UseInMemoryDatabase(databaseName: "FilterMasteries_ShouldReturnMasteries_WhenPassedValidParameters")
                 .Options;
 
+            string validSortOrder = "name_asc";
             string validFilter = "testMastery";
             int validPageSize = 10;
             int validPageNumber = 1;
@@ -47,7 +48,7 @@ namespace ESportStatistics.Services.Data.Tests.MasteryServiceTests
                     pandaScoreEndpointrMock.Object,
                     actContext);
 
-                result = await SUT.FilterMasteriesAsync(validFilter, validPageNumber, validPageSize);
+                result = await SUT.FilterMasteriesAsync(validSortOrder, validFilter, validPageNumber, validPageSize);
             }
 
             // Assert

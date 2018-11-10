@@ -4,7 +4,6 @@ using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Models.Contracts;
 using ESportStatistics.Data.Models.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -47,18 +46,18 @@ namespace ESportStatistics.Data.Context
             return base.SaveChanges();
         }
 
-        public async Task<int> SaveChangesAsync(bool applyDeletionRules = true, bool applyAuditInfoRules = true)
+        public virtual async Task<int> SaveChangesAsync(bool applyDeletionRules = true, bool applyAuditInfoRules = true)
         {
             if (applyDeletionRules == true)
             {
                 this.ApplyDeletionRules();
             }
-            
-            if(applyAuditInfoRules == true)
+
+            if (applyAuditInfoRules == true)
             {
                 this.ApplyAuditInfoRules();
             }
-            
+
             return await base.SaveChangesAsync();
         }
 

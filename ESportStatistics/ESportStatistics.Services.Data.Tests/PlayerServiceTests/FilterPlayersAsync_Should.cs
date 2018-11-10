@@ -20,7 +20,8 @@ namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
             Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
             Mock<DataContext> dataContextMock = new Mock<DataContext>();
 
-            string validFilter = It.IsAny<string>();
+            string validSortOrder = string.Empty;
+            string validFilter = string.Empty;
             int validPageSize = 10;
 
             PlayerService SUT = new PlayerService(
@@ -29,7 +30,7 @@ namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(
-                () => SUT.FilterPlayersAsync(validFilter, invalidPageNumber, validPageSize));
+                () => SUT.FilterPlayersAsync(validSortOrder, validFilter, invalidPageNumber, validPageSize));
         }
 
         [DataTestMethod]
@@ -41,7 +42,8 @@ namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
             Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
             Mock<DataContext> dataContextMock = new Mock<DataContext>();
 
-            string validFilter = It.IsAny<string>();
+            string validSortOrder = string.Empty;
+            string validFilter = string.Empty;
             int validPageNumber = 1;
 
             PlayerService SUT = new PlayerService(
@@ -50,7 +52,7 @@ namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(
-                () => SUT.FilterPlayersAsync(validFilter, validPageNumber, invalidPageSize));
+                () => SUT.FilterPlayersAsync(validSortOrder, validFilter, validPageNumber, invalidPageSize));
         }
     }
 }
