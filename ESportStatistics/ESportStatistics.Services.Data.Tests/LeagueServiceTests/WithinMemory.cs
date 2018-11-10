@@ -16,11 +16,11 @@ namespace ESportStatistics.Services.Data.Tests.LeagueServiceTests
     public class WithInMemory
     {
         [TestMethod]
-        public async Task FilterItemsAsync_ShouldReturnItems_WhenPassedValidParameters()
+        public async Task FilterLeaguesAsync_ShouldReturnItems_WhenPassedValidParameters()
         {
             // Arrange
             var contextOptions = new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: "LeagueService_ShouldReturnLeagues_WhenPassedValidParameters")
+                .UseInMemoryDatabase(databaseName: "FilterLeaguesAsync_ShouldReturnItems_WhenPassedValidParameters")
                 .Options;
 
             string validSortOrder = "name_asc";
