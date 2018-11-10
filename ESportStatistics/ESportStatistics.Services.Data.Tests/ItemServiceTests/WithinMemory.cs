@@ -116,5 +116,50 @@ namespace ESportStatistics.Services.Data.Tests.ItemServiceTests
                 Assert.IsTrue(assertContext.Items.Contains(validItem));
             }
         }
+
+        [TestMethod]
+        public async Task FindAsync_ShouldReturnChampion_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnChampion_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Champion validChampion = new Champion
+            {
+                Id = validId,
+                Name = "testChampion",
+                Armor = 2.34,
+                Movespeed = 2.55
+            };
+
+            Champion result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Champions.AddAsync(validChampion);
+                await actContext.SaveChangesAsync();
+
+                ChampionService SUT = new ChampionService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Champions.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Champions.Any(c => c.Name.Equals(result.Name)));
+                Assert.IsTrue(assertContext.Champions.Any(c => c.Armor.Equals(result.Armor)));
+                Assert.IsTrue(assertContext.Champions.Any(c => c.Movespeed.Equals(result.Movespeed)));
+            }
+        }
     }
 }

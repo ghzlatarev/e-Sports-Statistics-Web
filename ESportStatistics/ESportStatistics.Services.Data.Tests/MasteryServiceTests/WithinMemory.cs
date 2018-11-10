@@ -5,6 +5,7 @@ using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,6 +59,55 @@ namespace ESportStatistics.Services.Data.Tests.MasteryServiceTests
 
                 Assert.IsTrue(assertContext.Masteries.Count().Equals(result.Count()));
                 Assert.IsTrue(assertContext.Masteries.Any(m => m.Name.Equals(mastery.Name)));
+            }
+        }
+
+        [TestMethod]
+        public async Task RebaseMasteriesAsync_ShouldRepopulateMasteriesTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseMasteriesAsync_ShouldRepopulateMasteriesTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "masteries";
+            int validPageSize = 100;
+
+            Mastery validMastery = new Mastery
+            {
+                Id = Guid.NewGuid(),
+                Name = "testMastery",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Mastery> validMasteryList = new List<Mastery>()
+            {
+                validMastery
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<Mastery>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validMasteryList));
+
+                MasteryService SUT = new MasteryService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseMasteriesAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Masteries.Count() == 1);
+                Assert.IsTrue(assertContext.Masteries.Contains(validMastery));
             }
         }
     }

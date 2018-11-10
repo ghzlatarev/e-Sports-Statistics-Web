@@ -5,6 +5,7 @@ using ESportStatistics.Services.External;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,6 +70,98 @@ namespace ESportStatistics.Services.Data.Tests.LeagueServiceTests
                 Assert.IsTrue(assertContext.Leagues.Any(l => l.Name.Equals(league.Name)));
                 Assert.IsTrue(assertContext.Leagues.Any(l => l.Slug.Equals(league.Slug)));
                 Assert.IsTrue(assertContext.Leagues.Any(l => l.LifeSupported.Equals(league.LifeSupported)));
+            }
+        }
+
+        [TestMethod]
+        public async Task RebaseLeaguesAsync_ShouldRepopulateLeaguesTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebaseLeaguesAsync_ShouldRepopulateLeaguesTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "leagues";
+            int validPageSize = 100;
+
+            League validLeague = new League
+            {
+                Id = Guid.NewGuid(),
+                Name = "testLeague",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<League> validLeagueList = new List<League>()
+            {
+                validLeague
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<League>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validLeagueList));
+
+                LeagueService SUT = new LeagueService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebaseLeaguesAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Leagues.Count() == 1);
+                Assert.IsTrue(assertContext.Leagues.Contains(validLeague));
+            }
+        }
+
+        [TestMethod]
+        public async Task FindAsync_ShouldReturnLeagues_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnLeagues_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            League validLeague = new League
+            {
+                Id = validId,
+                Name = "testLeague",
+                URL = "testURL"
+            };
+
+            League result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Leagues.AddAsync(validLeague);
+                await actContext.SaveChangesAsync();
+
+                LeagueService SUT = new LeagueService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Leagues.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Leagues.Any(c => c.Name.Equals(result.Name)));
+                Assert.IsTrue(assertContext.Leagues.Any(c => c.URL.Equals(result.URL)));
             }
         }
     }

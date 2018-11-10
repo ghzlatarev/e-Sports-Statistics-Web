@@ -112,5 +112,54 @@ namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
                 Assert.IsTrue(assertContext.Players.Any(c => c.LastName.Equals(result.LastName)));
             }
         }
+
+        [TestMethod]
+        public async Task RebasePlayersAsync_ShouldRepopulatePlayersTable_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "RebasePlayersAsync_ShouldRepopulatePlayersTable_WhenPassedValidParameters")
+                .Options;
+
+            string validAccessToken = string.Empty;
+            string validCollectionName = "players";
+            int validPageSize = 100;
+
+            Player validPlayer = new Player
+            {
+                Id = Guid.NewGuid(),
+                Name = "testPlayer",
+                DeletedOn = DateTime.UtcNow.AddHours(2),
+                IsDeleted = true
+            };
+
+            IEnumerable<Player> validPlayerList = new List<Player>()
+            {
+                validPlayer
+            };
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                pandaScoreClientMock
+                    .Setup(mock => mock.GetEntitiesParallel<ESportStatistics.Data.Models.Player>(validAccessToken, validCollectionName, validPageSize))
+                    .Returns(Task.FromResult(validPlayerList));
+
+                PlayerService SUT = new PlayerService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                await SUT.RebasePlayersAsync(validAccessToken);
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Players.Count() == 1);
+                Assert.IsTrue(assertContext.Players.Contains(validPlayer));
+            }
+        }
     }
 }
