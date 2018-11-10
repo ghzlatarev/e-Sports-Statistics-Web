@@ -67,5 +67,50 @@ namespace ESportStatistics.Services.Data.Tests.PlayerServiceTests
                 Assert.IsTrue(assertContext.Players.Any(t => t.Hometown.Equals(player.Hometown)));
             }
         }
+
+        [TestMethod]
+        public async Task FindAsync_ShouldReturnPlayer_WhenPassedValidParameters()
+        {
+            // Arrange
+            var contextOptions = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "FindAsync_ShouldReturnPlayer_WhenPassedValidParameters")
+                .Options;
+
+            Guid validId = Guid.NewGuid();
+
+            Player validPlayer = new Player
+            {
+                Id = validId,
+                Name = "testChamp",
+                FirstName = "testFirstName",
+                LastName = "testLastName"
+            };
+
+            Player result = null;
+
+            // Act
+            using (DataContext actContext = new DataContext(contextOptions))
+            {
+                Mock<IPandaScoreClient> pandaScoreClientMock = new Mock<IPandaScoreClient>();
+
+                await actContext.Players.AddAsync(validPlayer);
+                await actContext.SaveChangesAsync();
+
+                PlayerService SUT = new PlayerService(
+                    pandaScoreClientMock.Object,
+                    actContext);
+
+                result = await SUT.FindAsync(validId.ToString());
+            }
+
+            // Assert
+            using (DataContext assertContext = new DataContext(contextOptions))
+            {
+                Assert.IsTrue(assertContext.Players.Any(c => c.Id.Equals(result.Id)));
+                Assert.IsTrue(assertContext.Players.Any(c => c.Name.Equals(result.Name)));
+                Assert.IsTrue(assertContext.Players.Any(c => c.FirstName.Equals(result.FirstName)));
+                Assert.IsTrue(assertContext.Players.Any(c => c.LastName.Equals(result.LastName)));
+            }
+        }
     }
 }
