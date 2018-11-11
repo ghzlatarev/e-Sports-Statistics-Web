@@ -2,7 +2,7 @@
 using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models.Items;
+using ESportStatistics.Web.Areas.Statistics.Models.Leagues;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 
-namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
+namespace ESportStatistics.Web.Tests.Areas.Statistics.LeagueControllerTests
 {
     [TestClass]
     public class IndexAction_Should
@@ -21,22 +21,22 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
         public async Task ReturnViewResult_WhenCalled()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<ILeagueService> leagueServiceMock = new Mock<ILeagueService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             IMemoryCache memoryCacheMock = new MemoryCache(new MemoryCacheOptions());
-            
+
             string validSortOrder = string.Empty;
             string validFilter = string.Empty;
             int validPageNumber = 1;
             int validPageSize = 10;
-            
-            IPagedList<Item> items = new PagedList<Item>(new List<Item>().AsQueryable(), validPageNumber, validPageSize);
 
-            itemServiceMock.Setup(mock => mock.FilterItemsAsync(validSortOrder, validFilter, validPageNumber, validPageSize))
-                .Returns(Task.FromResult(items));
-            
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            IPagedList<League> leagues = new PagedList<League>(new List<League>().AsQueryable(), validPageNumber, validPageSize);
+
+            leagueServiceMock.Setup(mock => mock.FilterLeaguesAsync(validSortOrder, validFilter, validPageNumber, validPageSize))
+                .Returns(Task.FromResult(leagues));
+
+            LeagueController SUT = new LeagueController(
+                leagueServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock);
 
@@ -51,7 +51,7 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
         public async Task ReturnCorrectViewModel_WhenCalled()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<ILeagueService> leagueServiceMock = new Mock<ILeagueService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             IMemoryCache memoryCacheMock = new MemoryCache(new MemoryCacheOptions());
 
@@ -60,13 +60,13 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
             int validPageNumber = 1;
             int validPageSize = 10;
 
-            IPagedList<Item> items = new PagedList<Item>(new List<Item>().AsQueryable(), validPageNumber, validPageSize);
+            IPagedList<League> leagues = new PagedList<League>(new List<League>().AsQueryable(), validPageNumber, validPageSize);
 
-            itemServiceMock.Setup(mock => mock.FilterItemsAsync(validSortOrder, validFilter, validPageNumber, validPageSize))
-                .Returns(Task.FromResult(items));
+            leagueServiceMock.Setup(mock => mock.FilterLeaguesAsync(validSortOrder, validFilter, validPageNumber, validPageSize))
+                .Returns(Task.FromResult(leagues));
 
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            LeagueController SUT = new LeagueController(
+                leagueServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock);
 
@@ -74,7 +74,7 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
             var result = await SUT.Index() as ViewResult;
 
             // Assert
-            Assert.IsInstanceOfType(result.Model, typeof(ItemIndexViewModel));
+            Assert.IsInstanceOfType(result.Model, typeof(LeagueIndexViewModel));
         }
     }
 }

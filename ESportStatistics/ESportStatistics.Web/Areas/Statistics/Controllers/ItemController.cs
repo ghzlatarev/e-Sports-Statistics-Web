@@ -28,7 +28,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet("items")]
-        public async Task<IActionResult> Index(ItemViewModel item)
+        public async Task<IActionResult> Index()
         {
             if (!_memoryCache.TryGetValue("ListOfItems", out IPagedList<Item> items))
             {
