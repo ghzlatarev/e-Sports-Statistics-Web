@@ -28,7 +28,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet("masteries")]
-        public async Task<IActionResult> Index(MasteryViewModel mastery)
+        public async Task<IActionResult> Index()
         {
             if (!_memoryCache.TryGetValue("ListOfMasteries", out IPagedList<Mastery> masteries))
             {

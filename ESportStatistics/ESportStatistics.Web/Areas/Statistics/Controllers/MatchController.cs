@@ -30,7 +30,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet("matches")]
-        public async Task<IActionResult> Index(MatchViewModel match)
+        public async Task<IActionResult> Index()
         {
             if (!_memoryCache.TryGetValue("ListOfMatches", out IPagedList<Match> matches))
             {

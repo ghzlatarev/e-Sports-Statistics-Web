@@ -1,16 +1,16 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
-using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Controllers;
-using ESportStatistics.Web.Areas.Statistics.Models.Items;
+using ESportStatistics.Web.Areas.Statistics.Models.Matches;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using Match = ESportStatistics.Data.Models.Match;
 
-namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
+namespace ESportStatistics.Web.Tests.Areas.Statistics.MatchControllerTests
 {
     [TestClass]
     public class DetailsAction_Should
@@ -19,19 +19,19 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
         public async Task ReturnViewResult_WhenCalled()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<IMatchService> matchServiceMock = new Mock<IMatchService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
 
             string validId = string.Empty;
 
-            Item validItemResult = new Item();
+            Match validMatchResult = new Match();
 
-            itemServiceMock.Setup(mock => mock.FindAsync(validId))
-                .Returns(Task.FromResult(validItemResult));
+            matchServiceMock.Setup(mock => mock.FindAsync(validId))
+                .Returns(Task.FromResult(validMatchResult));
 
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            MatchController SUT = new MatchController(
+                matchServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock.Object);
 
@@ -46,19 +46,19 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
         public async Task ReturnCorrectViewModel_WhenCalled()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<IMatchService> matchServiceMock = new Mock<IMatchService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
 
             string validId = string.Empty;
 
-            Item validItemResult = new Item();
+            Match validMatchResult = new Match();
 
-            itemServiceMock.Setup(mock => mock.FindAsync(validId))
-                .Returns(Task.FromResult(validItemResult));
+            matchServiceMock.Setup(mock => mock.FindAsync(validId))
+                .Returns(Task.FromResult(validMatchResult));
 
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            MatchController SUT = new MatchController(
+                matchServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock.Object);
 
@@ -66,26 +66,26 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
             var result = await SUT.Details(validId) as ViewResult;
 
             // Assert
-            Assert.IsInstanceOfType(result.Model, typeof(ItemDetailsViewModel));
+            Assert.IsInstanceOfType(result.Model, typeof(MatchDetailsViewModel));
         }
 
         [TestMethod]
         public async Task CallFindAsync_WhenCalled()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<IMatchService> matchServiceMock = new Mock<IMatchService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
 
             string validId = string.Empty;
 
-            Item validItemResult = new Item();
+            Match validMatchResult = new Match();
 
-            itemServiceMock.Setup(mock => mock.FindAsync(validId))
-                .Returns(Task.FromResult(validItemResult));
+            matchServiceMock.Setup(mock => mock.FindAsync(validId))
+                .Returns(Task.FromResult(validMatchResult));
 
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            MatchController SUT = new MatchController(
+                matchServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock.Object);
 
@@ -93,26 +93,26 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
             await SUT.Details(validId);
 
             // Assert
-            itemServiceMock.Verify(mock => mock.FindAsync(validId), Times.Once);
+            matchServiceMock.Verify(mock => mock.FindAsync(validId), Times.Once);
         }
 
         [TestMethod]
         public async Task ThrowApplicationException_WhenPassedNullId()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<IMatchService> matchServiceMock = new Mock<IMatchService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
 
             string validId = string.Empty;
 
-            Item validItemResult = new Item();
+            Match validMatchResult = new Match();
 
-            itemServiceMock.Setup(mock => mock.FindAsync(validId))
-                .Returns(Task.FromResult(validItemResult));
+            matchServiceMock.Setup(mock => mock.FindAsync(validId))
+                .Returns(Task.FromResult(validMatchResult));
 
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            MatchController SUT = new MatchController(
+                matchServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock.Object);
 
@@ -122,22 +122,22 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ItemControllerTests
         }
 
         [TestMethod]
-        public async Task ThrowApplicationException_WhenPassedItemIsNull()
+        public async Task ThrowApplicationException_WhenPassedMatchIsNull()
         {
             // Arrange
-            Mock<IItemService> itemServiceMock = new Mock<IItemService>();
+            Mock<IMatchService> ietmServiceMock = new Mock<IMatchService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
 
             string validId = string.Empty;
 
-            Item validItemResult = null;
+            Match validMatchResult = null;
 
-            itemServiceMock.Setup(mock => mock.FindAsync(validId))
-                .Returns(Task.FromResult(validItemResult));
+            ietmServiceMock.Setup(mock => mock.FindAsync(validId))
+                .Returns(Task.FromResult(validMatchResult));
 
-            ItemController SUT = new ItemController(
-                itemServiceMock.Object,
+            MatchController SUT = new MatchController(
+                ietmServiceMock.Object,
                 pDFServiceMock.Object,
                 memoryCacheMock.Object);
 
