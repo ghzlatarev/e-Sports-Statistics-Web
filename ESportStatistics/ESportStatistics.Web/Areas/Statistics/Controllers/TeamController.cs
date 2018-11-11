@@ -81,7 +81,7 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         }
 
         [HttpGet("teams/download")]
-        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageSize, int? pageNumber)
+        public async Task<FileResult> Download(string sortOrder, string searchTerm, int? pageNumber, int? pageSize)
         {
             IList<string> fileParameters = typeof(TeamDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
 

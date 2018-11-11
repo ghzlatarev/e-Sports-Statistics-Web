@@ -66,13 +66,13 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             IList<string> fileParameters = typeof(MasteryDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
 
-            var champions = await _masteryService.FilterMasteriesAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
-            if (champions is null)
+            var masteries = await _masteryService.FilterMasteriesAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (masteries is null)
             {
                 throw new ApplicationException("Failed to get database collection!");
             }
 
-            var model = champions.Select(c => new MasteryDownloadViewModel(c));
+            var model = masteries.Select(c => new MasteryDownloadViewModel(c));
             var outputFileName = _pDFService.CreatePDF(model, fileParameters, "masteries");
             var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
 

@@ -3,7 +3,6 @@ using ESportStatistics.Data.Models;
 using ESportStatistics.Services.Contracts;
 using ESportStatistics.Web.Areas.Statistics.Controllers;
 using ESportStatistics.Web.Areas.Statistics.Models.Series;
-using ESportStatistics.Web.Areas.Statistics.Models.Teams;
 using ESportStatistics.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
