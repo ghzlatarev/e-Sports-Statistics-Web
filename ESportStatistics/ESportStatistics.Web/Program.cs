@@ -3,6 +3,7 @@ using ESportStatistics.Web.Configurations;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -32,9 +33,10 @@ namespace ESportStatistics.Web
                 var services = scope.ServiceProvider;
                 try
                 {
+                    var _configuration = services.GetRequiredService<IConfiguration>();
                     var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var _roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    await IdentityDataInitializer.SeedDataAsync(_userManager, _roleManager);
+                    await IdentityDataInitializer.SeedDataAsync(_configuration, _userManager, _roleManager);
                 }
                 catch (Exception ex)
                 {

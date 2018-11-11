@@ -66,7 +66,7 @@
                         <td>
                             <div class="dark-theme">
                                 <form>
-                                    <a asp-area="Statistics" asp-controller="League" asp-action="Download" class="page-link"
+                                    <a asp-area="Statistics" asp-controller="Team" asp-action="Download" class="page-link"
                                        asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
                                        asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")">Download Page</a>
                                 </form>

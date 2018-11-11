@@ -87,13 +87,13 @@ namespace ESportStatistics.Web.Areas.Statistics.Controllers
         {
             IList<string> fileParameters = typeof(MatchDownloadViewModel).GetProperties().Select(p => p.Name.ToString()).ToList();
 
-            var champions = await _matchService.FilterMatchesAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
-            if (champions is null)
+            var matches = await _matchService.FilterMatchesAsync(sortOrder ?? string.Empty, searchTerm ?? string.Empty, pageNumber ?? 1, pageSize ?? 10);
+            if (matches is null)
             {
                 throw new ApplicationException("Failed to get database collection!");
             }
 
-            var model = champions.Select(c => new MatchDownloadViewModel(c));
+            var model = matches.Select(c => new MatchDownloadViewModel(c));
             var outputFileName = _pDFService.CreatePDF(model, fileParameters, "matches");
             var fileBytes = await _pDFService.GetFileBytesAsync(outputFileName);
 
