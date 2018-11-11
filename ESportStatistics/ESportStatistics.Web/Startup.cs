@@ -94,7 +94,7 @@ namespace ESportStatistics.Web
             else
             {
                 services.AddDbContext<DataContext>(options =>
-                     options.UseSqlServer(Configuration.GetConnectionString("ProductionConnection")));
+                     options.UseSqlServer(System.Environment.GetEnvironmentVariable("AZURE_ESS_DB_Connection" ,EnvironmentVariableTarget.User)));
             }
         }
 
