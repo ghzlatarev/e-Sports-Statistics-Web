@@ -1,0 +1,47 @@
+﻿<div class="sidebar" data-color="blue" data="blue">
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a href="javascript:void(0)" class="simple-text logo-mini">
+                ESS
+            </a>
+            <a href="javascript:void(0)" class="simple-text logo-normal">
+                Tazdingo Mon
+            </a>
+        </div>
+        <ul class="nav">
+            <li>
+                <a asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="tim-icons icon-bank"></i>
+                    <p>Home</p>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Home" asp-action="About">
+                    <i class="tim-icons icon-badge"></i>
+                    <p>About us</p>
+                </a>
+            </li>
+            <li class="dropdown nav-item">
+                <a class="dropdown-danger" data-toggle="dropdown">
+                    <i class="tim-icons icon-chart-pie-36"></i>
+                    <p>Statistics</p>
+                    <b class="caret d-none d-lg-block d-xl-block"></b>
+                </a>
+                <ul class="dropdown-menu dropdown-item">
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Champion" asp-action="Index"><i class="tim-icons icon-atom"></i> Champions</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Item" asp-action="Index"><i class="tim-icons icon-chart-bar-32"></i> Items</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Mastery" asp-action="Index"><i class="tim-icons icon-settings-gear-63"></i> Masteries</a>
+                    </li>
+                    <li>
+                        <a asp-area="Statistics" asp-controller="Spell" asp-action="Index"><i class="tim-icons icon-sound-wave"></i> Spells</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

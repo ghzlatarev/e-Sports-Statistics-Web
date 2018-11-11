@@ -11,17 +11,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{5727367B-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{4380777B-3B7C-4D45-9B62-E6F9ECD9B787}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{24E696E2-0A24-4568-8B70-CE304D968ABB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESportStatistics.Data", "ESportStatistics.Data\ESportStatistics.Data.csproj", "{082D37EB-670D-4CE6-B075-C86AA1256ACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESportStatistics.Services.Data", "ESportStatistics.Services.Data\ESportStatistics.Services.Data.csproj", "{7B94D8C3-149F-4F95-B39B-25B3505353A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESportStatistics.Services.Data", "ESportStatistics.Services.Data\ESportStatistics.Services.Data.csproj", "{7B94D8C3-149F-4F95-B39B-25B3505353A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESportStatistics.Services.External", "ESportStatistics.Services.External\ESportStatistics.Services.External.csproj", "{24488409-0F1B-4BB8-8D8F-BAE363B6BD93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESportStatistics.Services.External", "ESportStatistics.Services.External\ESportStatistics.Services.External.csproj", "{24488409-0F1B-4BB8-8D8F-BAE363B6BD93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESportStatistics.Data.Models", "ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj", "{832BD650-5A7A-4B3E-BEF7-49DC14C96DAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESportStatistics.Data.Models", "ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj", "{832BD650-5A7A-4B3E-BEF7-49DC14C96DAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESportStatistics.Services", "ESportStatistics.Services\ESportStatistics.Services.csproj", "{2A36DBEA-3517-4F52-AD5D-C3AB8AB27EB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESportStatistics.Services", "ESportStatistics.Services\ESportStatistics.Services.csproj", "{2A36DBEA-3517-4F52-AD5D-C3AB8AB27EB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{40A20DF6-84A3-4024-A0ED-BAD2D0CA3D4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESportStatistics.Services.Data.Tests", "ESportStatistics.Services.Data.Tests\ESportStatistics.Services.Data.Tests.csproj", "{5EEC8A6B-A5F3-4B3F-84CA-20FABA96AB5F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESportStatistics.Web.Tests", "ESportStatistics.Web.Tests\ESportStatistics.Web.Tests.csproj", "{89D7C562-8868-4966-9EA3-7138EA556473}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,14 @@ Global
 		{2A36DBEA-3517-4F52-AD5D-C3AB8AB27EB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A36DBEA-3517-4F52-AD5D-C3AB8AB27EB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A36DBEA-3517-4F52-AD5D-C3AB8AB27EB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EEC8A6B-A5F3-4B3F-84CA-20FABA96AB5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EEC8A6B-A5F3-4B3F-84CA-20FABA96AB5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EEC8A6B-A5F3-4B3F-84CA-20FABA96AB5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EEC8A6B-A5F3-4B3F-84CA-20FABA96AB5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89D7C562-8868-4966-9EA3-7138EA556473}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89D7C562-8868-4966-9EA3-7138EA556473}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89D7C562-8868-4966-9EA3-7138EA556473}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89D7C562-8868-4966-9EA3-7138EA556473}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +76,8 @@ Global
 		{24488409-0F1B-4BB8-8D8F-BAE363B6BD93} = {4380777B-3B7C-4D45-9B62-E6F9ECD9B787}
 		{832BD650-5A7A-4B3E-BEF7-49DC14C96DAE} = {5727367B-92DA-4AC4-88A2-40967DBAB266}
 		{2A36DBEA-3517-4F52-AD5D-C3AB8AB27EB8} = {4380777B-3B7C-4D45-9B62-E6F9ECD9B787}
+		{5EEC8A6B-A5F3-4B3F-84CA-20FABA96AB5F} = {40A20DF6-84A3-4024-A0ED-BAD2D0CA3D4C}
+		{89D7C562-8868-4966-9EA3-7138EA556473} = {40A20DF6-84A3-4024-A0ED-BAD2D0CA3D4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF440D22-0307-4944-9B84-5A57C166BFDD}

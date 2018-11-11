@@ -1,60 +1,67 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
     public class MasteryService : IMasteryService
     {
-        public MasteryService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public MasteryService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        public IEnumerable<Mastery> FilterMasteries(string filter, int pageNumber, int pageSize)
+        public async Task<IPagedList<Mastery>> FilterMasteriesAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataHandler.Masteries.All()
-                .Where(m => m.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToList();
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+            Validator.ValidateNull(sortOrder, "Sort order cannot be null!");
 
-            return query;
-        }
+            Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
+            Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
 
-        public void RebaseMasteries()
-        {
-            throw new NotImplementedException();
-            /*IEnumerable<Mastery> masteries = PandaScoreClient
-                .GetEntities<Mastery>(apiUrl)
-                .Select(entity => entity as Mastery);
+            var query = this.dataContext.Masteries
+                .Where(t => t.Name.Contains(filter));
 
-            foreach (var mastery in masteries)
+            switch (sortOrder)
             {
-                var temp = this.DataHandler.Masteries.All()
-                    .SingleOrDefault(m => m.PandaScoreId.Equals(mastery.PandaScoreId));
-
-                if (temp != null)
-                {
-                    this.DataHandler.Masteries.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Masteries.Add(mastery);
-                }
+                case "name_asc":
+                    query = query.OrderBy(u => u.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(u => u.Name);
+                    break;
             }
 
-            this.DataHandler.SaveChanges();*/
+            return await query.ToPagedListAsync(pageNumber, pageSize);
+        }
+
+        public async Task RebaseMasteriesAsync(string accessToken)
+        {
+            Validator.ValidateNull(accessToken, "Empty access token!");
+
+            IEnumerable<Mastery> masteries = await this.pandaScoreClient
+                .GetEntitiesParallel<Mastery>(accessToken, "masteries");
+
+            IList<Mastery> dbMasteries = await this.dataContext.Masteries.ToListAsync();
+
+            IList<Mastery> deleteList = dbMasteries.Where(m => masteries.Any(psm => psm.PandaScoreId.Equals(m.PandaScoreId))).ToList();
+
+            this.dataContext.Masteries.RemoveRange(deleteList);
+            await this.dataContext.Masteries.AddRangeAsync(masteries);
+
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

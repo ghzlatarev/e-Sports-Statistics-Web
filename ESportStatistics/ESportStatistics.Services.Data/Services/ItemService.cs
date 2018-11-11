@@ -1,60 +1,77 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
     public class ItemService : IItemService
     {
-        public ItemService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public ItemService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        public IEnumerable<Item> FilterItems(string filter, int pageNumber, int pageSize)
+        public async Task<IPagedList<Item>> FilterItemsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataHandler.Items.All()
-                .Where(i => i.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToList();
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+            Validator.ValidateNull(sortOrder, "Sort order cannot be null!");
+
+            Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
+            Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
+
+            var query = this.dataContext.Items
+                .Where(t => t.Name.Contains(filter));
+
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    query = query.OrderBy(u => u.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(u => u.Name);
+                    break;
+            }
+
+            return await query.ToPagedListAsync(pageNumber, pageSize);
+        }
+
+        public async Task<Item> FindAsync(string itemId)
+        {
+            Validator.ValidateNull(itemId, "Item Id cannot be null!");
+            Validator.ValidateGuid(itemId, "Item id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Items.FindAsync(Guid.Parse(itemId));
 
             return query;
         }
 
-        public void RebaseItems()
+        public async Task RebaseItemsAsync(string accessToken)
         {
-            throw new NotImplementedException();
-            /*IEnumerable<Item> items = PandaScoreClient
-                .GetEntities<Item>(apiUrl)
-                .Select(entity => entity as Item);
+            Validator.ValidateNull(accessToken, "Empty access token!");
 
-            foreach (var item in items)
-            {
-                var temp = this.DataHandler.Items.All()
-                    .SingleOrDefault(i => i.PandaScoreId.Equals(item.PandaScoreId));
+            IEnumerable<Item> items = await this.pandaScoreClient
+                .GetEntitiesParallel<Item>(accessToken, "items");
 
-                if (temp != null)
-                {
-                    this.DataHandler.Items.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Items.Add(item);
-                }
-            }
+            IList<Item> dbItems = await this.dataContext.Items.ToListAsync();
 
-            this.DataHandler.SaveChanges();*/
+            IList<Item> deleteList = dbItems.Where(i => items.Any(psi => psi.PandaScoreId.Equals(i.PandaScoreId))).ToList();
+
+            this.dataContext.Items.RemoveRange(deleteList);
+            await this.dataContext.Items.AddRangeAsync(items);
+
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

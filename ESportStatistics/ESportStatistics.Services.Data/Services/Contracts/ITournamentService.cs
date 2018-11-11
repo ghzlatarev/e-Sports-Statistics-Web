@@ -1,12 +1,16 @@
 ﻿using ESportStatistics.Data.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services.Contracts
 {
     public interface ITournamentService
     {
-        IEnumerable<Tournament> FilterTournaments(string filter, int pageNumber, int pageSize);
+        Task<IPagedList<Tournament>> FilterTournamentsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10);
 
-        void RebaseTournaments();
+        Task RebaseTournamentsAsync(string accessToken);
+
+        Task<Tournament> FindAsync(string id);
     }
 }

@@ -1,0 +1,77 @@
+﻿@using ESportStatistics.Web.Areas.Statistics.Models.Tournaments
+
+@model TableViewModel<TournamentViewModel>
+
+<div id="statusMessage"></div>
+<div id="tablePartial">
+    <div>
+        <form asp-area="Statistics" asp-controller="Tournament" asp-action="Filter"
+              asp-route-pageNumber="1" asp-route-sortOrder="@Model.Pagination.SortOrder" asp-route-searchTerm="@Model.Pagination.SearchTerm"
+              method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial">
+            <label>Page size:</label>
+            <input name="pageSize" class="form-control" value="@Model.Pagination.PageSize" type="number" min="1" max="50" style="width:5em;" />
+        </form>
+    </div>
+    <div>
+        <table class="table tablesorter">
+            <thead class="text-primary">
+                <tr>
+                    <th>
+                        <a asp-area="Statistics" asp-controller="Tournament" asp-action="Filter"
+                           asp-route-pageNumber="1" asp-route-pageSize="@Model.Pagination.PageSize"
+                           asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")"
+                           method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#tablePartial"><b>Name</b></a>
+                    </th>
+                    <th>
+                        Begins At
+                    </th>
+                    <th>
+                        Ends At
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tournament in Model.Items)
+                {
+                    <tr>
+                        <td>@tournament.Name</td>
+                        <td>@tournament.BeginAt</td>
+                        <td>@tournament.EndAt</td>
+                        <td>
+                            <div class="dark-theme">
+                                <a class="page-link" asp-area="Statistics" asp-controller="Tournament" asp-action="Details" asp-route-id="@tournament.Id">Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                    <tr>
+                        <td width="40%">
+                            @await Html.PartialAsync("_PaginationPartial", Model.Pagination)
+                        </td>
+                        <td></td>
+                        <td>
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <div class="dark-theme">
+                                    <a asp-area="Administration" asp-controller="Rebase" asp-action="Tournaments" class="page-link"
+                                       method="get" data-ajax="true" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#statusMessage">Rebase</a>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <div class="dark-theme">
+                                <form>
+                                    <a asp-area="Statistics" asp-controller="Tournament" asp-action="Download" class="page-link"
+                                       asp-route-pageNumber="@Model.Pagination.PageNumber" asp-route-pageSize="@Model.Pagination.PageSize"
+                                       asp-route-searchTerm="@Model.Pagination.SearchTerm" asp-route-sortOrder="@(Model.Pagination.SortOrder.Equals("name_asc") ? "name_desc" : "name_asc")">Download Page</a>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

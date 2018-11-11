@@ -1,60 +1,77 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
     public class TeamService : ITeamService
     {
-        public TeamService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public TeamService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        public IEnumerable<Team> FilterTeams(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task<Team> FindAsync(string teamId)
         {
-            var query = this.DataHandler.Teams.All()
-                .Where(i => i.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToList();
+            Validator.ValidateNull(teamId, "Team Id cannot be null!");
+            Validator.ValidateGuid(teamId, "Team id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Teams.FindAsync(Guid.Parse(teamId));
 
             return query;
         }
 
-        public void RebaseTeams()
+        public async Task<IPagedList<Team>> FilterTeamsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
-            throw new NotImplementedException();
-            /*IEnumerable<Team> teams = PandaScoreClient
-                .GetEntities<Team>(apiUrl)
-                .Select(entity => entity as Team);
+            Validator.ValidateNull(sortOrder, "SortOrder cannot be null!");
+            Validator.ValidateNull(filter, "Filter cannot be null!");
 
-            foreach (var team in teams)
+            Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
+            Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
+
+            var query = this.dataContext.Teams
+                .Where(t => t.Name.Contains(filter));
+
+            switch (sortOrder)
             {
-                var temp = this.DataHandler.Teams.All()
-                    .SingleOrDefault(t => t.PandaScoreId.Equals(team.PandaScoreId));
-
-                if (temp != null)
-                {
-                    this.DataHandler.Teams.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Teams.Add(team);
-                }
+                case "name_asc":
+                    query = query.OrderBy(t => t.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(t => t.Name);
+                    break;
             }
 
-            this.DataHandler.SaveChanges();*/
+            return await query.ToPagedListAsync(pageNumber, pageSize);
+        }
+
+        public async Task RebaseTeamsAsync(string accessToken)
+        {
+            Validator.ValidateNull(accessToken, "Empty access token!");
+
+            IEnumerable<Team> teams = await this.pandaScoreClient
+               .GetEntitiesParallel<Team>(accessToken, "teams");
+
+            IList<Team> dbTeams = await this.dataContext.Teams.ToListAsync();
+
+            IList<Team> deleteList = dbTeams.Where(t => teams.Any(pst => pst.PandaScoreId.Equals(t.PandaScoreId))).ToList();
+
+            this.dataContext.Teams.RemoveRange(deleteList);
+            await this.dataContext.Teams.AddRangeAsync(teams);
+
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

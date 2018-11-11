@@ -1,60 +1,77 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
     public class MatchService : IMatchService
     {
-        public MatchService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public MatchService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        public IEnumerable<Match> FilterMatches(string filter, int pageNumber, int pageSize)
+        public async Task<IPagedList<Match>> FilterMatchesAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
-            var query = this.DataHandler.Matches.All()
-                .Where(m => m.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToList();
+            Validator.ValidateNull(filter, "Filter cannot be null!");
+            Validator.ValidateNull(sortOrder, "Sort order cannot be null!");
+
+            Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
+            Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
+
+            var query = this.dataContext.Matches
+                .Where(t => t.Name.Contains(filter));
+
+            switch (sortOrder)
+            {
+                case "name_asc":
+                    query = query.OrderBy(u => u.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(u => u.Name);
+                    break;
+            }
+
+            return await query.ToPagedListAsync(pageNumber, pageSize);
+        }
+
+        public async Task<Match> FindAsync(string matchId)
+        {
+            Validator.ValidateNull(matchId, "Match Id cannot be null!");
+            Validator.ValidateGuid(matchId, "Match id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Matches.FindAsync(Guid.Parse(matchId));
 
             return query;
         }
 
-        public void RebaseMatches()
+        public async Task RebaseMatchesAsync(string accessToken)
         {
-            throw new NotImplementedException();
-            /*IEnumerable<Match> matches = PandaScoreClient
-                .GetEntities<Match>(apiUrl)
-                .Select(entity => entity as Match);
+            Validator.ValidateNull(accessToken, "Empty access token!");
 
-            foreach (var match in matches)
-            {
-                var temp = this.DataHandler.Matches.All()
-                    .SingleOrDefault(m => m.PandaScoreId.Equals(match.PandaScoreId));
+            IEnumerable<Match> matches = await this.pandaScoreClient
+                .GetEntitiesParallel<Match>(accessToken, "matches");
 
-                if (temp != null)
-                {
-                    this.DataHandler.Matches.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Matches.Add(match);
-                }
-            }
+            IList<Match> dbMatches = await this.dataContext.Matches.ToListAsync();
 
-            this.DataHandler.SaveChanges();*/
+            IList<Match> deleteList = dbMatches.Where(m => matches.Any(psm => psm.PandaScoreId.Equals(m.PandaScoreId))).ToList();
+
+            this.dataContext.Matches.RemoveRange(deleteList);
+            await this.dataContext.Matches.AddRangeAsync(matches);
+
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

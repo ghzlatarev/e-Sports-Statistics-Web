@@ -1,60 +1,77 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
+using ESportStatistics.Data.Context;
 using ESportStatistics.Data.Models;
-using ESportStatistics.Data.Repository.DataHandler.Contracts;
+using ESportStatistics.Services.Data.Utils;
 using ESportStatistics.Services.External;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services
 {
     public class TournamentService : ITournamentService
     {
-        public TournamentService(IDataHandler dataHandler,
-            IPandaScoreClient pandaScoreClient)
+        private readonly IPandaScoreClient pandaScoreClient;
+        private readonly DataContext dataContext;
+
+        public TournamentService(IPandaScoreClient pandaScoreClient, DataContext dataContext)
         {
-            this.DataHandler = dataHandler ?? throw new ArgumentNullException(nameof(dataHandler));
-            this.PandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.pandaScoreClient = pandaScoreClient ?? throw new ArgumentNullException(nameof(pandaScoreClient));
+            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        private IDataHandler DataHandler { get; }
-
-        private IPandaScoreClient PandaScoreClient { get; }
-
-        public IEnumerable<Tournament> FilterTournaments(string filter, int pageNumber = 1, int pageSize = 10)
+        public async Task<Tournament> FindAsync(string tournamentId)
         {
-            var query = this.DataHandler.Tournaments.All()
-                .Where(t => t.Name.Contains(filter)
-                ).Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToList();
+            Validator.ValidateNull(tournamentId, "Tournament Id cannot be null!");
+            Validator.ValidateGuid(tournamentId, "Tournament id is not in the correct format.Unable to parse to Guid!");
+
+            var query = await this.dataContext.Tournaments.FindAsync(Guid.Parse(tournamentId));
 
             return query;
         }
 
-        public void RebaseTournaments()
+        public async Task<IPagedList<Tournament>> FilterTournamentsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10)
         {
-            throw new NotImplementedException();
-            /*IEnumerable<Tournament> tournaments = PandaScoreClient
-                .GetEntities<Tournament>(apiUrl)
-                .Select(entity => entity as Tournament);
+            Validator.ValidateNull(sortOrder, "SortOrder cannot be null!");
+            Validator.ValidateNull(filter, "Filter cannot be null!");
 
-            foreach (var tournament in tournaments)
+            Validator.ValidateMinRange(pageNumber, 1, "Page number cannot be less then 1!");
+            Validator.ValidateMinRange(pageSize, 0, "Page size cannot be less then 0!");
+
+            var query = this.dataContext.Tournaments
+                .Where(t => t.Name.Contains(filter));
+
+            switch (sortOrder)
             {
-                var temp = this.DataHandler.Tournaments.All()
-                    .SingleOrDefault(t => t.PandaScoreId.Equals(tournament.PandaScoreId));
-
-                if (temp != null)
-                {
-                    this.DataHandler.Tournaments.Update(temp);
-                }
-                else
-                {
-                    this.DataHandler.Tournaments.Add(tournament);
-                }
+                case "name_asc":
+                    query = query.OrderBy(t => t.Name);
+                    break;
+                case "name_desc":
+                    query = query.OrderByDescending(t => t.Name);
+                    break;
             }
 
-            this.DataHandler.SaveChanges();*/
+            return await query.ToPagedListAsync(pageNumber, pageSize);
+        }
+
+        public async Task RebaseTournamentsAsync(string accessToken)
+        {
+            Validator.ValidateNull(accessToken, "Empty access token!");
+
+            IEnumerable<Tournament> tournaments = await this.pandaScoreClient
+               .GetEntitiesParallel<Tournament>(accessToken, "tournaments");
+
+            IList<Tournament> dbTournaments = await this.dataContext.Tournaments.ToListAsync();
+
+            IList<Tournament> deleteList = dbTournaments.Where(t => tournaments.Any(pst => pst.PandaScoreId.Equals(t.PandaScoreId))).ToList();
+
+            this.dataContext.Tournaments.RemoveRange(deleteList);
+            await this.dataContext.Tournaments.AddRangeAsync(tournaments);
+
+            await this.dataContext.SaveChangesAsync(false);
         }
     }
 }

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="sautinsoft.document" Version="3.5.9.26" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ESportStatistics.Data.Models\ESportStatistics.Data.Models.csproj" />
     <ProjectReference Include="..\ESportStatistics.Data\ESportStatistics.Data.csproj" />
   </ItemGroup>

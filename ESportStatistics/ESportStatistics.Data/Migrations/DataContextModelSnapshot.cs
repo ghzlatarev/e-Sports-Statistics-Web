@@ -95,17 +95,39 @@ namespace ESportStatistics.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Address");
+
+                    b.Property<byte[]>("AvatarImage");
+
+                    b.Property<string>("City");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("Country");
+
+                    b.Property<DateTime?>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(25);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(25);
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -119,7 +141,11 @@ namespace ESportStatistics.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<int>("PostalCode");
+
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<string>("Story");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -128,6 +154,10 @@ namespace ESportStatistics.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -135,6 +165,10 @@ namespace ESportStatistics.Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UserName")
+                        .IsUnique()
+                        .HasFilter("[UserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
                 });

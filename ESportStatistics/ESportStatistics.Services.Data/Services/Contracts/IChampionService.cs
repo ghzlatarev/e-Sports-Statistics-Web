@@ -1,19 +1,21 @@
 ﻿using ESportStatistics.Data.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace ESportStatistics.Core.Services.Contracts
 {
     public interface IChampionService
     {
-        IEnumerable<Champion> FilterChampions(string filter, int pageNumber = 1, int pageSize = 10);
+        Task<IPagedList<Champion>> FilterChampionsAsync(string sortOrder = "", string filter = "", int pageNumber = 1, int pageSize = 10);
 
-        Champion AddChampion(string name);
+        Task<Champion> FindAsync(string id);
 
-        Champion DeleteChampion(string name);
+        Task<Champion> AddChampionAsync(string name);
 
-        Champion RestoreChampion(string name);
+        Task<Champion> DeleteChampionAsync(string id);
 
-        Task RebaseChampions(string accessToken);
+        Task<Champion> RestoreChampionAsync(string id);
+
+        Task RebaseChampionsAsync(string accessToken);
     }
 }

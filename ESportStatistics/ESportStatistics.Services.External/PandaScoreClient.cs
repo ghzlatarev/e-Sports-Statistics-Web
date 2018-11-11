@@ -12,15 +12,16 @@ namespace ESportStatistics.Services.External
     {
         private readonly HttpClient client;
 
-        public PandaScoreClient()
+        public PandaScoreClient(HttpClient client)
         {
-            this.client = new HttpClient();
+            this.client = client;
+            this.client.BaseAddress = new Uri("https://api.pandascore.co/lol/");
         }
 
         public async Task<IEnumerable<T>> GetEntities<T>(string accessToken, string entityName, int pageSize = 100, int pageNumber = 1)
             where T : PandaScoreBaseEntity
         {
-            var response = await client.GetAsync("https://api.pandascore.co/lol/" + entityName +
+            var response = await client.GetAsync(entityName +
                 "?page[size]=" + pageSize +
                 "&page[number]=" + pageNumber +
                 "&token=" + accessToken)
@@ -49,7 +50,7 @@ namespace ESportStatistics.Services.External
 
         public async Task<int> GetNumberOfAvaliableElements(string accessToken, string entityName)
         {
-            var response = await client.GetAsync("https://api.pandascore.co/lol/" + entityName +
+            var response = await client.GetAsync(entityName +
                 "?page[size]=" + 1 +
                 "&token=" + accessToken)
                 .ConfigureAwait(false);

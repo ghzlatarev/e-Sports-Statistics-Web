@@ -1,16 +1,16 @@
 ﻿using ESportStatistics.Data.Context.Configurations;
+using ESportStatistics.Data.Context.Configurations.Identity;
 using ESportStatistics.Data.Context.Contracts;
 using ESportStatistics.Data.Models;
 using ESportStatistics.Data.Models.Contracts;
 using ESportStatistics.Data.Models.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
-// TO DO : Refactor the admin/role process!
 namespace ESportStatistics.Data.Context
 {
     public class DataContext : IdentityDbContext<ApplicationUser>, IDataContext
@@ -41,8 +41,24 @@ namespace ESportStatistics.Data.Context
 
         public override int SaveChanges()
         {
+            this.ApplyDeletionRules();
             this.ApplyAuditInfoRules();
             return base.SaveChanges();
+        }
+
+        public virtual async Task<int> SaveChangesAsync(bool applyDeletionRules = true, bool applyAuditInfoRules = true)
+        {
+            if (applyDeletionRules == true)
+            {
+                this.ApplyDeletionRules();
+            }
+
+            if (applyAuditInfoRules == true)
+            {
+                this.ApplyAuditInfoRules();
+            }
+
+            return await base.SaveChangesAsync();
         }
 
         public override DbSet<TEntity> Set<TEntity>()
@@ -57,6 +73,10 @@ namespace ESportStatistics.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Identity model configuration
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
+
+            // PandaScore model configuration
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
             modelBuilder.ApplyConfiguration(new MasteryConfiguration());
             modelBuilder.ApplyConfiguration(new SpellConfiguration());
@@ -68,9 +88,21 @@ namespace ESportStatistics.Data.Context
             modelBuilder.ApplyConfiguration(new SeriesConfiguration());
             modelBuilder.ApplyConfiguration(new MatchConfiguration());
 
-            this.SeedData(modelBuilder);
-
             base.OnModelCreating(modelBuilder);
+        }
+
+        private void ApplyDeletionRules()
+        {
+            var entitiesForDeletion = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Deleted && e.Entity is IDeletable);
+
+            foreach (var entry in entitiesForDeletion)
+            {
+                var entity = (IDeletable)entry.Entity;
+                entity.DeletedOn = DateTime.UtcNow.AddHours(2);
+                entity.IsDeleted = true;
+                entry.State = EntityState.Modified;
+            }
         }
 
         private void ApplyAuditInfoRules()
@@ -84,19 +116,13 @@ namespace ESportStatistics.Data.Context
 
                 if (entry.State == EntityState.Added && entity.CreatedOn == null)
                 {
-                    entity.CreatedOn = DateTime.Now;
+                    entity.CreatedOn = DateTime.UtcNow.AddHours(2);
                 }
                 else
                 {
-                    entity.ModifiedOn = DateTime.Now;
+                    entity.ModifiedOn = DateTime.UtcNow.AddHours(2);
                 }
             }
-        }
-
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<IdentityRole>().HasData(new { Name = "Standard" });
-            modelBuilder.Entity<IdentityRole>().HasData(new { Name = "Administrator" });
         }
     }
 }
