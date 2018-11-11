@@ -5,10 +5,6 @@
     <UserSecretsId>aspnet-ESportStatistics.Web-523E059C-E7A0-42E6-AA90-D954E2F576A2</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="Views\Shared\_FooterPartial.cshtml" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
@@ -34,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Shared\_FooterPartial.cshtml" />
     <None Include="wwwroot\theme\css\black-dashboard.css.map" />
     <None Include="wwwroot\theme\demo\demo.js" />
     <None Include="wwwroot\theme\fonts\nucleo.woff2" />

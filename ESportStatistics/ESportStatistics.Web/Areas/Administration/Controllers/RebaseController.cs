@@ -53,7 +53,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            pandaScoreAccessToken = Environment.GetEnvironmentVariable("PandaScoreAPIAccessToken", EnvironmentVariableTarget.User);
+            pandaScoreAccessToken = Environment.GetEnvironmentVariable("PandaScoreAPIAccessToken");
         }
 
         [TempData]

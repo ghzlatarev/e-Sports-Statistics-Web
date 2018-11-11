@@ -27,12 +27,12 @@ namespace ESportStatistics.Web
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
-            this.Environment = environment;
+            HostingEnvironment = environment;
         }
 
         public IConfiguration Configuration { get; }
 
-        public IHostingEnvironment Environment { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -57,11 +57,10 @@ namespace ESportStatistics.Web
             }
             else
             {
+                app.UseNotFoundExceptionHandler();
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseNotFoundExceptionHandler();
-
+            
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -86,7 +85,7 @@ namespace ESportStatistics.Web
 
         private void RegisterData(IServiceCollection services)
         {
-            if (Environment.IsDevelopment())
+            if (HostingEnvironment.IsDevelopment())
             {
                 services.AddDbContext<DataContext>(options =>
                      options.UseSqlServer(Configuration.GetConnectionString("DevelopmentConnection")));
@@ -94,7 +93,7 @@ namespace ESportStatistics.Web
             else
             {
                 services.AddDbContext<DataContext>(options =>
-                     options.UseSqlServer(System.Environment.GetEnvironmentVariable("AZURE_ESS_DB_Connection" ,EnvironmentVariableTarget.User)));
+                     options.UseSqlServer(Environment.GetEnvironmentVariable("AZURE_ESS_DB_Connection")));
             }
         }
 
@@ -104,7 +103,7 @@ namespace ESportStatistics.Web
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
 
-            if (this.Environment.IsDevelopment())
+            if (this.HostingEnvironment.IsDevelopment())
             {
                 services.Configure<IdentityOptions>(options =>
                 {

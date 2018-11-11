@@ -1,7 +1,6 @@
 ﻿using ESportStatistics.Data.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 
@@ -9,10 +8,10 @@ namespace ESportStatistics.Web.Configurations
 {
     public static class IdentityDataInitializer
     {
-        public static async Task SeedDataAsync(IConfiguration configuration, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedDataAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             await SeedRolesAsync(roleManager);
-            await SeedUsersAsync(configuration, userManager);
+            await SeedUsersAsync(userManager);
         }
 
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -30,19 +29,19 @@ namespace ESportStatistics.Web.Configurations
             }
         }
 
-        public static async Task SeedUsersAsync(IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        public static async Task SeedUsersAsync(UserManager<ApplicationUser> userManager)
         {
             if (!await userManager.Users.AnyAsync(u => u.UserName == "Administrator"))
             {
                 ApplicationUser newUser = new ApplicationUser()
                 {
-                    UserName = Environment.GetEnvironmentVariable("ESS_SuperAdminUserNameCredentials", EnvironmentVariableTarget.User),
-                    Email = Environment.GetEnvironmentVariable("ESS_SuperAdminEmailCredentials", EnvironmentVariableTarget.User),
+                    UserName = Environment.GetEnvironmentVariable("ESS_SuperAdminUserNameCredentials"),
+                    Email = Environment.GetEnvironmentVariable("ESS_SuperAdminEmailCredentials"),
                     CreatedOn = DateTime.UtcNow.AddHours(2),
                     IsDeleted = false
                 };
 
-                if ((await userManager.CreateAsync(newUser, Environment.GetEnvironmentVariable("ESS_SuperAdminPasswordCredentials", EnvironmentVariableTarget.User))).Succeeded)
+                if ((await userManager.CreateAsync(newUser, Environment.GetEnvironmentVariable("ESS_SuperAdminPasswordCredentials"))).Succeeded)
                 {
                     await userManager.AddToRoleAsync(newUser, "Administrator");
                 }
