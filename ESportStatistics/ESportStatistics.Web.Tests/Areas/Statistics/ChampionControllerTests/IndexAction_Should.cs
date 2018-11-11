@@ -7,10 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using X.PagedList;
 
@@ -26,17 +24,17 @@ namespace ESportStatistics.Web.Tests.Areas.Statistics.ChampionControllerTests
             Mock<IChampionService> championServiceMock = new Mock<IChampionService>();
             Mock<IPDFService> pDFServiceMock = new Mock<IPDFService>();
             IMemoryCache memoryCacheMock = new MemoryCache(new MemoryCacheOptions());
-            
+
             string validSortOrder = string.Empty;
             string validFilter = string.Empty;
             int validPageNumber = 1;
             int validPageSize = 10;
-            
+
             IPagedList<Champion> champions = new PagedList<Champion>(new List<Champion>().AsQueryable(), validPageNumber, validPageSize);
 
             championServiceMock.Setup(mock => mock.FilterChampionsAsync(validSortOrder, validFilter, validPageNumber, validPageSize))
                 .Returns(Task.FromResult(champions));
-            
+
             ChampionController SUT = new ChampionController(
                 championServiceMock.Object,
                 pDFServiceMock.Object,

@@ -36,13 +36,13 @@ namespace ESportStatistics.Web.Configurations
             {
                 ApplicationUser newUser = new ApplicationUser()
                 {
-                    UserName = configuration["SuperAdminUserNameCredentials"],
-                    Email = configuration["SuperAdminEmailCredentials"],
+                    UserName = Environment.GetEnvironmentVariable("ESS_SuperAdminUserNameCredentials", EnvironmentVariableTarget.User),
+                    Email = Environment.GetEnvironmentVariable("ESS_SuperAdminEmailCredentials", EnvironmentVariableTarget.User),
                     CreatedOn = DateTime.UtcNow.AddHours(2),
                     IsDeleted = false
                 };
 
-                if ((await userManager.CreateAsync(newUser, configuration["SuperAdminPasswordCredentials"])).Succeeded)
+                if ((await userManager.CreateAsync(newUser, Environment.GetEnvironmentVariable("ESS_SuperAdminPasswordCredentials", EnvironmentVariableTarget.User))).Succeeded)
                 {
                     await userManager.AddToRoleAsync(newUser, "Administrator");
                 }

@@ -1,7 +1,6 @@
 ﻿using ESportStatistics.Core.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -23,14 +22,22 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         private readonly ITeamService _teamService;
         private readonly ITournamentService _tournamentService;
 
-        private readonly IConfiguration _configuration;
         private readonly ILogger<RebaseController> _logger;
 
+        private readonly string pandaScoreAccessToken;
 
-        public RebaseController(IChampionService championService, IItemService itemService, 
-            ILeagueService leagueService, IMasteryService masteryService, IMatchService matchService,
-            IPlayerService playerService, ITeamService teamService, ITournamentService tournamentService,
-            ISpellService spellService, ISerieService serieService, IConfiguration configuration, 
+
+        public RebaseController(
+            IChampionService championService,
+            IItemService itemService,
+            ILeagueService leagueService,
+            IMasteryService masteryService,
+            IMatchService matchService,
+            IPlayerService playerService,
+            ITeamService teamService,
+            ITournamentService tournamentService,
+            ISpellService spellService,
+            ISerieService serieService,
             ILogger<RebaseController> logger)
         {
             _championService = championService ?? throw new ArgumentNullException(nameof(championService));
@@ -44,19 +51,20 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
             _teamService = teamService ?? throw new ArgumentNullException(nameof(teamService));
             _tournamentService = tournamentService ?? throw new ArgumentNullException(nameof(tournamentService));
 
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+            pandaScoreAccessToken = Environment.GetEnvironmentVariable("PandaScoreAPIAccessToken", EnvironmentVariableTarget.User);
         }
 
         [TempData]
         public string StatusMessage { get; set; }
-        
+
         [HttpGet("rebase/champions")]
         public async Task<IActionResult> Champions()
         {
             try
             {
-                await _championService.RebaseChampionsAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _championService.RebaseChampionsAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated champions.";
             }
             catch (Exception ex)
@@ -73,7 +81,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _itemService.RebaseItemsAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _itemService.RebaseItemsAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated items.";
             }
             catch (Exception ex)
@@ -90,7 +98,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _leagueService.RebaseLeaguesAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _leagueService.RebaseLeaguesAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated leagues.";
             }
             catch (Exception ex)
@@ -107,7 +115,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _masteryService.RebaseMasteriesAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _masteryService.RebaseMasteriesAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated masteries.";
             }
             catch (Exception ex)
@@ -124,7 +132,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _matchService.RebaseMatchesAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _matchService.RebaseMatchesAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated matches.";
             }
             catch (Exception ex)
@@ -141,7 +149,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _playerService.RebasePlayersAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _playerService.RebasePlayersAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated players.";
             }
             catch (Exception ex)
@@ -158,7 +166,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _serieService.RebaseSeriesAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _serieService.RebaseSeriesAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated series.";
             }
             catch (Exception ex)
@@ -175,7 +183,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _spellService.RebaseSpellsAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _spellService.RebaseSpellsAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated spells.";
             }
             catch (Exception ex)
@@ -192,7 +200,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _teamService.RebaseTeamsAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _teamService.RebaseTeamsAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated teams.";
             }
             catch (Exception ex)
@@ -209,7 +217,7 @@ namespace ESportStatistics.Web.Areas.Administration.Controllers
         {
             try
             {
-                await _tournamentService.RebaseTournamentsAsync(_configuration["PandaScoreAPIAccessToken"]);
+                await _tournamentService.RebaseTournamentsAsync(pandaScoreAccessToken);
                 StatusMessage = "Successfully repopulated tournaments.";
             }
             catch (Exception ex)
